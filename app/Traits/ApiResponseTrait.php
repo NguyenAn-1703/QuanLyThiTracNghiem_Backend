@@ -14,7 +14,7 @@ trait ApiResponseTrait
         404 => 'Không tìm thấy',
         422 => 'Dữ liệu không hợp lệ',
         429 => 'Quá nhiều yêu cầu trong thời gian ngắn',
-        500 => 'Lỗi hệ thống'
+        500 => 'Lỗi hệ thống',
     ];
 
     protected function success($data = null, ?string $message = null, int $code = 200): JsonResponse
@@ -62,19 +62,23 @@ trait ApiResponseTrait
         return $this->error(null, $message, 403);
     }
 
-    protected function notFound(?string $message = null): JsonResponse {
+    protected function notFound(?string $message = null): JsonResponse
+    {
         return $this->error(null, $message, 404);
     }
 
-    protected function validation($errors, ?string $message = null): JsonResponse {
+    protected function validation($errors, ?string $message = null): JsonResponse
+    {
         return $this->error($errors, $message, 422);
     }
 
-    protected function throttleRequest(?string $message = null): JsonResponse {
+    protected function throttleRequest(?string $message = null): JsonResponse
+    {
         return $this->error(null, $message, 429);
     }
 
-    protected function serverError(?string $message = null): JsonResponse {
+    protected function serverError(?string $message = null): JsonResponse
+    {
         return $this->error(null, $message, 500);
     }
 }
