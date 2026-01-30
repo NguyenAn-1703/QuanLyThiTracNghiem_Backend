@@ -10,6 +10,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -28,6 +29,7 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         NotFoundHttpException::class,
         ThrottleRequestsException::class,
+        BusinessException::class,
     ];
 
     /**
@@ -73,17 +75,21 @@ class Handler extends ExceptionHandler
         return match (true) {
             $e instanceof ValidationException       => $this->validation($e->errors(), 'Dữ liệu không hợp lệ'),
 
-            $e instanceof AuthenticationException   => $this->unauthorized(),
+            $e instanceof AuthenticationException   => $this->unauthorized("Bạn chưa đăng nhập vào hệ thống"),
 
-            $e instanceof AuthorizationException    => $this->forbidden(),
+            $e instanceof AuthorizationException    => $this->forbidden("Bạn chưa đủ quyền thực hiện hành động này"),
 
             $e instanceof ThrottleRequestsException => $this->throttleRequest(),
 
+            $e instanceof BusinessException         => $this->error(null, $msg, 400),
+
             $e instanceof ModelNotFoundException    => $this->notFound(
-                class_basename($e->getModel() . "Không tìm thấy")
+                class_basename($e->getModel()) . " không tìm thấy"
             ),
 
-            $e instanceof HttpException             => $this->error(null, $msg, $e->getCode()),
+            $e instanceof NotFoundHttpException     => $this->notFound("Đường dẫn không tồn tại"),
+
+            $e instanceof HttpException             => $this->error(null, $msg, $e->getStatusCode()),
 
             $e instanceof QueryException            => $this->error(
                 config('app.debug') ? "Lỗi database: " . $msg : null
