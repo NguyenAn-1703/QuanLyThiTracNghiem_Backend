@@ -5,55 +5,60 @@ use Illuminate\Http\JsonResponse;
 
 trait ApiResponseTrait
 {
-    protected static array $httpMsg = [
+    protected array $messages = [
         200 => 'Thành công',
-        201 => 'Tạo mới thành công',
-        204 => 'Không có nội dung',
-        400 => 'Yêu cầu không hợp lệ',
+        201 => 'Tạo thành công',
+        400 => 'Có lỗi xảy ra',
         401 => 'Chưa xác thực',
         403 => 'Không có quyền truy cập',
         404 => 'Không tìm thấy',
         422 => 'Dữ liệu không hợp lệ',
-        500 => 'Lỗi hệ thống',
+        429 => 'Quá nhiều yêu cầu trong thời gian ngắn',
+        500 => 'Lỗi hệ thống'
     ];
 
-    protected function success(mixed $data = null, ?string $message = null, int $code = 200): JsonResponse
+    protected function success($data = null, ?string $message = null, int $code = 200): JsonResponse
     {
         return response()->json([
             'success' => true,
             'code'    => $code,
-            'message' => $message ?? self::$httpMsg[$code],
+            'message' => $message ?? $this->messages[$code],
             'data'    => $data,
         ], $code);
     }
 
-    protected function error(mixed $errors = null, ?string $message = null, int $code = 400): JsonResponse
+    protected function error($errors = null, ?string $message = null, int $code = 400): JsonResponse
     {
         return response()->json([
             'success' => false,
             'code'    => $code,
-            'message' => $message ?? self::$httpMsg[$code],
+            'message' => $message ?? $this->messages[$code],
             'errors'  => $errors,
         ], $code);
     }
 
-    protected function created(mixed $data = null, ?string $message = null): JsonResponse {
+    protected function created($data = null, ?string $message = null): JsonResponse
+    {
         return $this->success($data, $message, 201);
     }
 
-    protected function updated(mixed $data = null, ?string $message = null): JsonResponse {
-        return $this->success($data, $message, 202);
+    protected function updated($data = null, ?string $message = null): JsonResponse
+    {
+        return $this->success($data, $message, 200);
     }
 
-    protected function deleted(?string $message = null): JsonResponse {
-        return $this->success(null, $message, 204);
+    protected function deleted(?string $message = null): JsonResponse
+    {
+        return $this->success(null, $message, 200);
     }
 
-    protected function unauthorized(?string $message = null): JsonResponse {
+    protected function unauthorized(?string $message = null): JsonResponse
+    {
         return $this->error(null, $message, 401);
     }
 
-    protected function forbidden(?string $message = null): JsonResponse {
+    protected function forbidden(?string $message = null): JsonResponse
+    {
         return $this->error(null, $message, 403);
     }
 
@@ -61,8 +66,12 @@ trait ApiResponseTrait
         return $this->error(null, $message, 404);
     }
 
-    protected function validation(mixed $errors, ?string $message = null): JsonResponse {
+    protected function validation($errors, ?string $message = null): JsonResponse {
         return $this->error($errors, $message, 422);
+    }
+
+    protected function throttleRequest(?string $message = null): JsonResponse {
+        return $this->error(null, $message, 429);
     }
 
     protected function serverError(?string $message = null): JsonResponse {
