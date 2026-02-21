@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('role_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('roleId')->constrained('roles');
-            $table->foreignId('actionId')->constrained('actions');
-            $table->string('hanhdong');
-            $table->unique(['roleId', 'actionId', 'hanhdong']);
+            $table->foreignId('nhomQuyenId')->constrained('roles');
+            $table->foreignId('chucNangId')->constrained('actions');
+            $table->string('hanhDong');
+            $table->unique(['nhomQuyenId', 'chucNangId', 'hanhdong']);
             $table->timestamps();
         });
     }

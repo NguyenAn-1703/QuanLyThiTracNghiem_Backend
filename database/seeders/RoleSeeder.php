@@ -17,19 +17,19 @@ class RoleSeeder extends Seeder
     {
         $roles = [
             [
-                'name' => 'admin'
+                'tenNhomQuyen' => 'admin'
             ],
             [
-                'name' => 'teacher'
+                'tenNhomQuyen' => 'teacher'
             ],
             [
-                'name' => 'student',
+                'tenNhomQuyen' => 'student',
             ],
         ];
 
         foreach ($roles as $role) {
             Role::firstOrCreate(
-                ['name' => $role['name']], // điều kiện kiểm tra trùng
+                ['tenNhomQuyen' => $role['tenNhomQuyen']], // điều kiện kiểm tra trùng
                 $role
             );
         }

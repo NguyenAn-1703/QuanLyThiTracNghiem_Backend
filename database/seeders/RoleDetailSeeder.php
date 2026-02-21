@@ -17,16 +17,16 @@ class RoleDetailSeeder extends Seeder
      */
     public function run()
     {
-        $adminRole = Role::where('name', 'admin')->first();
+        $adminRole = Role::where('tenNhomQuyen', 'admin')->first();
         $adminActions = Action::all();
         $roleDetails = [];
-        $hanhDongs = ["view", "add", "update", "delete"];
+        $hanhDongs = ["VIEW", "ADD", "UPDATE", "DELETE"];
         foreach ($adminActions as $adminAction) {
             foreach ($hanhDongs as $hanhDong) {
                 $roleDetails[] = [
-                    "roleId" => $adminRole->id,
-                    "actionId" => $adminAction->id,
-                    "hanhdong" => $hanhDong
+                    "nhomQuyenId" => $adminRole->id,
+                    "chucNangId" => $adminAction->id,
+                    "hanhDong" => $hanhDong
                 ];
             }
         }
