@@ -9,8 +9,8 @@ class RoleDetail extends Model
 {
     use HasFactory;
     protected $fillable = [
-        "roleId",
-        "actionId",
+        "nhomQuyenId",
+        "chucNangId",
         "hanhdong"
     ];
     
@@ -23,10 +23,10 @@ class RoleDetail extends Model
     ];
 
     public function role(){
-        return $this->belongsTo(Role::class, 'roleId');
+        return $this->belongsTo(Role::class, 'nhomQuyenId');
     }
 
     public function action(){
-        return $this->belongsTo(Action::class, 'actionId');
+        return $this->belongsTo(Action::class, 'chucNangId');
     }
 }

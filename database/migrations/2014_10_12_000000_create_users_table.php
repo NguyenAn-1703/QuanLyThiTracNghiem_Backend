@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('phoneNumber', 20);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->integer('groupId');
-            $table->dateTime('lastLogin');
+            $table->dateTime('lastLogin')->default(now());
             $table->timestamps();
         });
     }

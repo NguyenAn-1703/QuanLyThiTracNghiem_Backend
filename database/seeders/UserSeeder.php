@@ -17,14 +17,17 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'fullname' => 'Admin',
+                'hoTen' => 'Admin',
                 'email' => 'admin',
-                'passwordHash' => '',
-                'roleId' => 1,
-                'phoneNumber' => "0999999999",
-                'status' => 'active',
-                'groupId' => 1,
-                'lastLogin' => now(),
+                'password' => '',
+                'nhomQuyenId' => 1,
+                'sdt' => "0999999999",
+                'username' => 'Admin',
+                'ngaySinh' => now(),
+                'laGioiTinhNu' => true,
+                'ggid' => 'idexample',
+                'urlAvatar' => 'example.icon',
+                'isStudent' => false,
             ]
         ];
 
