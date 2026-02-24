@@ -24,7 +24,7 @@ return new class extends Migration
             $table->boolean('laGioiTinhNu');
             $table->text('ggid');
             $table->text('urlAvatar');
-            $table->boolean('isStudent')->default(true);
+            $table->boolean('isStudent');
             $table->boolean('isLocked')->default(false);
             $table->boolean('isDeleted')->default(false);
             //đổi tên

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             [
                 'hoTen' => 'Admin',
                 'email' => 'admin',
-                'password' => '',
+                'password' => 'admin',
                 'nhomQuyenId' => 1,
                 'sdt' => "0999999999",
                 'username' => 'Admin',
