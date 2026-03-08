@@ -26,8 +26,13 @@ class RoleService
                 ];
             })->values();
 
+        $response = [
+            "id" => $role->id,
+            "tenNhomQuyen" => $role->tenNhomQuyen,
+            "role_details" => $permission
+        ];
 
-        return $permission;
+        return $response;
     }
 
     // *** format gửi tạo 1 phân quyền
