@@ -73,7 +73,7 @@ class RoleService
                     $roleDetailsData[] = [
                         'nhomQuyenId'   => $role->id,
                         'chucNangId' => $action->id,
-                        'hanhdong'  => 'view',
+                        'hanhdong'  => 'VIEW',
                     ];
                 }
 
@@ -81,7 +81,7 @@ class RoleService
                     $roleDetailsData[] = [
                         'nhomQuyenId'   => $role->id,
                         'chucNangId' => $action->id,
-                        'hanhdong'  => 'add',
+                        'hanhdong'  => 'ADD',
                     ];
                 }
 
@@ -89,7 +89,7 @@ class RoleService
                     $roleDetailsData[] = [
                         'nhomQuyenId'   => $role->id,
                         'chucNangId' => $action->id,
-                        'hanhdong'  => 'update',
+                        'hanhdong'  => 'UPDATE',
                     ];
                 }
 
@@ -97,7 +97,7 @@ class RoleService
                     $roleDetailsData[] = [
                         'nhomQuyenId'   => $role->id,
                         'chucNangId' => $action->id,
-                        'hanhdong'  => 'delete',
+                        'hanhdong'  => 'DELETE',
                     ];
                 }
             }
@@ -137,7 +137,7 @@ class RoleService
                     $roleDetailsData[] = [
                         'nhomQuyenId'    => $role->id,
                         'chucNangId'  => $action->id,
-                        'hanhdong'  => 'view',
+                        'hanhdong'  => 'VIEW',
                     ];
                 }
 
@@ -145,7 +145,7 @@ class RoleService
                     $roleDetailsData[] = [
                         'nhomQuyenId'    => $role->id,
                         'chucNangId'  => $action->id,
-                        'hanhdong'  => 'add',
+                        'hanhdong'  => 'ADD',
                     ];
                 }
 
@@ -153,7 +153,7 @@ class RoleService
                     $roleDetailsData[] = [
                         'nhomQuyenId'    => $role->id,
                         'chucNangId'  => $action->id,
-                        'hanhdong'  => 'update',
+                        'hanhdong'  => 'UPDATE',
                     ];
                 }
 
@@ -161,7 +161,7 @@ class RoleService
                     $roleDetailsData[] = [
                         'nhomQuyenId'    => $role->id,
                         'chucNangId'  => $action->id,
-                        'hanhdong'  => 'delete',
+                        'hanhdong'  => 'DELETE',
                     ];
                 }
             }
