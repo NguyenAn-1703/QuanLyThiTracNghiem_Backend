@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,14 +16,27 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('fullname');
+
+            $table->string('username', 10);
+            $table->string('hoTen');
             $table->string('email')->unique();
-            $table->string('passwordHash');
-            $table->integer('roleId');
-            $table->string('phoneNumber', 20);
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->integer('groupId');
+            $table->string('password');
+
+            $table->integer('nhomQuyenId');
+            $table->string('sdt', 20);
+
+            $table->date('ngaySinh')->default(DB::raw('CURRENT_DATE'));
+            $table->boolean('laGioiTinhNu');
+
+            $table->text('ggid')->nullable();
+            $table->text('urlAvatar')->nullable();
+
+            $table->boolean('isStudent');
+            $table->boolean('isLocked')->default(false);
+            $table->boolean('isDeleted')->default(false);
+
             $table->dateTime('lastLogin')->default(now());
+
             $table->timestamps();
         });
     }
