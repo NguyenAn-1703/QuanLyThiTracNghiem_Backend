@@ -21,6 +21,13 @@ class DatabaseSeeder extends Seeder
             ActionSeeder::class,
             RoleDetailSeeder::class,
             UserSeeder::class,
+            MonHocSeeder::class,
+            NhomHocPhanSeeder::class,
+            ChiTietNhomSeeder::class,
+            DeThiSeeder::class,
+            GiaoBaiThiSeeder::class,
+            ThongBaoSeeder::class,
+            ChiTietThongBaoSeeder::class
         ]);
     }
 }
