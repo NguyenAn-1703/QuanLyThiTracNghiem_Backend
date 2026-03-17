@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\MonHoc;
+
+class MonHocService
+{
+    public function getAll()
+    {
+        return MonHoc::all();
+    }
+
+    public function getOne(MonHoc $monHoc)
+    {
+        return $monHoc;
+    }
+
+    public function add(array $data)
+    {
+        return MonHoc::create($data);
+    }
+
+    public function update(array $data, MonHoc $monHoc)
+    {
+        $monHoc->update($data);
+        return $monHoc;
+    }
+
+    public function delete(MonHoc $monHoc)
+    {
+        return $monHoc->delete();
+    }
+}

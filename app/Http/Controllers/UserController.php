@@ -9,7 +9,6 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Services\UserService;
 use App\Traits\ApiResponseTrait;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -85,9 +84,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUserRequest $request, $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $data = $this->userService->update($request->validated(), $id);
+        $data = $this->userService->update($request->validated(), $user);
         return $this->success($data);
     }
 
@@ -97,9 +96,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $data = $this->userService->delete($id);
+        $data = $this->userService->delete($user);
         return $this->success($data);
     }
 }

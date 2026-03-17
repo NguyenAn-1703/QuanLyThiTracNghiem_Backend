@@ -2,84 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreGiaoBaiThiRequest;
+use App\Http\Requests\UpdateGiaoBaiThiRequest;
 use App\Models\GiaoBaiThi;
-use Illuminate\Http\Request;
+use App\Services\GiaoBaiThiService;
+use App\Traits\ApiResponseTrait;
 
 class GiaoBaiThiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    use ApiResponseTrait;
+
+    private GiaoBaiThiService $giaoBaiThiService;
+
+    public function __construct(GiaoBaiThiService $giaoBaiThiService)
     {
-        //
+        $this->giaoBaiThiService = $giaoBaiThiService;
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index()
     {
-        //
+        $data = $this->giaoBaiThiService->getAll();
+        return $this->success($data);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGiaoBaiThiRequest $request)
     {
-        //
+        $data = $this->giaoBaiThiService->add($request->validated());
+        return $this->success($data, 201);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\GiaoBaiThi  $giaoBaiThi
-     * @return \Illuminate\Http\Response
      */
     public function show(GiaoBaiThi $giaoBaiThi)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\GiaoBaiThi  $giaoBaiThi
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(GiaoBaiThi $giaoBaiThi)
-    {
-        //
+        $data = $this->giaoBaiThiService->getOne($giaoBaiThi);
+        return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\GiaoBaiThi  $giaoBaiThi
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, GiaoBaiThi $giaoBaiThi)
+    public function update(UpdateGiaoBaiThiRequest $request, GiaoBaiThi $giaoBaiThi)
     {
-        //
+        $data = $this->giaoBaiThiService->update($request->validated(), $giaoBaiThi);
+        return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\GiaoBaiThi  $giaoBaiThi
-     * @return \Illuminate\Http\Response
      */
     public function destroy(GiaoBaiThi $giaoBaiThi)
     {
-        //
+        $data = $this->giaoBaiThiService->delete($giaoBaiThi);
+        return $this->success($data);
     }
 }
