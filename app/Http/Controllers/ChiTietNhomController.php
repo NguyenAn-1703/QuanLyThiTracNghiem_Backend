@@ -2,84 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreChiTietNhomRequest;
+use App\Http\Requests\UpdateChiTietNhomRequest;
 use App\Models\ChiTietNhom;
-use Illuminate\Http\Request;
+use App\Services\ChiTietNhomService;
+use App\Traits\ApiResponseTrait;
 
 class ChiTietNhomController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    use ApiResponseTrait;
+
+    private ChiTietNhomService $chiTietNhomService;
+
+    public function __construct(ChiTietNhomService $chiTietNhomService)
     {
-        //
+        $this->chiTietNhomService = $chiTietNhomService;
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index()
     {
-        //
+        $data = $this->chiTietNhomService->getAll();
+        return $this->success($data);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreChiTietNhomRequest $request)
     {
-        //
+        $data = $this->chiTietNhomService->add($request->validated());
+        return $this->success($data, 201);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\ChiTietNhom  $chiTietNhom
-     * @return \Illuminate\Http\Response
      */
     public function show(ChiTietNhom $chiTietNhom)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ChiTietNhom  $chiTietNhom
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ChiTietNhom $chiTietNhom)
-    {
-        //
+        $data = $this->chiTietNhomService->getOne($chiTietNhom);
+        return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ChiTietNhom  $chiTietNhom
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ChiTietNhom $chiTietNhom)
+    public function update(UpdateChiTietNhomRequest $request, ChiTietNhom $chiTietNhom)
     {
-        //
+        $data = $this->chiTietNhomService->update($request->validated(), $chiTietNhom);
+        return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ChiTietNhom  $chiTietNhom
-     * @return \Illuminate\Http\Response
      */
     public function destroy(ChiTietNhom $chiTietNhom)
     {
-        //
+        $data = $this->chiTietNhomService->delete($chiTietNhom);
+        return $this->success($data);
     }
 }

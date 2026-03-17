@@ -2,84 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreDeThiRequest;
+use App\Http\Requests\UpdateDeThiRequest;
 use App\Models\DeThi;
-use Illuminate\Http\Request;
+use App\Services\DeThiService;
+use App\Traits\ApiResponseTrait;
 
 class DeThiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    use ApiResponseTrait;
+
+    private DeThiService $deThiService;
+
+    public function __construct(DeThiService $deThiService)
     {
-        //
+        $this->deThiService = $deThiService;
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index()
     {
-        //
+        $data = $this->deThiService->getAll();
+        return $this->success($data);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreDeThiRequest $request)
     {
-        //
+        $data = $this->deThiService->add($request->validated());
+        return $this->success($data, 201);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\DeThi  $deThi
-     * @return \Illuminate\Http\Response
      */
     public function show(DeThi $deThi)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\DeThi  $deThi
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DeThi $deThi)
-    {
-        //
+        $data = $this->deThiService->getOne($deThi);
+        return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\DeThi  $deThi
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DeThi $deThi)
+    public function update(UpdateDeThiRequest $request, DeThi $deThi)
     {
-        //
+        $data = $this->deThiService->update($request->validated(), $deThi);
+        return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\DeThi  $deThi
-     * @return \Illuminate\Http\Response
      */
     public function destroy(DeThi $deThi)
     {
-        //
+        $data = $this->deThiService->delete($deThi);
+        return $this->success($data);
     }
 }
