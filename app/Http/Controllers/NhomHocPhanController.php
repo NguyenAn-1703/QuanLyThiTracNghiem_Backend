@@ -40,27 +40,38 @@ class NhomHocPhanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(NhomHocPhan $nhomHocPhan)
+    public function show(NhomHocPhan $nhomhocphan)
     {
-        $data = $this->nhomHocPhanService->getOne($nhomHocPhan);
+        $data = $this->nhomHocPhanService->getOne($nhomhocphan);
+        // $data = $nhomhocphan;
         return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateNhomHocPhanRequest $request, NhomHocPhan $nhomHocPhan)
+    public function update(UpdateNhomHocPhanRequest $request, NhomHocPhan $nhomhocphan)
     {
-        $data = $this->nhomHocPhanService->update($request->validated(), $nhomHocPhan);
+        $data = $this->nhomHocPhanService->update($request->validated(), $nhomhocphan);
         return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(NhomHocPhan $nhomHocPhan)
+    public function destroy(NhomHocPhan $nhomhocphan)
     {
-        $data = $this->nhomHocPhanService->delete($nhomHocPhan);
+        $data = $this->nhomHocPhanService->delete($nhomhocphan);
+        return $this->success($data);
+    }
+
+    public function get_w_gvien_mon(NhomHocPhan $nhomhocphan){
+        $data = $this->nhomHocPhanService->get_w_gvien_mon($nhomhocphan);
+        return $this->success($data);
+    }
+
+    public function get_w_dekiemtra(NhomHocPhan $nhomhocphan){
+        $data = $this->nhomHocPhanService->get_w_dekiemtra($nhomhocphan);
         return $this->success($data);
     }
 }

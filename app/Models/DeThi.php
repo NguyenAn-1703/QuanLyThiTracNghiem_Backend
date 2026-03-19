@@ -38,4 +38,8 @@ class DeThi extends Model
     {
         return $this->belongsTo(User::class, 'nguoiTaoId');
     }
+
+    public function nhomHocPhans(){
+        return $this->belongsToMany(NhomHocPhan::class, 'giao_bai_this', 'deThiId', 'nhomHocPhanId');
+    }
 }
