@@ -74,4 +74,8 @@ class User extends Authenticatable implements JWTSubject
             set: fn($value) => Hash::make($value),
         );
     }
+
+    public function nhomHocPhans(){
+        return $this->belongsToMany(NhomHocPhan::class, "chi_tiet_nhoms", "sinhVienId", "nhomHocPhanId");
+    }
 }

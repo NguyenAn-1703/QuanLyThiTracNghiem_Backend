@@ -24,7 +24,7 @@ class NhomHocPhanSeeder extends Seeder
             [
                 'monHocId' => $monLapTrinhC->id,
                 'tenNhom' => 'Lập trình C',
-                'maMoi' => 'LapTrinhC',
+                'maMoi' => 'abcdef12',
                 'siSo' => 30,
                 'notes' => 'Nhóm học phần môn lập trình C',
                 'hocKy' => 1,
@@ -36,7 +36,7 @@ class NhomHocPhanSeeder extends Seeder
             [
                 'monHocId' => $monCauTrucDuLieu->id,
                 'tenNhom' => 'Nhóm Cấu trúc dữ liệu 01',
-                'maMoi' => 'CTDL01',
+                'maMoi' => '123456a',
                 'siSo' => 25,
                 'notes' => 'Nhóm học phần môn cấu trúc dữ liệu',
                 'hocKy' => 1,
