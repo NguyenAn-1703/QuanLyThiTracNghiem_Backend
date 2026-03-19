@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreNhomHocPhanRequest;
+use App\Http\Requests\ThamGiaNhomRequest;
 use App\Http\Requests\UpdateNhomHocPhanRequest;
 use App\Models\NhomHocPhan;
+use App\Models\User;
 use App\Services\NhomHocPhanService;
 use App\Traits\ApiResponseTrait;
 
@@ -72,6 +74,16 @@ class NhomHocPhanController extends Controller
 
     public function get_w_dekiemtra(NhomHocPhan $nhomhocphan){
         $data = $this->nhomHocPhanService->get_w_dekiemtra($nhomhocphan);
+        return $this->success($data);
+    }
+
+    public function join_group(ThamGiaNhomRequest $request){
+        $data = $this->nhomHocPhanService->join_group($request->validated());
+        return $this->success($data, 201);
+    }
+
+    public function get_o_svien(User $user){
+        $data = $this->nhomHocPhanService->get_o_svien($user);
         return $this->success($data);
     }
 }
