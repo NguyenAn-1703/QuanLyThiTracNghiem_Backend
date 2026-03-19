@@ -40,27 +40,27 @@ class ChiTietNhomController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ChiTietNhom $chiTietNhom)
+    public function show(ChiTietNhom $chitietnhom)
     {
-        $data = $this->chiTietNhomService->getOne($chiTietNhom);
+        $data = $this->chiTietNhomService->getOne($chitietnhom);
         return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateChiTietNhomRequest $request, ChiTietNhom $chiTietNhom)
+    public function update(UpdateChiTietNhomRequest $request, ChiTietNhom $chitietnhom)
     {
-        $data = $this->chiTietNhomService->update($request->validated(), $chiTietNhom);
+        $data = $this->chiTietNhomService->update($request->validated(), $chitietnhom);
         return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ChiTietNhom $chiTietNhom)
+    public function destroy(ChiTietNhom $chitietnhom)
     {
-        $data = $this->chiTietNhomService->delete($chiTietNhom);
+        $data = $this->chiTietNhomService->delete($chitietnhom);
         return $this->success($data);
     }
 }

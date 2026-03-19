@@ -40,27 +40,27 @@ class ThongBaoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ThongBao $thongBao)
+    public function show(ThongBao $thongbao)
     {
-        $data = $this->thongBaoService->getOne($thongBao);
+        $data = $this->thongBaoService->getOne($thongbao);
         return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateThongBaoRequest $request, ThongBao $thongBao)
+    public function update(UpdateThongBaoRequest $request, ThongBao $thongbao)
     {
-        $data = $this->thongBaoService->update($request->validated(), $thongBao);
+        $data = $this->thongBaoService->update($request->validated(), $thongbao);
         return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ThongBao $thongBao)
+    public function destroy(ThongBao $thongbao)
     {
-        $data = $this->thongBaoService->delete($thongBao);
+        $data = $this->thongBaoService->delete($thongbao);
         return $this->success($data);
     }
 }

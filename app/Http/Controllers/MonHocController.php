@@ -40,27 +40,27 @@ class MonHocController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MonHoc $monHoc)
+    public function show(MonHoc $monhoc)
     {
-        $data = $this->monHocService->getOne($monHoc);
+        $data = $this->monHocService->getOne($monhoc);
         return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMonHocRequest $request, MonHoc $monHoc)
+    public function update(UpdateMonHocRequest $request, MonHoc $monhoc)
     {
-        $data = $this->monHocService->update($request->validated(), $monHoc);
+        $data = $this->monHocService->update($request->validated(), $monhoc);
         return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MonHoc $monHoc)
+    public function destroy(MonHoc $monhoc)
     {
-        $data = $this->monHocService->delete($monHoc);
+        $data = $this->monHocService->delete($monhoc);
         return $this->success($data);
     }
 }

@@ -40,27 +40,27 @@ class DeThiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DeThi $deThi)
+    public function show(DeThi $dethi)
     {
-        $data = $this->deThiService->getOne($deThi);
+        $data = $this->deThiService->getOne($dethi);
         return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDeThiRequest $request, DeThi $deThi)
+    public function update(UpdateDeThiRequest $request, DeThi $dethi)
     {
-        $data = $this->deThiService->update($request->validated(), $deThi);
+        $data = $this->deThiService->update($request->validated(), $dethi);
         return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DeThi $deThi)
+    public function destroy(DeThi $dethi)
     {
-        $data = $this->deThiService->delete($deThi);
+        $data = $this->deThiService->delete($dethi);
         return $this->success($data);
     }
 }

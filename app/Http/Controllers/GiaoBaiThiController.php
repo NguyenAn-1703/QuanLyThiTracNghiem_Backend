@@ -40,27 +40,27 @@ class GiaoBaiThiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(GiaoBaiThi $giaoBaiThi)
+    public function show(GiaoBaiThi $giaobaithi)
     {
-        $data = $this->giaoBaiThiService->getOne($giaoBaiThi);
+        $data = $this->giaoBaiThiService->getOne($giaobaithi);
         return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateGiaoBaiThiRequest $request, GiaoBaiThi $giaoBaiThi)
+    public function update(UpdateGiaoBaiThiRequest $request, GiaoBaiThi $giaobaithi)
     {
-        $data = $this->giaoBaiThiService->update($request->validated(), $giaoBaiThi);
+        $data = $this->giaoBaiThiService->update($request->validated(), $giaobaithi);
         return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(GiaoBaiThi $giaoBaiThi)
+    public function destroy(GiaoBaiThi $giaobaithi)
     {
-        $data = $this->giaoBaiThiService->delete($giaoBaiThi);
+        $data = $this->giaoBaiThiService->delete($giaobaithi);
         return $this->success($data);
     }
 }

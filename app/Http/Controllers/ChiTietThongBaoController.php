@@ -40,27 +40,27 @@ class ChiTietThongBaoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ChiTietThongBao $chiTietThongBao)
+    public function show(ChiTietThongBao $chitietthongbao)
     {
-        $data = $this->chiTietThongBaoService->getOne($chiTietThongBao);
+        $data = $this->chiTietThongBaoService->getOne($chitietthongbao);
         return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateChiTietThongBaoRequest $request, ChiTietThongBao $chiTietThongBao)
+    public function update(UpdateChiTietThongBaoRequest $request, ChiTietThongBao $chitietthongbao)
     {
-        $data = $this->chiTietThongBaoService->update($request->validated(), $chiTietThongBao);
+        $data = $this->chiTietThongBaoService->update($request->validated(), $chitietthongbao);
         return $this->success($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ChiTietThongBao $chiTietThongBao)
+    public function destroy(ChiTietThongBao $chitietthongbao)
     {
-        $data = $this->chiTietThongBaoService->delete($chiTietThongBao);
+        $data = $this->chiTietThongBaoService->delete($chitietthongbao);
         return $this->success($data);
     }
 }
