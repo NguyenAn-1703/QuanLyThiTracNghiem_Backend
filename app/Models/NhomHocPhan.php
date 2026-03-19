@@ -35,4 +35,8 @@ class NhomHocPhan extends Model
     public function giangVien(){
         return $this->belongsTo(User::class, 'giangVienId');
     }
+
+    public function deThis(){
+        return $this->belongsToMany(DeThi::class, 'giao_bai_this', 'nhomHocPhanId', "deThiId");
+    }
 }
