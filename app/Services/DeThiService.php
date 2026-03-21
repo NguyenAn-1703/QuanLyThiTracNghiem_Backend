@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\DeThi;
+use App\Models\User;
 
 class DeThiService
 {
@@ -13,6 +14,8 @@ class DeThiService
 
     public function getOne(DeThi $deThi)
     {
+        $deThi->load('cauHois');
+        $deThi->cauHois->load('cauTraLois');
         return $deThi;
     }
 
@@ -30,5 +33,19 @@ class DeThiService
     public function delete(DeThi $deThi)
     {
         return $deThi->delete();
+    }
+
+    public function get_osvien(User $user)
+    { // lấy tất cả đề thi của sinh viên
+        $user->load('nhomHocPhans.deThis');
+
+        //map và tách các phần tử trong mảng con (dethis) ra 1 mảng
+        $deThi = $user->nhomHocPhans->flatMap(
+            function ($nhomHocPhan) {
+                return $nhomHocPhan->deThis;
+            }
+        ) -> unique('id'); // tránh trường hợp đề thi chia cho 2 nhóm khác nhau
+
+        return $deThi;
     }
 }
