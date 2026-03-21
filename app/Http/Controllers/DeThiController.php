@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDeThiRequest;
 use App\Http\Requests\UpdateDeThiRequest;
 use App\Models\DeThi;
+use App\Models\User;
 use App\Services\DeThiService;
 use App\Traits\ApiResponseTrait;
 
@@ -61,6 +62,11 @@ class DeThiController extends Controller
     public function destroy(DeThi $dethi)
     {
         $data = $this->deThiService->delete($dethi);
+        return $this->success($data);
+    }
+
+    public function get_osvien(User $user){
+        $data = $this->deThiService->get_osvien($user);
         return $this->success($data);
     }
 }
