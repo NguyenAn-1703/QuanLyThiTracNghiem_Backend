@@ -42,4 +42,8 @@ class DeThi extends Model
     public function nhomHocPhans(){
         return $this->belongsToMany(NhomHocPhan::class, 'giao_bai_this', 'deThiId', 'nhomHocPhanId');
     }
+
+    public function cauHois(){
+        return $this->belongsToMany(CauHoi::class, 'chi_tiet_de_this', 'deThiId', 'cauHoiId');
+    }
 }

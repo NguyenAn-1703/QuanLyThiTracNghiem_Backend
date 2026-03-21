@@ -15,7 +15,21 @@ return new class extends Migration
     {
         Schema::create('bai_lams', function (Blueprint $table) {
             $table->id();
+
+            $table->dateTime('thoiGianBatDau');
+            $table->dateTime('thoiGianNopBai')->nullable();
+
+            $table->decimal('tongDiem', 5, 2)->nullable();
+            $table->integer('soCauDung')->nullable();
+
+            $table->enum('status', ['DANG_LAM', 'TAM_LUU', 'DA_NOP', 'BI_HUY'])
+                ->default('DANG_LAM');
+
             $table->timestamps();
+
+            //constraint
+            $table->foreignId('thiSinhId')->constrained('users');
+            $table->foreignId('deThiId')->constrained('de_this');
         });
     }
 

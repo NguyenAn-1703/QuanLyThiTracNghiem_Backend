@@ -10,4 +10,4 @@ Route::post('/dethis', [DeThiController::class, 'store']);
 Route::put('/dethis/{dethi}', [DeThiController::class, 'update']);
 Route::delete('/dethis/{dethi}', [DeThiController::class, 'destroy']);
 
-Route::get('/get_osvien/{user}', [DeThiController::class, 'get_osvien']);
+Route::get('dethis/get_osvien/{user}', [DeThiController::class, 'get_osvien']);

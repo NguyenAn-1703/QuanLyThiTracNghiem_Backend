@@ -14,6 +14,8 @@ class DeThiService
 
     public function getOne(DeThi $deThi)
     {
+        $deThi->load('cauHois');
+        $deThi->cauHois->load('cauTraLois');
         return $deThi;
     }
 
