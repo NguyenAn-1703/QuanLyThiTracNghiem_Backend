@@ -13,8 +13,6 @@ class ChiTietBaiLam extends Model
         "baiLamId",
         "cauHoiId",
         "dapAnId",
-        "isCorrectChooser",
-        "diem",
     ];
 
     protected $hidden = [];

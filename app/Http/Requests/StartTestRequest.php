@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreBaiLamRequest extends FormRequest
+class StartTestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,36 +27,13 @@ class StoreBaiLamRequest extends FormRequest
             "thiSinhId" => [
                 "required",
                 "integer",
-                "exists:users,id"
+                "exists:users,id",
             ],
 
             "deThiId" => [
                 "required",
                 "integer",
                 "exists:de_this,id"
-            ],
-
-            "thoiGianNopBai" => [
-                "nullable",
-                "date",
-                "after_or_equal:thoiGianBatDau"
-            ],
-
-            "tongDiem" => [
-                "nullable",
-                "numeric",
-                "min:0",
-                "max:10"
-            ],
-
-            "soCauDung" => [
-                "nullable",
-                "integer",
-                "min:0"
-            ],
-
-            "status" => [
-                Rule::in(["DANG_LAM", "TAM_LUU", "DA_NOP", "BI_HUY"]),
             ],
         ];
     }

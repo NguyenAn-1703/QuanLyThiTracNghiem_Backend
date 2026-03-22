@@ -25,10 +25,10 @@ class UpdateChiTietBaiLamRequest extends FormRequest
     {
         return [
             "dapAnId" => [
-                "sometimes",
+                "required",
                 "nullable",
                 "integer",
-                "exists:cau_tra_lois,cauTraLoiId"
+                "exists:cau_tra_lois,id"
             ],
         ];
     }

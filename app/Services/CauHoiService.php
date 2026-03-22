@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Services;
 use App\Models\CauHoi;
 
 class CauHoiService{
@@ -26,5 +27,11 @@ class CauHoiService{
     public function delete(CauHoi $cauHoi)
     {
         //
+    }
+
+    public function getCauTraLois(int $id){
+        $cauHoi = CauHoi::findOrFail($id);
+        $cauHoi->load('cauTraLois');
+        return $cauHoi->cauTraLois;
     }
 }

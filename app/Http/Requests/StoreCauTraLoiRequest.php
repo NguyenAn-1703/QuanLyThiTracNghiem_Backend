@@ -38,7 +38,7 @@ class StoreCauTraLoiRequest extends FormRequest
             "cauHoiId" => [
                 "required",
                 "integer",
-                "exists:cau_hois,cauHoiId"
+                "exists:cau_hois,id"
             ],
         ];
     }

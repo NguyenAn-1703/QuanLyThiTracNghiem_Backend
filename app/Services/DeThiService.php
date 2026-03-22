@@ -48,4 +48,11 @@ class DeThiService
 
         return $deThi;
     }
+
+    public function getQuestions(int $deThiId)
+    {
+        $deThi = DeThi::findOrFail($deThiId);
+        $deThi->load('cauHois');
+        return $deThi->cauHois;
+    }
 }

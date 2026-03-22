@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreBaiLamRequest extends FormRequest
+class StoreChiTietDeThiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +24,10 @@ class StoreBaiLamRequest extends FormRequest
     public function rules()
     {
         return [
-            "thiSinhId" => [
+            "cauHoiId" => [
                 "required",
                 "integer",
-                "exists:users,id"
+                "exists:cau_hois,id"
             ],
 
             "deThiId" => [
@@ -37,27 +36,16 @@ class StoreBaiLamRequest extends FormRequest
                 "exists:de_this,id"
             ],
 
-            "thoiGianNopBai" => [
-                "nullable",
-                "date",
-                "after_or_equal:thoiGianBatDau"
-            ],
-
-            "tongDiem" => [
-                "nullable",
-                "numeric",
-                "min:0",
-                "max:10"
-            ],
-
-            "soCauDung" => [
-                "nullable",
+            "thutu" => [
+                "required",
                 "integer",
-                "min:0"
+                "min:1"
             ],
 
-            "status" => [
-                Rule::in(["DANG_LAM", "TAM_LUU", "DA_NOP", "BI_HUY"]),
+            "diem" => [
+                "required",
+                "numeric",
+                "min:0"
             ],
         ];
     }
