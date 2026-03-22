@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreLogBaiLamRequest extends FormRequest
+class UpdateStudentTestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,17 +25,10 @@ class StoreLogBaiLamRequest extends FormRequest
     public function rules()
     {
         return [
-            "baiLamId" => [
-                "required",
-                "integer",
-                "exists:bai_lams,id"
-            ],
-
-            "soLanChuyenTab" => [
-                "required",
-                "integer",
-                "min:0"
-            ],
+            'dapAnId' => [
+                'required',
+                'integer',
+            ]
         ];
     }
 }

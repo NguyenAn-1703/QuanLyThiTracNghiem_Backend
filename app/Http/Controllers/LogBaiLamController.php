@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLogBaiLamRequest;
 use App\Http\Requests\UpdateLogBaiLamRequest;
 use App\Models\LogBaiLam;
+use App\Services\LogBaiLamService;
 use App\Traits\ApiResponseTrait;
-use LogBaiLamService;
 
 class LogBaiLamController extends Controller
 {
@@ -40,27 +40,27 @@ class LogBaiLamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(LogBaiLam $logBaiLam)
+    public function show(LogBaiLam $logbailam)
     {
-        $data = $this->logBaiLamService->getOne($logBaiLam);
+        $data = $this->logBaiLamService->getOne($logbailam);
         return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLogBaiLamRequest $request, LogBaiLam $logBaiLam)
+    public function update(UpdateLogBaiLamRequest $request, LogBaiLam $logbailam)
     {
-        $log = $this->logBaiLamService->update($request->validated(), $logBaiLam);
+        $log = $this->logBaiLamService->update($request->validated(), $logbailam);
         return $this->success($log);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LogBaiLam $logBaiLam)
+    public function destroy(LogBaiLam $logbailam)
     {
-        $result = $this->logBaiLamService->delete($logBaiLam);
+        $result = $this->logBaiLamService->delete($logbailam);
         return $this->success($result);
     }
 }

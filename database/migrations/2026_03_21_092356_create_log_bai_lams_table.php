@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('log_bai_lams', function (Blueprint $table) {
             $table->id();
             $table->integer('soLanChuyenTab')->default(0);
-            $table->timestamp('createdAt')->useCurrent();
+            $table->timestamps();
 
             // Foreign key
             $table->foreignId('baiLamId')->constrained('bai_lams');

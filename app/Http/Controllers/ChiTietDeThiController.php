@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreChiTietDeThiRequest;
+use App\Http\Requests\UpdateChiTietDeThiRequest;
+use App\Models\ChiTietDeThi;
+use App\Services\ChiTietDeThiService;
+use App\Traits\ApiResponseTrait;
 
 class ChiTietDeThiController extends Controller
 {
@@ -20,8 +24,8 @@ class ChiTietDeThiController extends Controller
      */
     public function index()
     {
-        $data = ChiTietDeThi::all();
-        return $this->success(ChiTietDeThiResource::collection($data), 'Lấy danh sách chi tiết đề thi thành công');
+        $data = $this->chiTietDeThiService->getAll();
+        return $this->success($data);
     }
 
     /**
@@ -29,34 +33,34 @@ class ChiTietDeThiController extends Controller
      */
     public function store(StoreChiTietDeThiRequest $request)
     {
-        $chiTiet = $this->chiTietDeThiService->createChiTietDeThi($request->validated());
-        return $this->success($chiTiet, 'Tạo chi tiết đề thi thành công', 201);
+        $chiTiet = $this->chiTietDeThiService->add($request->validated());
+        return $this->success($chiTiet, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ChiTietDeThi $chiTietDeThi)
+    public function show(ChiTietDeThi $chitietdethi)
     {
-        $data = $this->chiTietDeThiService->getChiTietDeThiDetail($chiTietDeThi);
-        return $this->success($data, 'Lấy chi tiết đề thi thành công');
+        $data = $this->chiTietDeThiService->getOne($chitietdethi);
+        return $this->success($data);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateChiTietDeThiRequest $request, ChiTietDeThi $chiTietDeThi)
+    public function update(UpdateChiTietDeThiRequest $request, ChiTietDeThi $chitietdethi)
     {
-        $chiTiet = $this->chiTietDeThiService->updateChiTietDeThi($request->validated(), $chiTietDeThi->id);
-        return $this->success($chiTiet, 'Cập nhật chi tiết đề thi thành công');
+        $chiTiet = $this->chiTietDeThiService->update($request->validated(), $chitietdethi);
+        return $this->success($chiTiet);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ChiTietDeThi $chiTietDeThi)
+    public function destroy(ChiTietDeThi $chitietdethi)
     {
-        $result = $this->chiTietDeThiService->deleteChiTietDeThi($chiTietDeThi->id);
-        return $this->success($result, 'Xóa chi tiết đề thi thành công');
+        $result = $this->chiTietDeThiService->delete($chitietdethi);
+        return $this->success($result);
     }
 }

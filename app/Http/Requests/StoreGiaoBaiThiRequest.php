@@ -19,8 +19,8 @@ class StoreGiaoBaiThiRequest extends FormRequest
     public function rules()
     {
         return [
-            'deThiId' => 'required|integer|exists:de_this,deThiId',
-            'nhomHocPhanId' => 'required|integer|exists:nhom_hoc_phans,nhomHocPhanId',
+            'deThiId' => 'required|integer|exists:de_this,id',
+            'nhomHocPhanId' => 'required|integer|exists:nhom_hoc_phans,id',
 
             'thoiGianBatDau' => 'required|date',
             'thoiGianKetThuc' => 'required|date|after:thoiGianBatDau',

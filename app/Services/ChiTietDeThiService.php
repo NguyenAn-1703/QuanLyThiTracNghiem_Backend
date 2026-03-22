@@ -1,8 +1,11 @@
 <?php
 
+namespace App\Services;
+
 use App\Models\ChiTietDeThi;
 
-class ChiTietDeThiService{
+class ChiTietDeThiService
+{
     public function getAll()
     {
         return ChiTietDeThi::all();
@@ -26,5 +29,12 @@ class ChiTietDeThiService{
     public function delete(ChiTietDeThi $chiTietDeThi)
     {
         //
+    }
+
+    public function getChiTietDeThiById(int $deThiId, int $cauHoiId)
+    {
+        return ChiTietDeThi::where('deThiId', $deThiId)
+            ->where('cauHoiId', $cauHoiId)
+            ->firstOrFail();
     }
 }

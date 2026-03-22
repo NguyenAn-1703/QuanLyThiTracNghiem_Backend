@@ -24,7 +24,7 @@ class UpdateNhomHocPhanRequest extends FormRequest
 public function rules()
     {
         return [
-            'monHocId' => 'sometimes|integer|exists:mon_hocs,monHocId',
+            'monHocId' => 'sometimes|integer|exists:mon_hocs,id',
 
             'tenNhom' => 'sometimes|string|max:100',
 

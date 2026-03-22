@@ -27,19 +27,19 @@ class StoreChiTietBaiLamRequest extends FormRequest
             "baiLamId" => [
                 "required",
                 "integer",
-                "exists:bai_lams,baiLamId"
+                "exists:bai_lams,id"
             ],
 
             "cauHoiId" => [
                 "required",
                 "integer",
-                "exists:cau_hois,cauHoiId"
+                "exists:cau_hois,id"
             ],
 
             "dapAnId" => [
                 "nullable",
                 "integer",
-                "exists:cau_tra_lois,cauTraLoiId"
+                "exists:cau_tra_lois,id"
             ],
 
             "isCorrectChooser" => [

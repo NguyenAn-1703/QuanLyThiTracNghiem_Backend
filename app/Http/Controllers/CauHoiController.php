@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\CauHoi;
+use App\Services\CauHoiService;
 use App\Traits\ApiResponseTrait;
-use CauHoiService;
-use Illuminate\Http\Request;
 
 class CauHoiController extends Controller
 {
@@ -21,9 +20,10 @@ class CauHoiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
         $data = $this->cauHoiService->getAll();
+        return $this->success($data);
     }
 
     /**
@@ -37,9 +37,9 @@ class CauHoiController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(CauHoi $cauHoi)
+    public function show(CauHoi $cauhoi)
     {
-        $cauHoi = $this->cauHoiService->getOne($cauHoi);
+        $cauHoi = $this->cauHoiService->getOne($cauhoi);
         return $this->success($cauHoi);
     }
 
@@ -54,7 +54,7 @@ class CauHoiController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CauHoi $cauHoi)
+    public function destroy(CauHoi $cauhoi)
     {
         //
     }
