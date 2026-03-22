@@ -21,4 +21,5 @@ require __DIR__ . '/api/nhomhocphan.php';
 require __DIR__ . '/api/dethi.php';
 require __DIR__ . '/api/giaobaithi.php';
 require __DIR__ . '/api/thongbao.php';
+require __DIR__ . '/api/chuong.php';
 
