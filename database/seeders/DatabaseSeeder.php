@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             RoleDetailSeeder::class,
             UserSeeder::class,
             MonHocSeeder::class,
+            ChuongSeeder::class,
             NhomHocPhanSeeder::class,
             ChiTietNhomSeeder::class,
             DeThiSeeder::class,
