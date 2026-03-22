@@ -15,10 +15,10 @@ class DoKhoSeeder extends Seeder
     public function run()
     {
         $doKhos = [
-            ['tenDoKho' => 'Dễ'],
-            ['tenDoKho' => 'Trung bình'],
-            ['tenDoKho' => 'Khó'],
-            ['tenDoKho' => 'Rất khó'],
+            ['tenDoKho' => 'Nhận biết'],
+            ['tenDoKho' => 'Thông hiểu'],
+            ['tenDoKho' => 'Vận dụng'],
+            ['tenDoKho' => 'Vận dụng cao'],
         ];
 
         foreach ($doKhos as $doKho) {
