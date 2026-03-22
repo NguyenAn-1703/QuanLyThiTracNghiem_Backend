@@ -44,12 +44,12 @@ trait ApiResponseTrait
 
     protected function updated($data = null, ?string $message = null): JsonResponse
     {
-        return $this->success($data, $message, 200);
+        return $this->success($data, $message ?: "Cập nhật đối tượng thành công", 200);
     }
 
     protected function deleted(?string $message = null): JsonResponse
     {
-        return $this->success(null, $message, 200);
+        return $this->success(null, $message ?: "Xóa đối tượng thành công", 200);
     }
 
     protected function unauthorized(?string $message = null): JsonResponse

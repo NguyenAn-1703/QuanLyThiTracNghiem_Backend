@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RankingResource extends JsonResource
+class DoKhoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,9 @@ class RankingResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            "id" => $this->id,
+            "tenDoKho" => $this->tenDoKho
+        ];
     }
 }

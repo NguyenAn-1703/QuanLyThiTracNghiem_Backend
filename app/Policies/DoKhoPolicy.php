@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Ranking;
+use App\Models\DoKho;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class RankingPolicy
+class DoKhoPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class RankingPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Ranking  $ranking
+     * @param  \App\Models\DoKho  $doKho
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Ranking $ranking)
+    public function view(User $user, DoKho $doKho)
     {
         //
     }
@@ -48,10 +48,10 @@ class RankingPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Ranking  $ranking
+     * @param  \App\Models\DoKho  $doKho
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Ranking $ranking)
+    public function update(User $user, DoKho $doKho)
     {
         //
     }
@@ -60,10 +60,10 @@ class RankingPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Ranking  $ranking
+     * @param  \App\Models\DoKho  $doKho
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Ranking $ranking)
+    public function delete(User $user, DoKho $doKho)
     {
         //
     }
@@ -72,10 +72,10 @@ class RankingPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Ranking  $ranking
+     * @param  \App\Models\DoKho  $doKho
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Ranking $ranking)
+    public function restore(User $user, DoKho $doKho)
     {
         //
     }
@@ -84,10 +84,10 @@ class RankingPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Ranking  $ranking
+     * @param  \App\Models\DoKho  $doKho
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Ranking $ranking)
+    public function forceDelete(User $user, DoKho $doKho)
     {
         //
     }

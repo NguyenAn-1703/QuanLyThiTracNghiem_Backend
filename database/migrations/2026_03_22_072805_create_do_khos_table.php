@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rankings', function (Blueprint $table) {
+        Schema::create('do_khos', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('tenDoKho');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rankings');
+        Schema::dropIfExists('do_khos');
     }
 };

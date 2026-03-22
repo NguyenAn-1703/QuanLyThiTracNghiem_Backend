@@ -13,7 +13,6 @@
 require __DIR__ . '/api/users.php';
 require __DIR__ . '/api/auth.php';
 require __DIR__ . '/api/roles.php';
-require __DIR__ . '/api/ranking.php';
 require __DIR__ . '/api/actions.php';
 require __DIR__ . '/api/roledetails.php';
 require __DIR__ . '/api/monhoc.php';
@@ -22,4 +21,5 @@ require __DIR__ . '/api/dethi.php';
 require __DIR__ . '/api/giaobaithi.php';
 require __DIR__ . '/api/thongbao.php';
 require __DIR__ . '/api/chuong.php';
+require __DIR__ . '/api/dokho.php';
 
