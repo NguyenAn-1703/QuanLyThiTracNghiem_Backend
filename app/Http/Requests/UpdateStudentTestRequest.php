@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateStudentTestRequest extends FormRequest
 {
@@ -25,10 +24,19 @@ class UpdateStudentTestRequest extends FormRequest
     public function rules()
     {
         return [
-            'dapAnId' => [
+            'answers' => ['required', 'array', 'min:1'],
+
+            'answers.*.cauHoiId' => [
                 'required',
                 'integer',
-            ]
+                'exists:cau_hois,id'
+            ],
+
+            'answers.*.dapAnId' => [
+                'required',
+                'integer',
+                'exists:cau_tra_lois,id'
+            ],
         ];
     }
 }

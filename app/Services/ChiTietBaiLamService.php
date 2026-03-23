@@ -60,4 +60,13 @@ class ChiTietBaiLamService
         ChiTietBaiLam::insert($data);
         return $data;
     }
+
+    public function updateBatch(array $data)
+    {
+        ChiTietBaiLam::upsert(
+            $data,
+            ['baiLamId', 'cauHoiId'], // unique key
+            ['dapAnId', 'isCorrectChooser', 'diem', 'updated_at'] // những cột cần update
+        );
+    }
 }

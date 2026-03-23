@@ -7,10 +7,8 @@ use App\Http\Requests\StoreBaiLamRequest;
 use App\Http\Requests\UpdateBaiLamRequest;
 use App\Http\Requests\UpdateStudentTestRequest;
 use App\Models\BaiLam;
-use App\Models\CauHoi;
 use App\Traits\ApiResponseTrait;
 use App\Services\BaiLamService;
-use Illuminate\Support\Facades\Log;
 
 class BaiLamController extends Controller
 {
@@ -72,7 +70,7 @@ class BaiLamController extends Controller
         return $this->success($this->baiLamService->startTest($request->validated()));
     }
 
-    public function updatestudenttest(UpdateStudentTestRequest $request, BaiLam $bailam, CauHoi $cauhoi){
-        return $this->baiLamService->updatestudenttest($request->validated(), $bailam, $cauhoi);
+    public function updatestudenttest(UpdateStudentTestRequest $request, BaiLam $bailam){
+        return $this->success($this->baiLamService->updatestudenttest($request->validated(), $bailam));
     }
 }

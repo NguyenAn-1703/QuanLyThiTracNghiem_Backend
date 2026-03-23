@@ -11,4 +11,4 @@ Route::put('/bailams/{bailam}', [BaiLamController::class, 'update']);
 Route::delete('/bailams/{bailam}', [BaiLamController::class, 'destroy']);
 
 Route::post('/bailams/starttest', [BaiLamController::class, 'starttest']);
-Route::put('/bailams/updatestudenttest/{bailam}/{cauhoi}', [BaiLamController::class, 'updatestudenttest']);
+Route::put('/bailams/updatestudenttest/{bailam}', [BaiLamController::class, 'updatestudenttest']);
