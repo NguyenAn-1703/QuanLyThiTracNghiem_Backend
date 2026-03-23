@@ -16,7 +16,8 @@ class BaiLamService
     private CauHoiService $cauHoiService;
     private ChiTietDeThiService $chiTietDeThiService;
 
-    public function __construct(LogBaiLamService $logBaiLamService, ChiTietBaiLamService $chiTietBaiLamService, DeThiService $deThiService, CauHoiService $cauHoiService, ChiTietDeThiService $chiTietDeThiService) {
+    public function __construct(LogBaiLamService $logBaiLamService, ChiTietBaiLamService $chiTietBaiLamService, DeThiService $deThiService, CauHoiService $cauHoiService, ChiTietDeThiService $chiTietDeThiService)
+    {
         $this->logBaiLamService = $logBaiLamService;
         $this->chiTietBaiLamService = $chiTietBaiLamService;
         $this->deThiService = $deThiService;
@@ -70,13 +71,13 @@ class BaiLamService
                 "soLanChuyenTab" => 0,
             ];
             $logBaiLam = $this->logBaiLamService->add($logBaiLam);
-            
+
             //tạo ChiTietBaiLam
             $chiTietBaiLam = [];
-                        
+
             $cauHois = $this->deThiService->getQuestions($deThiId);
 
-            $chiTietBaiLam = $cauHois->map(function ($item) use($baiLam) {
+            $chiTietBaiLam = $cauHois->map(function ($item) use ($baiLam) {
                 return [
                     "baiLamId" => $baiLam->id,
                     "cauHoiId" => $item->id
@@ -87,13 +88,29 @@ class BaiLamService
         });
     }
 
-    public function updatestudenttest(array $data, BaiLam $bailam, CauHoi $cauhoi){
+    public function updatestudenttest(array $data, BaiLam $baiLam)
+    {
+        $answers = $data['answers'];
+
+        $chiTietBaiLams = collect($answers)->map(function ($item) use ($baiLam) {
+            $cauHoiId = $item['cauHoiId'];
+            $cauHoi = $this->cauHoiService->getById($cauHoiId);
+            return $this->getAnswer($item, $baiLam, $cauHoi);
+        });
+
+        DB::transaction(function () use ($chiTietBaiLams) {
+            $this->chiTietBaiLamService->updateBatch($chiTietBaiLams->toArray());
+        });
+    }
+
+    public function getAnswer(array $data, BaiLam $bailam, CauHoi $cauhoi)
+    {
         $dapAnId = $data['dapAnId'];
 
         //kiểm tra câu trả lời thuộc câu hỏi, câu trả lời là đúng
         $cauTraLois = $this->cauHoiService->getCauTraLois($cauhoi->id);
 
-        $isCorrectChooser = $cauTraLois->contains(function($item) use ($dapAnId){
+        $isCorrectChooser = $cauTraLois->contains(function ($item) use ($dapAnId) {
             return ($dapAnId == $item->id && $item->isCorrectAnswer);
         });
 
@@ -108,6 +125,6 @@ class BaiLamService
             "diem" => $diem,
         ];
 
-        return $this->chiTietBaiLamService->updateById($chiTietBaiLam, $bailam->id, $cauhoi->id);
+        return $chiTietBaiLam;
     }
 }

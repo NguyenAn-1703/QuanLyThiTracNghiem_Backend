@@ -29,6 +29,11 @@ class CauHoiService{
         //
     }
 
+    public function getById(int $id){
+        $cauHoi = CauHoi::findOrFail($id);
+        return $cauHoi;
+    }
+
     public function getCauTraLois(int $id){
         $cauHoi = CauHoi::findOrFail($id);
         $cauHoi->load('cauTraLois');
