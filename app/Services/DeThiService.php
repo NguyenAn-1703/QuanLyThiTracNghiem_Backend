@@ -19,6 +19,10 @@ class DeThiService
         return $deThi;
     }
 
+    public function getById(int $id){
+        return DeThi::findOrFail($id);
+    }
+
     public function add(array $data)
     {
         return DeThi::create($data);

@@ -25,9 +25,9 @@ class DeThiSeeder extends Seeder
                 'monThiId' => $monLapTrinhC->id,
                 'nguoiTaoId' => $giangvien->id,
                 'tenDe' => 'Đề thi giữa kỳ Lập trình C',
-                'thoiGianBatDau' => '2026-06-01 08:00:00',
-                'thoiGianKetThuc' => '2026-06-01 10:00:00',
-                'thoiGianLamBai' => 60,
+                'thoiGianBatDau' => '2026-03-24 02:22:00',
+                'thoiGianKetThuc' => '2026-03-24 02:59:00',
+                'thoiGianLamBai' => 20,
                 'isDeleted' => false,
                 // 'createdAt' => now()
             ],

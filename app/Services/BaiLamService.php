@@ -2,11 +2,15 @@
 
 namespace App\Services;
 
+use App\Jobs\SubmitTestJob;
 use App\Models\BaiLam;
 use App\Models\CauHoi;
+use DateTime;
+use Exception;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BaiLamService
 {
@@ -46,6 +50,12 @@ class BaiLamService
         return $baiLam;
     }
 
+    public function updateById(array $data, int $baiLamId)
+    {
+        $baiLam = BaiLam::findOrFail($baiLamId);
+        return $baiLam->update($data);
+    }
+
     public function delete(BaiLam $baiLam)
     {
         return $baiLam->delete();
@@ -53,39 +63,74 @@ class BaiLamService
 
     public function startTest(array $data)
     {
-        return DB::transaction(function () use ($data) {
-            $thiSinhId = $data["thiSinhId"];
-            $deThiId = $data["deThiId"];
-            //tạo BaiLam
-            $baiLam = [
-                "thiSinhId" => $thiSinhId,
-                "deThiId" => $deThiId,
-                "thoiGianBatDau" => Date::now(),
-            ];
+        $thiSinhId = $data["thiSinhId"];
+        $deThiId = $data["deThiId"];
 
-            $baiLam = BaiLam::create($baiLam);
+        $deThi = $this->deThiService->getById($deThiId);
 
-            //tạo LogBaiLam
-            $logBaiLam = [
+        //tạo BaiLam
+        $baiLam = [
+            "thiSinhId" => $thiSinhId,
+            "deThiId" => $deThiId,
+            "thoiGianBatDau" => Date::now(),
+        ];
+
+        $baiLam = BaiLam::create($baiLam);
+
+        //tạo LogBaiLam
+        $logBaiLam = [
+            "baiLamId" => $baiLam->id,
+            "soLanChuyenTab" => 0,
+        ];
+        $logBaiLam = $this->logBaiLamService->add($logBaiLam);
+
+        //tạo ChiTietBaiLam
+        $chiTietBaiLam = [];
+
+        $cauHois = $this->deThiService->getQuestions($deThiId);
+
+        $chiTietBaiLam = $cauHois->map(function ($item) use ($baiLam) {
+            return [
                 "baiLamId" => $baiLam->id,
-                "soLanChuyenTab" => 0,
+                "cauHoiId" => $item->id
             ];
-            $logBaiLam = $this->logBaiLamService->add($logBaiLam);
+        });
 
-            //tạo ChiTietBaiLam
-            $chiTietBaiLam = [];
+        $startTime = Date::now();
+        $doTestTime = $deThi->thoiGianLamBai;
+        $endTime = $deThi->thoiGianKetThuc;
 
-            $cauHois = $this->deThiService->getQuestions($deThiId);
+        $duration = $this->CalculateDuration($startTime, $endTime, $doTestTime) * 60;
 
-            $chiTietBaiLam = $cauHois->map(function ($item) use ($baiLam) {
-                return [
-                    "baiLamId" => $baiLam->id,
-                    "cauHoiId" => $item->id
-                ];
-            });
 
+        Log::info("thời gian $duration");
+        Log::info("start time $startTime");
+        Log::info("end time $endTime");
+
+        $this->setAutoSubmit($baiLam->id, $duration);
+
+        return DB::transaction(function () use ($chiTietBaiLam) {
             $this->chiTietBaiLamService->addManyNonTrans($chiTietBaiLam);
         });
+    }
+
+    public function CalculateDuration(DateTime $startTime, DateTime $endTime, int $doTestTime)
+    {
+        $expectedEnd = clone $startTime;
+        $expectedEnd->modify("+{$doTestTime} minutes");
+
+        if ($expectedEnd <= $endTime) {
+            return $doTestTime;
+        }
+
+        return ($endTime->getTimestamp() - $startTime->getTimestamp()) / 60;
+    }
+
+    //trường hợp front-end mất mạng không gửi request submit => backend tự động submit, chặn submit lại
+    public function setAutoSubmit(int $baiLamId, int $sec)
+    {
+        $sec += 10; // đợi 10s nếu frontend không gửi thì submit tự động
+        SubmitTestJob::dispatch($baiLamId)->delay(now()->addSecond($sec));
     }
 
     public function updatestudenttest(array $data, BaiLam $baiLam)
@@ -114,8 +159,11 @@ class BaiLamService
             return ($dapAnId == $item->id && $item->isCorrectAnswer);
         });
 
-        $chiTietDeThi = $this->chiTietDeThiService->getChiTietDeThiById($bailam->deThiId, $cauhoi->id);
-        $diem = $chiTietDeThi->diem;
+        $diem = 0;
+        if ($isCorrectChooser) {
+            $chiTietDeThi = $this->chiTietDeThiService->getChiTietDeThiById($bailam->deThiId, $cauhoi->id);
+            $diem = $chiTietDeThi->diem;
+        }
 
         $chiTietBaiLam = [
             "baiLamId" => $bailam->id,
@@ -126,5 +174,37 @@ class BaiLamService
         ];
 
         return $chiTietBaiLam;
+    }
+
+    public function submittest(array $data, int $baiLamId)
+    {
+        $baiLam = BaiLam::findOrFail($baiLamId);
+        //Nếu đã submit thì không cho submit nữa
+        if ($baiLam->status == "DA_NOP") {
+            throw new HttpException(500, "Bài làm đã nộp!");
+        }
+
+        $this->updatestudenttest($data, $baiLam); // update lần cuối
+        // tính điểm
+        $baiLam->load('chiTietBaiLams');
+        $soCauDung = $baiLam->chiTietBaiLams->reduce(function ($carry, $item) {
+            if ($item->isCorrectChooser) {
+                return $carry + 1;
+            }
+            return $carry;
+        }, 0);
+        $tongDiem = $baiLam->chiTietBaiLams->reduce(function ($carry, $item) {
+            return $carry + $item->diem ?? 0;
+        }, 0);
+
+        // cập nhật status
+        $dataUpdate = [
+            "thoiGianNopBai" => Date::now(),
+            "tongDiem" => $tongDiem,
+            "soCauDung" => $soCauDung,
+            "status" => "DA_NOP"
+        ];
+
+        return $this->updateById($dataUpdate, $baiLam->id);
     }
 }
