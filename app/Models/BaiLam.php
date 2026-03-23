@@ -26,4 +26,8 @@ class BaiLam extends Model
         "thoiGianNopBai" => "datetime",
         "tongDiem" => "decimal:2",
     ];
+
+    public function chiTietBaiLams(){
+        return $this->hasMany(ChiTietBaiLam::class, 'baiLamId');
+    }
 }

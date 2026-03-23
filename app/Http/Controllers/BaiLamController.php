@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StartTestRequest;
 use App\Http\Requests\StoreBaiLamRequest;
+use App\Http\Requests\SubmitTestRequest;
 use App\Http\Requests\UpdateBaiLamRequest;
 use App\Http\Requests\UpdateStudentTestRequest;
 use App\Models\BaiLam;
@@ -72,5 +73,9 @@ class BaiLamController extends Controller
 
     public function updatestudenttest(UpdateStudentTestRequest $request, BaiLam $bailam){
         return $this->success($this->baiLamService->updatestudenttest($request->validated(), $bailam));
+    }
+
+    public function submittest(SubmitTestRequest $request,BaiLam $bailam){
+        return $this->success($this->baiLamService->submittest($request->validated(), $bailam->id));
     }
 }
