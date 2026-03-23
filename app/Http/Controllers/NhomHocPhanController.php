@@ -67,23 +67,33 @@ class NhomHocPhanController extends Controller
         return $this->success($data);
     }
 
-    public function get_w_gvien_mon(NhomHocPhan $nhomhocphan){
+    public function get_w_gvien_mon(NhomHocPhan $nhomhocphan)
+    {
         $data = $this->nhomHocPhanService->get_w_gvien_mon($nhomhocphan);
         return $this->success($data);
     }
 
-    public function get_w_dekiemtra(NhomHocPhan $nhomhocphan){
+    public function get_w_dekiemtra(NhomHocPhan $nhomhocphan)
+    {
         $data = $this->nhomHocPhanService->get_w_dekiemtra($nhomhocphan);
         return $this->success($data);
     }
 
-    public function join_group(ThamGiaNhomRequest $request){
+    public function join_group(ThamGiaNhomRequest $request)
+    {
         $data = $this->nhomHocPhanService->join_group($request->validated());
         return $this->success($data, 201);
     }
 
-    public function get_o_svien(User $user){
+    public function get_o_svien(User $user)
+    {
         $data = $this->nhomHocPhanService->get_o_svien($user);
+        return $this->success($data);
+    }
+
+    public function resetInviteCode(NhomHocPhan $nhomhocphan)
+    {
+        $data = $this->nhomHocPhanService->resetInviteCode($nhomhocphan);
         return $this->success($data);
     }
 }

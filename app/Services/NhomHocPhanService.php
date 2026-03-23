@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\ChiTietNhom;
 use App\Models\NhomHocPhan;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class NhomHocPhanService
 {
@@ -73,5 +74,11 @@ class NhomHocPhanService
             'nhomHocPhans.monHoc'
         ]);
         return $user;
+    }
+
+    public function resetInviteCode(NhomHocPhan $nhomHocPhan)
+    {
+        $nhomHocPhan->update(['maMoi' => Str::random(19)]);
+        return $nhomHocPhan;
     }
 }

@@ -13,3 +13,4 @@ Route::get('/nhomhocphans/o_svien/{user}', [NhomHocPhanController::class, 'get_o
 Route::get('/nhomhocphans/w_gvien_mon/{nhomhocphan}', [NhomHocPhanController::class, 'get_w_gvien_mon']);
 Route::get('/nhomhocphans/w_dekiemtra/{nhomhocphan}', [NhomHocPhanController::class, 'get_w_dekiemtra']);
 Route::post('/nhomhocphans/join_group', [NhomHocPhanController::class, 'join_group']);
+Route::patch('/nhomhocphans/reset_invite_code/{nhomhocphan}', [NhomHocPhanController::class, 'resetInviteCode']);
