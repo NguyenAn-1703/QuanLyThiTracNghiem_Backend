@@ -14,34 +14,56 @@ class StoreDeThiRequest extends FormRequest
     public function rules()
     {
         return [
-            'monThiId' => 'required|integer|exists:mon_this,monThiId',
-            'nguoiTaoId' => 'required|string|max:50|exists:users,id',
-            'tenDe' => 'required|string|max:255',
-
-            'thoiGianBatDau' => 'required|date',
-            'thoiGianKetThuc' => 'required|date|after:thoiGianBatDau',
-
-            'thoiGianLamBai' => 'required|integer|min:1',
-
-            'isDeleted' => 'nullable|boolean',
+            'monThiId' => ['required', 'integer', 'exists:mon_hocs,id'],
+            'nguoiTaoId' => ['required', 'integer', 'exists:users,id'],
+            'tenDe' => ['required', 'string', 'max:255'],
+            'thoiGianBatDau' => ['required', 'date'],
+            'thoiGianKetThuc' => ['required', 'date', 'after:thoiGianBatDau'],
+            'thoiGianLamBai' => ['required', 'integer', 'min:1'],
+            'isDeleted' => ['nullable', 'boolean'],
         ];
     }
 
     public function messages()
     {
         return [
-            'monThiId.required' => 'Môn thi không được để trống',
-            'monThiId.exists' => 'Môn thi không tồn tại',
+            'monThiId.required' => ':attribute không được để trống',
+            'monThiId.integer' => ':attribute phải là số nguyên',
+            'monThiId.exists' => ':attribute không tồn tại trong hệ thống',
 
-            'nguoiTaoId.required' => 'Người tạo không được để trống',
-            'nguoiTaoId.exists' => 'Người tạo không tồn tại',
+            'nguoiTaoId.required' => ':attribute không được để trống',
+            'nguoiTaoId.integer' => ':attribute phải là số nguyên',
+            'nguoiTaoId.exists' => ':attribute không tồn tại trong hệ thống',
 
-            'tenDe.required' => 'Tên đề không được để trống',
+            'tenDe.required' => ':attribute không được để trống',
+            'tenDe.string' => ':attribute phải là chuỗi ký tự',
+            'tenDe.max' => ':attribute không được vượt quá 255 ký tự',
 
-            'thoiGianBatDau.required' => 'Phải có thời gian bắt đầu',
-            'thoiGianKetThuc.after' => 'Thời gian kết thúc phải sau thời gian bắt đầu',
+            'thoiGianBatDau.required' => ':attribute không được để trống',
+            'thoiGianBatDau.date' => ':attribute không đúng định dạng ngày giờ',
 
-            'thoiGianLamBai.min' => 'Thời gian làm bài phải lớn hơn 0',
+            'thoiGianKetThuc.required' => ':attribute không được để trống',
+            'thoiGianKetThuc.date' => ':attribute không đúng định dạng ngày giờ',
+            'thoiGianKetThuc.after' => ':attribute phải sau thời gian bắt đầu',
+
+            'thoiGianLamBai.required' => ':attribute không được để trống',
+            'thoiGianLamBai.integer' => ':attribute phải là số nguyên',
+            'thoiGianLamBai.min' => ':attribute phải lớn hơn hoặc bằng 1',
+
+            'isDeleted.boolean' => ':attribute phải là kiểu đúng/sai',
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'monThiId' => 'Mã môn thi',
+            'nguoiTaoId' => 'Mã người tạo',
+            'tenDe' => 'Tên đề',
+            'thoiGianBatDau' => 'Thời gian bắt đầu',
+            'thoiGianKetThuc' => 'Thời gian kết thúc',
+            'thoiGianLamBai' => 'Thời gian làm bài',
+            'isDeleted' => 'Trạng thái xóa',
         ];
     }
 }
