@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\MonHoc;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class MonHocSeeder extends Seeder
@@ -18,6 +17,7 @@ class MonHocSeeder extends Seeder
         $monHocs = [
             [
                 'tenMonHoc' => 'Lập trình C',
+                'maMonHoc' => '841255',
                 'soTinChi' => 3,
                 'soTietLyThuyet' => 30,
                 'soTietThucHanh' => 30,
@@ -25,6 +25,7 @@ class MonHocSeeder extends Seeder
             ],
             [
                 'tenMonHoc' => 'Cấu trúc dữ liệu và giải thuật',
+                'maMonHoc' => '841244',
                 'soTinChi' => 3,
                 'soTietLyThuyet' => 30,
                 'soTietThucHanh' => 30,
@@ -34,7 +35,7 @@ class MonHocSeeder extends Seeder
 
         foreach ($monHocs as $monHoc) {
             MonHoc::firstOrCreate(
-                ['tenMonHoc' => $monHoc['tenMonHoc']], // điều kiện tránh trùng
+                ['maMonHoc' => $monHoc['maMonHoc']], // điều kiện tránh trùng
                 $monHoc
             );
         }

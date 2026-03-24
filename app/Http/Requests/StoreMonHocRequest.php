@@ -25,6 +25,7 @@ class StoreMonHocRequest extends FormRequest
     {
         return [
             'tenMonHoc' => 'required|string|max:150',
+            'maMonHoc' => 'required|string|max:150|unique:mon_hocs,maMonHoc',
 
             'soTinChi' => 'required|integer|min:1',
 

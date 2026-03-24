@@ -11,6 +11,7 @@ class MonHoc extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        "maMonHoc",
         "tenMonHoc",
         "soTinChi",
         "soTietLyThuyet",
