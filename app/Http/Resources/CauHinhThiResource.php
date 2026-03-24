@@ -28,7 +28,7 @@ class CauHinhThiResource extends JsonResource
             'tabSwitchLimit' => $this->tabSwitchLimit,
             'messageOnWarning' => $this->messageOnWarning,
             'deThiId' => $this->deThiId,
-            'deThi' => new DethiResource($this->whenLoaded('deThi')),
+            'deThi' => new DeThiResource($this->whenLoaded('deThi')),
         ];
     }
 }
