@@ -30,6 +30,17 @@ class UpdateCauTraLoiRequest extends FormRequest
                 "string",
                 "max:1000"
             ],
+            "isCorrectAnswer" => [
+                "sometimes",
+                "required",
+                "boolean"
+            ],
+            "cauHoiId" => [
+                "sometimes",
+                "required",
+                "integer",
+                "exists:cau_hois,id"
+            ],
         ];
     }
 }
