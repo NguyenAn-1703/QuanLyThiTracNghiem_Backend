@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // use App\Models\User;
 
+use App\Http\Requests\ChangePassWordRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -99,6 +100,11 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $data = $this->userService->delete($user);
+        return $this->success($data);
+    }
+
+    public function changepassword(ChangePassWordRequest $request, User $user){
+        $data = $this->userService->changepassword($request->validated(), $user);
         return $this->success($data);
     }
 }

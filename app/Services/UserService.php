@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserService
 {
@@ -26,5 +28,22 @@ class UserService
 
     public function delete(User $user){
         return $user->delete();
+    }
+
+    public function changepassword(array $data, User $user){
+        $currentPassword = $data["currentPassword"];
+        $newPassword = $data["newPassword"];
+
+        $userPassword = $user->password;
+        //validate
+        if(!Hash::check($currentPassword, $userPassword)){
+            throw new HttpException(400, "Mật khẩu cũ không khớp");
+        }
+        //update
+        $dataUpdate = [
+            "password" => $newPassword,
+        ];
+
+        return $user->update($dataUpdate);
     }
 }
