@@ -24,16 +24,50 @@ class UpdateDeThiRequest extends FormRequest
     public function rules()
     {
         return [
-            'monThiId' => 'sometimes|integer|exists:mon_this,monThiId',
-            'nguoiTaoId' => 'sometimes|string|max:50|exists:users,id',
-            'tenDe' => 'sometimes|string|max:255',
+            'monThiId' => ['sometimes', 'integer', 'exists:mon_hocs,id'],
+            'nguoiTaoId' => ['sometimes', 'integer', 'exists:users,id'],
+            'tenDe' => ['sometimes', 'string', 'max:255'],
+            'thoiGianBatDau' => ['sometimes', 'date'],
+            'thoiGianKetThuc' => ['sometimes', 'date', 'after:thoiGianBatDau'],
+            'thoiGianLamBai' => ['sometimes', 'integer', 'min:1'],
+            'isDeleted' => ['sometimes', 'boolean'],
+        ];
+    }
 
-            'thoiGianBatDau' => 'sometimes|date',
-            'thoiGianKetThuc' => 'sometimes|date|after:thoiGianBatDau',
+    public function messages()
+    {
+        return [
+            'monThiId.integer' => ':attribute phải là số nguyên',
+            'monThiId.exists' => ':attribute không tồn tại trong hệ thống',
 
-            'thoiGianLamBai' => 'sometimes|integer|min:1',
+            'nguoiTaoId.integer' => ':attribute phải là số nguyên',
+            'nguoiTaoId.exists' => ':attribute không tồn tại trong hệ thống',
 
-            'isDeleted' => 'sometimes|boolean',
+            'tenDe.string' => ':attribute phải là chuỗi ký tự',
+            'tenDe.max' => ':attribute không được vượt quá 255 ký tự',
+
+            'thoiGianBatDau.date' => ':attribute không đúng định dạng ngày giờ',
+
+            'thoiGianKetThuc.date' => ':attribute không đúng định dạng ngày giờ',
+            'thoiGianKetThuc.after' => ':attribute phải sau thời gian bắt đầu',
+
+            'thoiGianLamBai.integer' => ':attribute phải là số nguyên',
+            'thoiGianLamBai.min' => ':attribute phải lớn hơn hoặc bằng 1',
+
+            'isDeleted.boolean' => ':attribute phải là kiểu đúng/sai',
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'monThiId' => 'Mã môn thi',
+            'nguoiTaoId' => 'Mã người tạo',
+            'tenDe' => 'Tên đề',
+            'thoiGianBatDau' => 'Thời gian bắt đầu',
+            'thoiGianKetThuc' => 'Thời gian kết thúc',
+            'thoiGianLamBai' => 'Thời gian làm bài',
+            'isDeleted' => 'Trạng thái xóa',
         ];
     }
 }
