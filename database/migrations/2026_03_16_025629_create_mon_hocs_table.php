@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('mon_hocs', function (Blueprint $table) {
             $table->id();
+            $table->string('maMonHoc')->unique();
             $table->string('tenMonHoc', 150);
             $table->integer('soTinChi');
 
