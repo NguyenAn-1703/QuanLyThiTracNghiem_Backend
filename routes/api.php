@@ -23,4 +23,4 @@ require __DIR__ . '/api/thongbao.php';
 require __DIR__ . '/api/chuong.php';
 require __DIR__ . '/api/dokho.php';
 require __DIR__ . '/api/bailam.php';
-
+require __DIR__ . '/api/cauhinhthi.php';
