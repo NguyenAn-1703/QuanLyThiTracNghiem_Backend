@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessException;
 use App\Models\CauHoi;
 use App\Models\Chuong;
 use Illuminate\Database\Eloquent\Builder;
@@ -81,7 +82,7 @@ class CauHoiService
     public function copyFromPublic(CauHoi $source, int $nguoiTaoId)
     {
         if ($source->status !== 'public') {
-            throw new \InvalidArgumentException('Chỉ được sao chép từ câu hỏi công khai');
+            throw new BusinessException('Chỉ được sao chép từ câu hỏi công khai', 422);
         }
 
         return DB::transaction(function () use ($source, $nguoiTaoId) {
