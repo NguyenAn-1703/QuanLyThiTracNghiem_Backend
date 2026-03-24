@@ -35,7 +35,8 @@ class DatabaseSeeder extends Seeder
             CauTraLoiSeeder::class,
             ChiTietBaiLamSeeder::class,
             ChiTietDeThiSeeder::class,
-            LogBaiLamSeeder::class
+            LogBaiLamSeeder::class,
+            PhanCongSeeder::class
         ]);
     }
 }
