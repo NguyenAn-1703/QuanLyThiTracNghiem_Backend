@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Services;
+
 use App\Models\PhanCong;
 
-class PhanCongService{
+class PhanCongService
+{
     public function getAll()
     {
         return PhanCong::all();
@@ -24,8 +27,10 @@ class PhanCongService{
     //     return $phanCong;
     // }
 
-    public function delete(PhanCong $phanCong)
+    public function delete(int $giangVienId, int $monHocId)
     {
-        return $phanCong->delete();
+        return PhanCong::where('giangVienId', $giangVienId)
+            ->where('monHocId', $monHocId)
+            ->delete();
     }
 }

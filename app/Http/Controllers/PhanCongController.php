@@ -31,8 +31,8 @@ class PhanCongController extends Controller
         return $this->success($data, 201);
     }
 
-    public function destroy(PhanCong $phancong){
-        $data = $this->phanCongService->delete($phancong);
+    public function destroy(int $giangvienid, int $monhocid){
+        $data = $this->phanCongService->delete($giangvienid, $monhocid);
         return $this->success($data);
     }
 
