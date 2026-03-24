@@ -29,8 +29,7 @@ class ThamGiaNhomRequest extends FormRequest
             "maMoi" => [
                 "required",
                 "string",
-                "size:7",
-                "regex:/^[A-Za-z0-9]{7}$/"
+                "max:20",
             ]
         ];
     }
