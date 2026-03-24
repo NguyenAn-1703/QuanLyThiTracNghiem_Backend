@@ -22,5 +22,7 @@ require __DIR__ . '/api/giaobaithi.php';
 require __DIR__ . '/api/thongbao.php';
 require __DIR__ . '/api/chuong.php';
 require __DIR__ . '/api/dokho.php';
+require __DIR__ . '/api/cauhoi.php';
+require __DIR__ . '/api/cautraloi.php';
 require __DIR__ . '/api/bailam.php';
 require __DIR__ . '/api/cauhinhthi.php';
