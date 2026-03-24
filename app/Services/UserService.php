@@ -41,7 +41,15 @@ class UserService
         }
         //update
         $dataUpdate = [
-            "password" => $newPassword,
+            "password" => Hash::make($newPassword),
+        ];
+
+        return $user->update($dataUpdate);
+    }
+
+    public function resetpassword(array $data, User $user){
+        $dataUpdate = [
+            "password" => Hash::make($data["newPassword"]),
         ];
 
         return $user->update($dataUpdate);
