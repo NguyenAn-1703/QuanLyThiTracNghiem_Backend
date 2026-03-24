@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\PhanCong;
+use App\Models\User;
 
 class PhanCongService
 {
@@ -32,5 +33,10 @@ class PhanCongService
         return PhanCong::where('giangVienId', $giangVienId)
             ->where('monHocId', $monHocId)
             ->delete();
+    }
+
+    public function get_o_gvien(User $user){
+        $user->load('monHocs');
+        return $user->monHocs;
     }
 }
