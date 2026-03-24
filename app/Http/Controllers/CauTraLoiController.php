@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCauTraLoiRequest;
+use App\Http\Requests\UpdateCauTraLoiRequest;
 use App\Models\CauTraLoi;
 use App\Services\CauTraLoiService;
 use App\Traits\ApiResponseTrait;
@@ -32,7 +33,8 @@ class CauTraLoiController extends Controller
      */
     public function store(StoreCauTraLoiRequest $request)
     {
-        //
+        $data = $this->cauTraLoiService->add($request->validated());
+        return $this->success($data, 201);
     }
 
     /**
@@ -47,9 +49,10 @@ class CauTraLoiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update()
+    public function update(UpdateCauTraLoiRequest $request, CauTraLoi $cautraloi)
     {
-        //
+        $data = $this->cauTraLoiService->update($request->validated(), $cautraloi);
+        return $this->success($data);
     }
 
     /**
@@ -57,6 +60,7 @@ class CauTraLoiController extends Controller
      */
     public function destroy(CauTraLoi $cautraloi)
     {
-        //
+        $result = $this->cauTraLoiService->delete($cautraloi);
+        return $this->success($result);
     }
 }
