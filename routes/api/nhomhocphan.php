@@ -14,3 +14,7 @@ Route::get('/nhomhocphans/w_gvien_mon/{nhomhocphan}', [NhomHocPhanController::cl
 Route::get('/nhomhocphans/w_dekiemtra/{nhomhocphan}', [NhomHocPhanController::class, 'get_w_dekiemtra']);
 Route::post('/nhomhocphans/join_group', [NhomHocPhanController::class, 'join_group']);
 Route::patch('/nhomhocphans/reset_invite_code/{nhomhocphan}', [NhomHocPhanController::class, 'resetInviteCode']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/nhomhocphans/assigned/me', [NhomHocPhanController::class, 'assignedTeaching']);
+});
