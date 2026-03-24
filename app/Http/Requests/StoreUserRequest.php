@@ -28,6 +28,7 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
+            "ma" => 'required|string|max:150|unique:users,ma',
             "hoTen" => ["required", "string", "max:255"],
             "email" => ["required", "string", "email", "unique:users,email"],
             "password" => [
