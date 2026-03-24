@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePhanCongRequest;
 use App\Models\PhanCong;
+use App\Models\User;
 use App\Services\PhanCongService;
 use App\Traits\ApiResponseTrait;
 
@@ -33,6 +34,11 @@ class PhanCongController extends Controller
 
     public function destroy(int $giangvienid, int $monhocid){
         $data = $this->phanCongService->delete($giangvienid, $monhocid);
+        return $this->success($data);
+    }
+
+    public function get_o_gvien(User $user){
+        $data = $this->phanCongService->get_o_gvien($user);
         return $this->success($data);
     }
 
