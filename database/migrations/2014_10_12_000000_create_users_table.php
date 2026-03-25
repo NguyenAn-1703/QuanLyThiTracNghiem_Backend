@@ -26,7 +26,9 @@ return new class extends Migration
             $table->integer('nhomQuyenId');
             $table->string('sdt', 20);
 
-            $table->date('ngaySinh')->default(DB::raw('CURRENT_DATE'));
+            // Ngày sinh bỏ default, để nullable hoặc fill giá trị khi insert
+            $table->date('ngaySinh')->nullable();
+
             $table->boolean('laGioiTinhNu');
 
             $table->text('ggid')->nullable();
@@ -36,9 +38,14 @@ return new class extends Migration
             $table->boolean('isLocked')->default(false);
             $table->boolean('isDeleted')->default(false);
 
-            $table->dateTime('lastLogin')->default(now());
+            // lastLogin dùng CURRENT_TIMESTAMP trong MySQL
+            $table->dateTime('lastLogin')->useCurrent();
 
             $table->timestamps();
+
+            // Set charset và collation để hỗ trợ Unicode
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
         });
     }
 
