@@ -81,4 +81,34 @@ class NhomHocPhanService
         $nhomHocPhan->update(['maMoi' => Str::random(19)]);
         return $nhomHocPhan;
     }
+
+    public function getAssignedTeachingByLecturerId(int $lecturerId, bool $includeHidden = false): array
+    {
+        $query = NhomHocPhan::query()
+            ->with(['monHoc', 'deThis'])
+            ->where('giangVienId', $lecturerId)
+            ->where('isDeleted', false)
+            ->orderByDesc('id');
+
+        if (!$includeHidden) {
+            $query->where('isHide', false);
+        }
+
+        $nhomHocPhans = $query->get();
+
+        $monHocs = $nhomHocPhans
+            ->pluck('monHoc')
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        return [
+            'nhomHocPhans' => $nhomHocPhans,
+            'monHocs' => $monHocs,
+            'summary' => [
+                'soNhomHocPhan' => $nhomHocPhans->count(),
+                'soMonHoc' => $monHocs->count(),
+            ],
+        ];
+    }
 }

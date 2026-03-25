@@ -9,6 +9,8 @@ use App\Models\NhomHocPhan;
 use App\Models\User;
 use App\Services\NhomHocPhanService;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NhomHocPhanController extends Controller
 {
@@ -94,6 +96,20 @@ class NhomHocPhanController extends Controller
     public function resetInviteCode(NhomHocPhan $nhomhocphan)
     {
         $data = $this->nhomHocPhanService->resetInviteCode($nhomhocphan);
+        return $this->success($data);
+    }
+
+    public function assignedTeaching(Request $request)
+    {
+        $lecturer = Auth::guard('api')->user();
+
+        if (!$lecturer) {
+            return $this->unauthorized('Chưa xác thực người dùng');
+        }
+
+        $includeHidden = filter_var($request->query('includeHidden', false), FILTER_VALIDATE_BOOL);
+        $data = $this->nhomHocPhanService->getAssignedTeachingByLecturerId($lecturer->id, $includeHidden);
+
         return $this->success($data);
     }
 }
