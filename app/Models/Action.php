@@ -9,7 +9,8 @@ class Action extends Model
 {
     use HasFactory;
     protected $fillable = [
-        "name"
+        "tenChucNang",
+        "urlIcon"
     ];
 
     protected $hidden = [];
@@ -18,6 +19,6 @@ class Action extends Model
 
     public function role_details()
     {
-        return $this->hasMany(RoleDetail::class, 'actionId');
+        return $this->hasMany(RoleDetail::class, 'chucNangId');
     }
 }

@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+// use App\Models\User;
+
+use App\Http\Requests\ChangePassWordRequest;
+use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Services\UserService;
 use App\Traits\ApiResponseTrait;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -14,9 +20,17 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    private UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
-        $data = User::all();
+        $data = $this->userService->getAll();
         return $this->success($data);
     }
 
@@ -25,10 +39,10 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
@@ -36,14 +50,10 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //Form validate sau
-        return response()->json(User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => $request->password,
-        ]));
+        $data = $this->userService->add($request->validated());
+        return $this->success($data, 201);
     }
 
     /**
@@ -52,9 +62,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        $data = $this->userService->getOne($user);
+        return $this->success($data);
     }
 
     /**
@@ -63,10 +74,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
+    // public function edit(UpdateUserRequest $user)
+    // {
+
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -75,9 +86,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        //
+        $data = $this->userService->update($request->validated(), $user);
+        return $this->success($data);
     }
 
     /**
@@ -86,8 +98,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $data = $this->userService->delete($user);
+        return $this->success($data);
+    }
+
+    public function changepassword(ChangePassWordRequest $request, User $user){
+        $data = $this->userService->changepassword($request->validated(), $user);
+        return $this->success($data);
+    }
+
+    public function resetpassword(ResetPasswordRequest $request, User $user){
+        $data = $this->userService->resetpassword($request->validated(), $user);
+        return $this->success($data);
     }
 }

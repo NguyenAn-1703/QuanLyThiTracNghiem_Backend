@@ -14,3 +14,4 @@ yarn-error.log
 /.idea
 /.vscode
 /bootstrap/cache/*
+API_DOCUMENTATION_FULL.md

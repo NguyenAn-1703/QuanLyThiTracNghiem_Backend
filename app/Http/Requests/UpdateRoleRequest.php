@@ -28,23 +28,23 @@ class UpdateRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
+            'tenNhomQuyen' => [
                 'required',
                 'string',
                 'max:255',
                 //cho trường hợp giữ nguyên tên quyền và chỉ sửa chi tiết quyền
-                Rule::unique('roles', 'name')->ignore(
+                Rule::unique('roles', 'tenNhomQuyen')->ignore(
                     $this->route('role')->id
                 ),
             ],
             //chi tiết quyền
             'role_details' => ['required', 'array', 'min:1'],
             //kiểm tra xem name của role detail có tồn tại trong db không
-            'role_details.*.name' => [
+            'role_details.*.tenChucNang' => [
                 'required',
                 'string',
                 //kiểm tra truy suất trực tiếp trong db
-                'exists:actions,name',
+                'exists:actions,tenChucNang',
             ],
 
             'role_details.*.canView' => [

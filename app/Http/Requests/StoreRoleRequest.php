@@ -25,15 +25,15 @@ class StoreRoleRequest extends FormRequest
     {
         return [
             //tên quyền
-            'name' => 'required|max:255|string',
+            'tenNhomQuyen' => 'required|max:255|string',
             //chi tiết quyền
             'role_details' => ['required', 'array', 'min:1'],
-            //kiểm tra xem name của role detail có tồn tại trong db không
-            'role_details.*.name' => [
+            //kiểm tra xem chức năng có tồn tại trong db không
+            'role_details.*.tenChucNang' => [
                 'required',
                 'string',
                 //kiểm tra truy suất trực tiếp trong db
-                'exists:actions,name',
+                'exists:actions,tenChucNang',
             ],
 
             'role_details.*.canView' => [

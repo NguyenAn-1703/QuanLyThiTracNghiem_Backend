@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 //thêm các dữ liệu bắt buộc có sẵn trong hệ thống
@@ -21,6 +20,23 @@ class DatabaseSeeder extends Seeder
             ActionSeeder::class,
             RoleDetailSeeder::class,
             UserSeeder::class,
+            MonHocSeeder::class,
+            ChuongSeeder::class,
+            DoKhoSeeder::class,
+            NhomHocPhanSeeder::class,
+            ChiTietNhomSeeder::class,
+            DeThiSeeder::class,
+            CauHinhThiSeeder::class,
+            GiaoBaiThiSeeder::class,
+            ThongBaoSeeder::class,
+            ChiTietThongBaoSeeder::class,
+            BaiLamSeeder::class,
+            CauHoiSeeder::class,
+            CauTraLoiSeeder::class,
+            ChiTietBaiLamSeeder::class,
+            ChiTietDeThiSeeder::class,
+            LogBaiLamSeeder::class,
+            PhanCongSeeder::class
         ]);
     }
 }

@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -15,17 +16,52 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $adminRole = Role::where('tenNhomQuyen', 'admin')->first();
+        $teacherRole = Role::where('tenNhomQuyen','teacher')->first();
+        $studentRole = Role::where('tenNhomQuyen', 'student')->first();
         $users = [
             [
-                'fullname' => 'Admin',
+                'ma' => '1',
+                'hoTen' => 'Admin',
                 'email' => 'admin',
-                'passwordHash' => '',
-                'roleId' => 1,
-                'phoneNumber' => "0999999999",
-                'status' => 'active',
-                'groupId' => 1,
-                'lastLogin' => now(),
-            ]
+                'password' => 'admin',
+                'nhomQuyenId' => $adminRole->id,
+                'sdt' => "0999999999",
+                'username' => 'Admin',
+                'ngaySinh' => now(),
+                'laGioiTinhNu' => true,
+                'ggid' => 'idexample',
+                'urlAvatar' => 'example.icon',
+                'isStudent' => false,
+            ],
+            [
+                'ma' => '2',
+                'hoTen' => 'Ân Giảng Viên',
+                'email' => 'gianvien@gmail.com',
+                'password' => '123456',
+                'nhomQuyenId' => $teacherRole->id,
+                'sdt' => "0988888889",
+                'username' => 'giangvien',
+                'ngaySinh' => '2004-05-10',
+                'laGioiTinhNu' => false,
+                'ggid' => null,
+                'urlAvatar' => null,
+                'isStudent' => false,
+            ],
+            [
+                'ma' => '3123560002',
+                'hoTen' => 'Nguyễn Ngọc Thiên Ân',
+                'email' => 'sinhvien@gmail.com',
+                'password' => '123456',
+                'nhomQuyenId' => $studentRole->id,
+                'sdt' => "0988888888",
+                'username' => 'sinhvien',
+                'ngaySinh' => '2004-05-10',
+                'laGioiTinhNu' => false,
+                'ggid' => null,
+                'urlAvatar' => null,
+                'isStudent' => true,
+            ],
         ];
 
         foreach ($users as $user) {

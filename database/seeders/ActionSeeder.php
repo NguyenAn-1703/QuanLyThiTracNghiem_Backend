@@ -17,17 +17,37 @@ class ActionSeeder extends Seeder
     public function run()
     {
         $actions = [
-            ['name' => 'Chức năng 1'],
-            ['name' => 'Chức năng 2'],
-            ['name' => 'Chức năng 3'],
+            [
+                'tenChucNang' => 'QL_NHOMHP',
+                'urlIcon' => 'example.icon',
+            ],
+            [
+                'tenChucNang' => 'QL_CAUHOI',
+                'urlIcon' => 'example.icon',
+            ],
+            [
+                'tenChucNang' => 'QL_DETHI',
+                'urlIcon' => 'example.icon',
+            ],
+            [
+                'tenChucNang' => 'QL_MONHOC',
+                'urlIcon' => 'example.icon',
+            ],
+            [
+                'tenChucNang' => 'QL_NGUOIDUNG',
+                'urlIcon' => 'example.icon',
+            ],
+            [
+                'tenChucNang' => 'QL_PHANQUYEN',
+                'urlIcon' => 'example.icon',
+            ],
         ];
 
-        foreach ($actions as $action){
+        foreach ($actions as $action) {
             Action::firstOrCreate(
-                ['name' => $action['name']],
+                ['tenChucNang' => $action['tenChucNang']],
                 $action
             );
         }
-        
     }
 }
