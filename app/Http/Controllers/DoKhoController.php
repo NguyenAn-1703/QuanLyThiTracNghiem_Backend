@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDoKhoRequest;
@@ -12,9 +13,7 @@ class DoKhoController extends Controller
 {
     use ApiResponseTrait;
 
-    public function __construct(private DoKhoService $service)
-    {
-    }
+    public function __construct(private DoKhoService $service) {}
 
     /**
      * Display a listing of the resource.
@@ -24,7 +23,7 @@ class DoKhoController extends Controller
     public function index()
     {
         $data = $this->service->getAll();
-        return $this->success(new DoKhoResource($data));
+        return $this->success(DoKhoResource::collection($data));
     }
 
     /**
