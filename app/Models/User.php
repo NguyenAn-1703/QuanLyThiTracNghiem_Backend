@@ -57,8 +57,15 @@ class User extends Authenticatable implements JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
+        'ngaySinh' => 'date',       // tự động cast sang Carbon (chỉ date)
+        'laGioiTinhNu' => 'boolean',
+        'isStudent' => 'boolean',
+        'isLocked' => 'boolean',
+        'isDeleted' => 'boolean',
+        'lastLogin' => 'datetime',
         'email_verified_at' => 'datetime',
     ];
+    
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -76,11 +83,13 @@ class User extends Authenticatable implements JWTSubject
         );
     }
 
-    public function nhomHocPhans(){
+    public function nhomHocPhans()
+    {
         return $this->belongsToMany(NhomHocPhan::class, "chi_tiet_nhoms", "sinhVienId", "nhomHocPhanId");
     }
 
-    public function monHocs(){
+    public function monHocs()
+    {
         return $this->belongsToMany(MonHoc::class, "phan_congs", "giangVienId", "monHocId");
     }
 }
