@@ -78,4 +78,8 @@ class BaiLamController extends Controller
     public function submittest(SubmitTestRequest $request,BaiLam $bailam){
         return $this->success($this->baiLamService->submittest($request->validated(), $bailam->id));
     }
+
+    public function reviewresult(BaiLam $bailam){
+        return $this->success($this->baiLamService->reviewresult($bailam));
+    }
 }

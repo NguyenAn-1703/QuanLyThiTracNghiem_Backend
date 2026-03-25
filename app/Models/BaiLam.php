@@ -30,4 +30,8 @@ class BaiLam extends Model
     public function chiTietBaiLams(){
         return $this->hasMany(ChiTietBaiLam::class, 'baiLamId');
     }
+
+    public function deThi(){
+        return $this->belongsTo(DeThi::class, 'deThiId');
+    }
 }

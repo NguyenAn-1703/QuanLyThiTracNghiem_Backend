@@ -207,4 +207,47 @@ class BaiLamService
 
         return $this->updateById($dataUpdate, $baiLam->id);
     }
+
+    public function reviewresult(BaiLam $bailam)
+    {
+        //check cấu hình
+        $deThi = $bailam->deThi;
+        $deThi->loadCount([
+            'cauHois as soCauHoi'
+        ]);
+
+        $cauHinhThi = $deThi->cauHinhThi;
+        $cauHois = $deThi->cauHois;
+
+        $cauHois->load('cauTraLois');
+
+        $chiTietBaiLams = $bailam->chiTietBaiLams;
+
+        $bailam->makeHidden('deThi');
+        $bailam->makeHidden('chiTietBaiLams');
+        $deThi->makeHidden('cauHinhThi');
+
+        $mapChiTiet = $chiTietBaiLams->keyBy('cauHoiId'); // giống dictionary
+
+        $cauHois->transform(function ($cauHoi) use ($mapChiTiet) { // map
+            $chiTiet = $mapChiTiet->get($cauHoi->id);
+
+            $cauHoi->dapAnDaChon = $chiTiet->dapAnId;
+
+            return $cauHoi;
+        });
+
+
+        if ($cauHinhThi->showScore) {
+            $data = [
+                "baiLam" => $bailam,
+                "deThi" => $deThi,
+            ];
+            if ($cauHinhThi->showDetailResults) {
+                $data["cauHois"] = $cauHois;
+            }
+        }
+
+        return $data;
+    }
 }

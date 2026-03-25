@@ -46,4 +46,8 @@ class DeThi extends Model
     public function cauHois(){
         return $this->belongsToMany(CauHoi::class, 'chi_tiet_de_this', 'deThiId', 'cauHoiId');
     }
+
+    public function cauHinhThi(){
+        return $this->hasOne(CauHinhThi::class, 'deThiId');
+    }
 }
