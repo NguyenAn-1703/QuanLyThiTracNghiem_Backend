@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Services\AuthService;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    use ApiResponseTrait;
+
+    protected AuthService $authService;
+
+    public function __construct(AuthService $authService) {
+        $this->authService = $authService; 
+    }
+
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->only('email', 'password');
-
-        if (!$token = Auth::guard('api')->attempt($credentials)) {
-            return response()->json([
-                'message' => 'Email hoặc mật khẩu không đúng'
-            ], 401);
-        }
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type'   => 'bearer',
-            'me' => Auth::guard('api')->user(),
-        ]);
+        return $this->success($this->authService->login($request->validated()));
     }
 
     public function me()
