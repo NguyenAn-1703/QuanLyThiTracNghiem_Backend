@@ -14,7 +14,7 @@ class CauHoiService
     public function getAll(array $filters = [])
     {
         $query = CauHoi::query()
-            ->with(['monHoc', 'chuong', 'doKho', 'nguoiTao'])
+            ->with(['monHoc', 'chuong', 'doKho', 'nguoiTao', 'cauTraLois'])
             ->withCount('deThis')
             ->where('isDeleted', false);
 

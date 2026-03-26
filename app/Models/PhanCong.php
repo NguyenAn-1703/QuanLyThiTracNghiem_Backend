@@ -17,4 +17,12 @@ class PhanCong extends Model
     protected $hidden = [];
 
     public $timestamps = false;
+
+    public function monHoc(){
+        return $this->belongsTo(MonHoc::class, 'monHocId');
+    }
+
+    public function giangVien(){
+        return $this->belongsTo(User::class, 'giangVienId');
+    }
 }
