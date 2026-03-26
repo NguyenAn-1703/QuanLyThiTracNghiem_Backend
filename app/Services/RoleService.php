@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Log;
 
 class RoleService
 {
+
+    public function getAll()
+    {
+        $roles = Role::withCount([
+            'users as total_users'
+        ])->get();
+        return $roles;
+    }
+
     public function getRoleDetail(Role $role)
     {
         $role = Role::with('role_details.action')->findOrFail($role->id);
