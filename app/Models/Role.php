@@ -21,4 +21,8 @@ class Role extends Model
         return $this->hasMany(RoleDetail::class, 'nhomQuyenId');
     }
 
+    public function users(){
+        return $this->hasMany(RoleDetail::class, 'nhomQuyenId');
+    }
+
 }

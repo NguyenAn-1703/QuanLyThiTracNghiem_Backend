@@ -27,9 +27,8 @@ class RoleController extends Controller
 
     public function index()
     {
-        $data = Role::all();
-        // if ($data->isEmpty()) return $this->notFound('Danh sách phân quyền trống');
-        return $this->success(RoleResource::collection($data), 'Lấy danh sách quyền thành công');
+        $data = $this->roleService->getAll();
+        return $this->success(RoleResource::collection($data));
     }
 
     /**
