@@ -9,7 +9,7 @@ class DeThiService
 {
     public function getAll()
     {
-        return DeThi::all();
+        return DeThi::all()->load(['monThi']);
     }
 
     public function getOne(DeThi $deThi)
