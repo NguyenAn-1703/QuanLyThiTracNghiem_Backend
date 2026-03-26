@@ -6,6 +6,7 @@ use App\Models\Action;
 use App\Models\Role;
 use App\Models\RoleDetail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RoleService
 {
@@ -189,5 +190,43 @@ class RoleService
 
             return true;
         });
+    }
+
+    public function hasRole($id, $permission)
+    { //cho middleware
+        $role = Role::findOrFail($id);
+        if (!$role || !isset($role['role_details'])) {
+            return false; // nếu không có quyền nào trả về false
+        }
+
+        $parts = explode('_', $permission, 2);
+
+        [$action, $function] = $parts;
+
+        $actionMap = [
+            'view'    => 'canView',
+            'create'   => 'canCreate',
+            'update'    => 'canUpdate',
+            'delete'    => 'canDelete',
+        ];
+
+        $field = $actionMap[$action];
+
+        $roleDetailData = $this->getRoleDetail($role);
+
+        foreach ($roleDetailData["role_details"] as $detail) {
+            if ($detail['tenChucNang'] === $function) {
+                return $detail[$field]; // trả true/false
+            }
+        }
+
+        // Log quyền cần và quyền đang có
+        Log::info("Kiểm tra quyền", [
+            'role_id' => $id,
+            'permission_checked' => $permission,
+            'user_has_permission' => $this->getRoleDetail($role),
+        ]);
+
+        return false;
     }
 }

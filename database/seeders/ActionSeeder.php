@@ -18,27 +18,27 @@ class ActionSeeder extends Seeder
     {
         $actions = [
             [
-                'tenChucNang' => 'QL_NHOMHP',
+                'tenChucNang' => 'users',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'QL_CAUHOI',
+                'tenChucNang' => 'mon_hocs',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'QL_DETHI',
+                'tenChucNang' => 'chua',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'QL_MONHOC',
+                'tenChucNang' => 'chua1',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'QL_NGUOIDUNG',
+                'tenChucNang' => 'chua2',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'QL_PHANQUYEN',
+                'tenChucNang' => 'chua3',
                 'urlIcon' => 'example.icon',
             ],
         ];
