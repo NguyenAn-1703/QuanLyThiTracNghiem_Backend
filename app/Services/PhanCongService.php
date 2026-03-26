@@ -9,17 +9,17 @@ class PhanCongService
 {
     public function getAll()
     {
-        return PhanCong::all();
+        return PhanCong::all()->load(['monHoc', 'giangVien']);
     }
 
-    public function getOne(PhanCong $phanCong)
-    {
-        return $phanCong;
-    }
+    // public function getOne(PhanCong $phanCong)
+    // {
+    //     return $phanCong;
+    // }
 
     public function add(array $data)
     {
-        return PhanCong::create($data);
+        return PhanCong::create($data)->load(['monHoc', 'giangVien']);
     }
 
     // public function update(array $data, PhanCong $phanCong)
@@ -36,7 +36,7 @@ class PhanCongService
     }
 
     public function get_o_gvien(User $user){
-        $user->load('monHocs');
+        $user->load(['monHocs']);
         return $user->monHocs;
     }
 }
