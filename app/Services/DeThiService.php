@@ -9,7 +9,7 @@ class DeThiService
 {
     public function getAll()
     {
-        return DeThi::all()->load(['monThi']);
+        return DeThi::all()->load(['monThi', 'nhomHocPhans']);
     }
 
     public function getOne(DeThi $deThi)
@@ -46,9 +46,10 @@ class DeThiService
         //map và tách các phần tử trong mảng con (dethis) ra 1 mảng
         $deThi = $user->nhomHocPhans->flatMap(
             function ($nhomHocPhan) {
-                return $nhomHocPhan->deThis;
+                return $nhomHocPhan->deThis->load('monThi');
             }
         ) -> unique('id'); // tránh trường hợp đề thi chia cho 2 nhóm khác nhau
+        $deThi;
 
         return $deThi;
     }
