@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\SubmitTestJob;
 use App\Models\BaiLam;
 use App\Models\CauHoi;
+use App\Models\User;
 use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Date;
@@ -248,6 +249,12 @@ class BaiLamService
             }
         }
 
+        return $data;
+    }
+
+    public function get_osvien(User $user)
+    { // lấy tất cả bài làm của sinh viên
+        $data = $user->load('baiLams.deThi');
         return $data;
     }
 }

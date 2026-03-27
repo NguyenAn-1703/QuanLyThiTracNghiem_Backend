@@ -8,6 +8,7 @@ use App\Http\Requests\SubmitTestRequest;
 use App\Http\Requests\UpdateBaiLamRequest;
 use App\Http\Requests\UpdateStudentTestRequest;
 use App\Models\BaiLam;
+use App\Models\User;
 use App\Traits\ApiResponseTrait;
 use App\Services\BaiLamService;
 
@@ -81,5 +82,9 @@ class BaiLamController extends Controller
 
     public function reviewresult(BaiLam $bailam){
         return $this->success($this->baiLamService->reviewresult($bailam));
+    }
+
+    public function get_osvien(User $user){
+        return $this->success($this->baiLamService->get_osvien($user));
     }
 }
