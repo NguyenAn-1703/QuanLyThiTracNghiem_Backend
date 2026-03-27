@@ -31,4 +31,8 @@ class GiaoBaiThiService
     {
         return $giaoBaiThi->delete();
     }
+
+    public function addArr(array $data){
+        return GiaoBaiThi::insert($data);
+    }
 }
