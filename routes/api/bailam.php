@@ -14,5 +14,5 @@ Route::post('/bailams/starttest', [BaiLamController::class, 'starttest']);
 Route::put('/bailams/updatestudenttest/{bailam}', [BaiLamController::class, 'updatestudenttest']);
 
 Route::put('/bailams/submittest/{bailam}', [BaiLamController::class, 'submittest']);
-
 Route::get('/bailams/reviewresult/{bailam}', [BaiLamController::class, 'reviewresult']);
+Route::get('/bailams/get_osvien/{user}', [BaiLamController::class, 'get_osvien']);

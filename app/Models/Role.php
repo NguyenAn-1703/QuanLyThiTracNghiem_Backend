@@ -22,7 +22,7 @@ class Role extends Model
     }
 
     public function users(){
-        return $this->hasMany(RoleDetail::class, 'nhomQuyenId');
+        return $this->hasMany(User::class, 'nhomQuyenId');
     }
 
 }
