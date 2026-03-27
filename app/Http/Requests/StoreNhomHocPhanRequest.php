@@ -26,6 +26,7 @@ class StoreNhomHocPhanRequest extends FormRequest
             'notes' => ['nullable', 'string'],
             'hocKy' => ['required', 'integer', 'min:1', 'max:3'],
             'namHoc' => ['required', 'integer', 'min:2000'],
+            'urlBackground' => ['nullable'],
             'giangVienId' => ['nullable', 'integer', 'exists:users,id'],
             'isHide' => ['nullable', 'boolean'],
             'isDeleted' => ['nullable', 'boolean'],
