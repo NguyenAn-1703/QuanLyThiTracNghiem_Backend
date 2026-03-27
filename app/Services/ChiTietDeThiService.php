@@ -37,4 +37,8 @@ class ChiTietDeThiService
             ->where('cauHoiId', $cauHoiId)
             ->firstOrFail();
     }
+
+    public function addArr(array $data){
+        return ChiTietDeThi::insert($data);
+    }
 }
