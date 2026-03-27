@@ -15,13 +15,16 @@ class NhomHocPhan extends Model
         "monHocId",
         "tenNhom",
         "maMoi",
-        "siSo",
         "notes",
         "hocKy",
         "namHoc",
         "giangVienId",
         "isHide",
         "isDeleted"
+    ];
+
+    protected $withCount = [
+        'chiTietNhoms as siSo'
     ];
 
     protected $hidden = [
@@ -42,5 +45,9 @@ class NhomHocPhan extends Model
 
     public function sinhViens(){
         return $this->belongsToMany(User::class, "chi_tiet_nhoms", "nhomHocPhanId", "sinhVienId");
+    }
+
+    public function chiTietNhoms(){
+        return $this->hasMany(ChiTietNhom::class, 'nhomHocPhanId');
     }
 }

@@ -20,7 +20,6 @@ return new class extends Migration
 
             $table->string('maMoi', 20)->unique(); // mã mời
 
-            $table->integer('siSo')->nullable();
             $table->text('notes')->nullable();
 
             $table->integer('hocKy');
