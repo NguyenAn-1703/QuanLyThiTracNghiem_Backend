@@ -69,4 +69,8 @@ class DeThiController extends Controller
         $data = $this->deThiService->get_osvien($user);
         return $this->success($data);
     }
+    public function get_ad(DeThi $dethi){
+        $data = $this->deThiService->getAd($dethi);
+        return $this->success($data);
+    }
 }
