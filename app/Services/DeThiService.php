@@ -60,4 +60,10 @@ class DeThiService
         $deThi->load('cauHois');
         return $deThi->cauHois;
     }
+
+    public function getAd(DeThi $deThi){
+        $deThi->load(['cauHois', 'monThi', 'nhomHocPhans', 'cauHinhThi']);
+        $deThi->cauHois->load('cauTraLois');
+        return $deThi;
+    }
 }
