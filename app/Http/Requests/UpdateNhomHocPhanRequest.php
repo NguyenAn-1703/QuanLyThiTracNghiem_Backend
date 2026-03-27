@@ -33,7 +33,7 @@ class UpdateNhomHocPhanRequest extends FormRequest
                 'max:20',
                 Rule::unique('nhom_hoc_phans', 'maMoi')->ignore($this->route('nhom_hoc_phan'))
             ],
-            'siSo' => ['sometimes', 'integer', 'min:1'],
+            // 'siSo' => ['sometimes', 'integer', 'min:1'],
             'notes' => ['sometimes', 'string'],
             'hocKy' => ['sometimes', 'integer', 'min:1', 'max:3'],
             'namHoc' => ['sometimes', 'integer', 'min:2000'],

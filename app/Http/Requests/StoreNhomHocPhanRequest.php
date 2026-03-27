@@ -22,7 +22,6 @@ class StoreNhomHocPhanRequest extends FormRequest
             'monHocId' => ['required', 'integer', 'exists:mon_hocs,id'],
             'tenNhom' => ['required', 'string', 'max:100'],
             'maMoi' => ['required', 'string', 'max:20', 'unique:nhom_hoc_phans,maMoi'],
-            'siSo' => ['nullable', 'integer', 'min:1'],
             'notes' => ['nullable', 'string'],
             'hocKy' => ['required', 'integer', 'min:1', 'max:3'],
             'namHoc' => ['required', 'integer', 'min:2000'],
@@ -48,9 +47,6 @@ class StoreNhomHocPhanRequest extends FormRequest
             'maMoi.string' => ':attribute phải là chuỗi ký tự',
             'maMoi.max' => ':attribute không được vượt quá 20 ký tự',
             'maMoi.unique' => ':attribute đã tồn tại',
-
-            'siSo.integer' => ':attribute phải là số nguyên',
-            'siSo.min' => ':attribute phải lớn hơn hoặc bằng 1',
 
             'notes.string' => ':attribute phải là chuỗi ký tự',
 
