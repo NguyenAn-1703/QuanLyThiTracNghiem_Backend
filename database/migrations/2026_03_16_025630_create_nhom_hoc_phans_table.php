@@ -26,6 +26,8 @@ return new class extends Migration
             $table->integer('hocKy');
             $table->integer('namHoc');
 
+            $table->string('urlBackground')->default('default.png');
+
             $table->integer('giangVienId');
 
             $table->boolean('isHide')->default(false);
