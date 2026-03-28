@@ -18,27 +18,39 @@ class ActionSeeder extends Seeder
     {
         $actions = [
             [
-                'tenChucNang' => 'users',
+                'tenChucNang' => 'nguoi_dung',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'mon_hocs',
+                'tenChucNang' => 'hoc_phan',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'chua',
+                'tenChucNang' => 'cau_hoi',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'chua1',
+                'tenChucNang' => 'mon_hoc',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'chua2',
+                'tenChucNang' => 'chuong',
                 'urlIcon' => 'example.icon',
             ],
             [
-                'tenChucNang' => 'chua3',
+                'tenChucNang' => 'phan_cong',
+                'urlIcon' => 'example.icon',
+            ],
+            [
+                'tenChucNang' => 'de_thi',
+                'urlIcon' => 'example.icon',
+            ],
+            [
+                'tenChucNang' => 'nhom_quyen',
+                'urlIcon' => 'example.icon',
+            ],
+            [
+                'tenChucNang' => 'thong_bao',
                 'urlIcon' => 'example.icon',
             ],
         ];
