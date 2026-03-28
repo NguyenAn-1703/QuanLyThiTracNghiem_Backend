@@ -15,12 +15,14 @@ class RoleDetailSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run() //làm tạm đầy đủ crud
     {
         $adminRole = Role::where('tenNhomQuyen', 'admin')->first();
         $adminActions = Action::all();
         $roleDetails = [];
+
         $hanhDongs = ["VIEW", "ADD", "UPDATE", "DELETE"];
+
         foreach ($adminActions as $adminAction) {
             foreach ($hanhDongs as $hanhDong) {
                 $roleDetails[] = [
@@ -30,6 +32,27 @@ class RoleDetailSeeder extends Seeder
                 ];
             }
         }
-        RoleDetail::insert($roleDetails);
+
+        $giangVienRole = Role::where('tenNhomQuyen', 'teacher')->first();
+        $giangVienActions = Action::whereIn('tenChucNang', [
+            'hoc_phan',
+            'cau_hoi',
+            'chuong',
+            'phan_cong',
+            'de_thi',
+            'thong_bao'
+        ])->get();
+
+        foreach ($giangVienActions as $giangVienAction) {
+            foreach ($hanhDongs as $hanhDong) {
+                $roleDetails[] = [
+                    "nhomQuyenId" => $giangVienRole->id,
+                    "chucNangId" => $giangVienAction->id,
+                    "hanhDong" => $hanhDong
+                ];
+            }
+        }
+
+        RoleDetail::insertOrIgnore($roleDetails); //ignore hoặc insert dựa vào constraint unique của db
     }
 }
