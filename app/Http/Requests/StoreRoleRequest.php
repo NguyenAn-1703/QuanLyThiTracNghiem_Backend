@@ -25,7 +25,7 @@ class StoreRoleRequest extends FormRequest
     {
         return [
             //tên quyền
-            'tenNhomQuyen' => 'required|max:255|string',
+            'tenNhomQuyen' => 'required|max:255|string|unique:roles,tenNhomQuyen',
             //chi tiết quyền
             'role_details' => ['required', 'array', 'min:1'],
             //kiểm tra xem chức năng có tồn tại trong db không
@@ -55,6 +55,13 @@ class StoreRoleRequest extends FormRequest
                 'required',
                 'boolean',
             ],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'tenNhomQuyen.unique' => 'Tên nhóm quyền đã tồn tại',
         ];
     }
 }

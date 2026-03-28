@@ -68,4 +68,11 @@ class UpdateRoleRequest extends FormRequest
             ],
         ];
     }
+    
+    public function messages()
+    {
+        return [
+            'tenNhomQuyen.unique'   => 'Tên nhóm quyền đã tồn tại',
+        ];
+    }
 }
