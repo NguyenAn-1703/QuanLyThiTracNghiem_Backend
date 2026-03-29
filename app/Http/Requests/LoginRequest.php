@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
 class LoginRequest extends FormRequest
 {
@@ -31,16 +30,15 @@ class LoginRequest extends FormRequest
                 'string',
                 function ($attribute, $value, $fail) {
                     $exists = User::where('email', $value)
-                            ->orWhere('username', $value)
-                            ->exists();
+                        ->orWhere('username', $value)
+                        ->exists();
                     if (!$exists) {
-                        $fail('The selected login is invalid.');
+                        $fail('Email hoặc username không tồn tại.');
                     }
                 }
             ],
             'password' => [
                 'required',
-                'confirmed'
             ],
         ];
     }

@@ -30,6 +30,7 @@ class Handler extends ExceptionHandler
         NotFoundHttpException::class,
         ThrottleRequestsException::class,
         BusinessException::class,
+        NotFoundException::class,
     ];
 
     /**
@@ -75,13 +76,15 @@ class Handler extends ExceptionHandler
         return match (true) {
             $e instanceof ValidationException       => $this->validation($e->errors(), 'Dữ liệu không hợp lệ'),
 
-            $e instanceof AuthenticationException   => $this->unauthorized("Bạn chưa đăng nhập vào hệ thống"),
+            $e instanceof AuthenticationException   => $this->unauthorized(),
 
             $e instanceof AuthorizationException    => $this->forbidden("Bạn chưa đủ quyền thực hiện hành động này"),
 
             $e instanceof ThrottleRequestsException => $this->throttleRequest(),
 
             $e instanceof BusinessException         => $this->error(null, $msg, 400),
+
+            $e instanceof NotFoundException         => $this->notFound($msg),
 
             $e instanceof ModelNotFoundException    => $this->notFound(
                 class_basename($e->getModel()) . " không tìm thấy"
