@@ -4,10 +4,16 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthService
 {
+    protected RoleService $roleService;
+    public function __construct(RoleService $roleService)
+    {
+        $this->roleService = $roleService;
+    }
     public function login(array $data)
     {
         $login = $data['login'];
@@ -29,13 +35,18 @@ class AuthService
         ];
 
         if (!$token = Auth::guard('api')->attempt($credentials)) {
-            throw new HttpException(401, 'Email/Tên đăng nhập hoặc mật khẩu không đúng');
+            throw ValidationException::withMessages([
+                'login' => ['Mật khẩu không đúng'],
+            ]);
         }
+
+        $role = $this->roleService->getRoleDetailById($user->nhomQuyenId) ?? "sinh viên";
 
         return response()->json([
             'access_token' => $token,
             'token_type'   => 'bearer',
             'me' => Auth::guard('api')->user(),
+            'role' => $role
         ]);
     }
 

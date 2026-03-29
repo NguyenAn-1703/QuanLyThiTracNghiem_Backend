@@ -45,6 +45,33 @@ class RoleService
         return $response;
     }
 
+    public function getRoleDetailById(int $id)
+    {
+        $role = Role::with('role_details.action')->find($id);
+        if(!$role) return null;
+        $role_details = $role->role_details;
+
+        $permission = $role_details
+            ->groupBy('chucNangId')
+            ->map(function ($items) {
+                return [
+                    'tenChucNang' => $items->first()->action->tenChucNang,
+                    'canView'   => $items->contains('hanhDong', 'VIEW'),
+                    'canCreate' => $items->contains('hanhDong', 'ADD'),
+                    'canUpdate' => $items->contains('hanhDong', 'UPDATE'),
+                    'canDelete' => $items->contains('hanhDong', 'DELETE')
+                ];
+            })->values();
+
+        $response = [
+            "id" => $role->id,
+            "tenNhomQuyen" => $role->tenNhomQuyen,
+            "role_details" => $permission
+        ];
+
+        return $response;
+    }
+
     // *** format gửi tạo 1 phân quyền
     // {
     //   "tenNhomQuyen": "Nhân viên bán hàng",
