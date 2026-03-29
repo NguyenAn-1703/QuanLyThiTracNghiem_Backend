@@ -9,7 +9,7 @@ trait ApiResponseTrait
         200 => 'Thành công',
         201 => 'Tạo thành công',
         400 => 'Có lỗi xảy ra',
-        401 => 'Chưa xác thực',
+        401 => 'Chưa xác thực người dùng',
         403 => 'Không có quyền truy cập',
         404 => 'Không tìm thấy',
         422 => 'Dữ liệu không hợp lệ',

@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Exceptions\BusinessException;
+use App\Exceptions\NotFoundException;
 use App\Models\ChiTietNhom;
 use App\Models\NhomHocPhan;
 use App\Models\User;
+use Hamcrest\Type\IsNumeric;
 use Illuminate\Support\Str;
 
 class NhomHocPhanService
@@ -56,7 +59,7 @@ class NhomHocPhanService
         $nhomHocPhan = NhomHocPhan::findOrFail($nhomHocPhanId);
 
         if ($mamoi !== $nhomHocPhan->maMoi) {
-            throw new \Exception('Mã tham gia không đúng');
+            throw new BusinessException('Mã tham gia không đúng');
         }
 
         $chiTietNhom = [
@@ -74,6 +77,49 @@ class NhomHocPhanService
             'nhomHocPhans.monHoc'
         ]);
         return $user;
+    }
+
+    public function get_danh_sach_sinh_vien(NhomHocPhan $nhomHocPhan): array
+    {
+        $sinhViens = $nhomHocPhan->sinhViens()
+            ->where('users.isStudent', true)
+            ->where('users.isDeleted', false)
+            ->orderBy('users.hoTen')
+            ->get()
+            ->makeHidden('pivot');
+        if ($sinhViens->isEmpty()) throw new NotFoundException("Nhóm học phần chưa có sinh viên, vui lòng thêm sinh viên mới.");
+
+        return [
+            'nhomHocPhanId' => $nhomHocPhan->id,
+            'soLuongSinhVien' => $sinhViens->count(),
+            'sinhViens' => $sinhViens,
+        ];
+    }
+
+    public function add_sinh_vien_to_nhom(int $sinhVienId, NhomHocPhan $nhomHocPhan)
+    {
+        $user = User::findOrFail($sinhVienId);
+
+        if (!$user->isStudent) {
+            throw new BusinessException('Người dùng không phải là sinh viên');
+        }
+
+        if ($user->isDeleted) {
+            throw new BusinessException('Người dùng đã bị xóa');
+        }
+
+        $exists = ChiTietNhom::where('sinhVienId', $sinhVienId)
+            ->where('nhomHocPhanId', $nhomHocPhan->id)
+            ->exists();
+
+        if ($exists) {
+            throw new BusinessException('Sinh viên đã có trong nhóm học phần này');
+        }
+
+        return ChiTietNhom::create([
+            'sinhVienId' => $sinhVienId,
+            'nhomHocPhanId' => $nhomHocPhan->id,
+        ]);
     }
 
     public function resetInviteCode(NhomHocPhan $nhomHocPhan)
