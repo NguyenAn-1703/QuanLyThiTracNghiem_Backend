@@ -96,4 +96,8 @@ class User extends Authenticatable implements JWTSubject
     public function baiLams(){
         return $this->hasMany(BaiLam::class, "thiSinhId");
     }
+
+    public function role(){
+        return $this->belongsTo(Role::class, "nhomQuyenId");
+    }
 }
