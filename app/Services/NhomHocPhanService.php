@@ -34,7 +34,8 @@ class NhomHocPhanService
 
     public function delete(NhomHocPhan $nhomHocPhan)
     {
-        return $nhomHocPhan->delete();
+        $nhomHocPhan->update(['isDeleted' => true]);
+        return true;
     }
 
     public function get_w_gvien_mon(NhomHocPhan $nhomHocPhan)
@@ -78,19 +79,32 @@ class NhomHocPhanService
         return $user;
     }
 
-    public function get_danh_sach_sinh_vien(NhomHocPhan $nhomHocPhan): array
+    public function get_danh_sach_sinh_vien(NhomHocPhan $nhomHocPhan, ?string $keyword = null): array
     {
-        $sinhViens = $nhomHocPhan->sinhViens()
+        $query = $nhomHocPhan->sinhViens()
             ->where('users.isStudent', true)
             ->where('users.isDeleted', false)
-            ->orderBy('users.hoTen')
-            ->get()
-            ->makeHidden('pivot');
-        if ($sinhViens->isEmpty()) throw new NotFoundException("Nhóm học phần chưa có sinh viên, vui lòng thêm sinh viên mới.");
+            ->orderBy('users.hoTen');
+
+        if (!empty($keyword)) {
+            $keyword = trim($keyword);
+            $query->where(function ($q) use ($keyword) {
+                $q->where('users.hoTen', 'like', "%{$keyword}%")
+                  ->orWhere('users.ma', 'like', "%{$keyword}%")
+                  ->orWhere('users.email', 'like', "%{$keyword}%");
+            });
+        }
+
+        $sinhViens = $query->get()->makeHidden('pivot');
+
+        if (empty($keyword) && $sinhViens->isEmpty()) {
+            throw new NotFoundException('Nhóm học phần chưa có sinh viên, vui lòng thêm sinh viên mới.');
+        }
 
         return [
             'nhomHocPhanId' => $nhomHocPhan->id,
             'soLuongSinhVien' => $sinhViens->count(),
+            'keyword' => $keyword,
             'sinhViens' => $sinhViens,
         ];
     }

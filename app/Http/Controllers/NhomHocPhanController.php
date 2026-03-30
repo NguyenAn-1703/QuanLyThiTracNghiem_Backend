@@ -95,9 +95,10 @@ class NhomHocPhanController extends Controller
         return $this->success($data);
     }
 
-    public function get_danh_sach_sinh_vien(NhomHocPhan $nhomhocphan)
+    public function get_danh_sach_sinh_vien(NhomHocPhan $nhomhocphan, Request $request)
     {
-        $data = $this->nhomHocPhanService->get_danh_sach_sinh_vien($nhomhocphan);
+        $keyword = $request->query('keyword');
+        $data = $this->nhomHocPhanService->get_danh_sach_sinh_vien($nhomhocphan, $keyword);
         return $this->success($data);
     }
 
@@ -114,6 +115,19 @@ class NhomHocPhanController extends Controller
     public function resetInviteCode(NhomHocPhan $nhomhocphan)
     {
         $data = $this->nhomHocPhanService->resetInviteCode($nhomhocphan);
+        return $this->success($data);
+    }
+
+    /**
+     * Hiển thị danh sách học phần / nhóm lớp được phân công giảng dạy của một giảng viên.
+     *
+     * Query params:
+     *   - includeHidden (bool, default false): có lấy cả nhóm đang ẩn không
+     */
+    public function getAssignedTeaching(User $user, Request $request)
+    {
+        $includeHidden = filter_var($request->query('includeHidden', false), FILTER_VALIDATE_BOOLEAN);
+        $data = $this->nhomHocPhanService->getAssignedTeachingByLecturerId($user->id, $includeHidden);
         return $this->success($data);
     }
 
