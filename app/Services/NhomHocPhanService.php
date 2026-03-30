@@ -7,7 +7,6 @@ use App\Exceptions\NotFoundException;
 use App\Models\ChiTietNhom;
 use App\Models\NhomHocPhan;
 use App\Models\User;
-use Hamcrest\Type\IsNumeric;
 use Illuminate\Support\Str;
 
 class NhomHocPhanService
