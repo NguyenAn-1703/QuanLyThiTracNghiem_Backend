@@ -34,7 +34,8 @@ class NhomHocPhanService
 
     public function delete(NhomHocPhan $nhomHocPhan)
     {
-        return $nhomHocPhan->delete();
+        $nhomHocPhan->update(['isDeleted' => true]);
+        return true;
     }
 
     public function get_w_gvien_mon(NhomHocPhan $nhomHocPhan)
