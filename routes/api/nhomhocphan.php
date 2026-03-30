@@ -9,6 +9,7 @@ Route::get('/nhomhocphans/{nhomhocphan}', [NhomHocPhanController::class, 'show']
 Route::post('/nhomhocphans', [NhomHocPhanController::class, 'store']);
 Route::put('/nhomhocphans/{nhomhocphan}', [NhomHocPhanController::class, 'update']);
 Route::delete('/nhomhocphans/{nhomhocphan}', [NhomHocPhanController::class, 'destroy']);
+Route::patch('/nhomhocphans/hidden/{nhomhocphan}', [NhomHocPhanController::class, 'hidden']);
 Route::get('/nhomhocphans/o_svien/{user}', [NhomHocPhanController::class, 'get_o_svien']);
 Route::get('/nhomhocphans/get_danh_sach_sinh_vien/{nhomhocphan}', [NhomHocPhanController::class, 'get_danh_sach_sinh_vien']);
 Route::get('/nhomhocphans/sinh_vien_export/{nhomhocphan}', [NhomHocPhanController::class, 'sinhVienExport']);

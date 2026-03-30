@@ -39,6 +39,12 @@ class NhomHocPhanService
         return true;
     }
 
+    public function hidden(NhomHocPhan $nhomHocPhan)
+    {
+        $nhomHocPhan->update(['isHide' => true]);
+        return $nhomHocPhan;
+    }
+
     public function get_w_gvien_mon(NhomHocPhan $nhomHocPhan)
     {
         $nhomHocPhan->load(['giangVien', 'monHoc']);

@@ -77,6 +77,12 @@ class NhomHocPhanController extends Controller
         return $this->success($data);
     }
 
+    public function hidden(NhomHocPhan $nhomhocphan)
+    {
+        $data = $this->nhomHocPhanService->hidden($nhomhocphan);
+        return $this->success($data);
+    }
+
     public function get_w_gvien_mon(NhomHocPhan $nhomhocphan)
     {
         $data = $this->nhomHocPhanService->get_w_gvien_mon($nhomhocphan);
