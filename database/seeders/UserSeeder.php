@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
         $studentRole = Role::where('tenNhomQuyen', 'student')->first();
         $users = [
             [
-                'ma' => '1',
                 'hoTen' => 'Admin',
                 'email' => 'admin',
                 'password' => 'admin',
@@ -35,7 +34,6 @@ class UserSeeder extends Seeder
                 'isStudent' => false,
             ],
             [
-                'ma' => '2',
                 'hoTen' => 'Ân Giảng Viên',
                 'email' => 'gianvien@gmail.com',
                 'password' => '123456',
@@ -49,7 +47,6 @@ class UserSeeder extends Seeder
                 'isStudent' => false,
             ],
             [
-                'ma' => '3123560002',
                 'hoTen' => 'Nguyễn Ngọc Thiên Ân',
                 'email' => 'sinhvien@gmail.com',
                 'password' => '123456',
