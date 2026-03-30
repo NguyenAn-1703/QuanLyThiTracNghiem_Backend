@@ -63,4 +63,9 @@ class MonHocController extends Controller
         $data = $this->monHocService->delete($monhoc);
         return $this->success($data);
     }
+
+    public function get_w_nhp(){
+        $data = $this->monHocService->get_w_nhp();
+        return $this->success($data);
+    }
 }
