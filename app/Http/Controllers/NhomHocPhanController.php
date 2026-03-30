@@ -95,9 +95,10 @@ class NhomHocPhanController extends Controller
         return $this->success($data);
     }
 
-    public function get_danh_sach_sinh_vien(NhomHocPhan $nhomhocphan)
+    public function get_danh_sach_sinh_vien(NhomHocPhan $nhomhocphan, Request $request)
     {
-        $data = $this->nhomHocPhanService->get_danh_sach_sinh_vien($nhomhocphan);
+        $keyword = $request->query('keyword');
+        $data = $this->nhomHocPhanService->get_danh_sach_sinh_vien($nhomhocphan, $keyword);
         return $this->success($data);
     }
 
