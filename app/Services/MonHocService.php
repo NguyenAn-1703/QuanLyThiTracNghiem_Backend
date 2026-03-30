@@ -31,4 +31,10 @@ class MonHocService
     {
         return $monHoc->delete();
     }
+
+    public function get_w_nhp(){
+        $monHocs = MonHoc::all();
+        $monHocs->load('nhomHocPhans');
+        return $monHocs;
+    }
 }
