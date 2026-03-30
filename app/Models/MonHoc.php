@@ -20,4 +20,8 @@ class MonHoc extends Model
     ];
 
     protected $hidden = [];
+
+    public function nhomHocPhans(){
+        return $this->hasMany(NhomHocPhan::class, 'monHocId');
+    }
 }
