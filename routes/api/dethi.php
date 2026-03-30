@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/dethis', [DeThiController::class, 'index']);
 Route::get('/dethis/{dethi}', [DeThiController::class, 'show']);
 Route::post('/dethis', [DeThiController::class, 'store']);
+Route::post('/dethis/generate_dethis_by_fiter', [DeThiController::class, 'generate_dethis_by_fiter']);
 Route::put('/dethis/{dethi}', [DeThiController::class, 'update']);
 Route::delete('/dethis/{dethi}', [DeThiController::class, 'destroy']);
 

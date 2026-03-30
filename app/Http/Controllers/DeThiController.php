@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GenerateDeThiByFilterRequest;
 use App\Http\Requests\StoreDeThiRequest;
 use App\Http\Requests\UpdateDeThiRequest;
 use App\Models\DeThi;
@@ -35,6 +36,12 @@ class DeThiController extends Controller
     public function store(StoreDeThiRequest $request)
     {
         $data = $this->deThiService->add($request->validated());
+        return $this->success($data, 201);
+    }
+
+    public function generate_dethis_by_fiter(GenerateDeThiByFilterRequest $request)
+    {
+        $data = $this->deThiService->generateByFilter($request->validated());
         return $this->success($data, 201);
     }
 
