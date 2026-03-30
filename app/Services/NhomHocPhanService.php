@@ -97,7 +97,7 @@ class NhomHocPhanService
             $keyword = trim($keyword);
             $query->where(function ($q) use ($keyword) {
                 $q->where('users.hoTen', 'like', "%{$keyword}%")
-                  ->orWhere('users.ma', 'like', "%{$keyword}%")
+                  ->orWhere('users.username', 'like', "%{$keyword}%")
                   ->orWhere('users.email', 'like', "%{$keyword}%");
             });
         }
@@ -126,7 +126,7 @@ class NhomHocPhanService
 
             return [
                 $index + 1,
-                $sinhVien->ma,
+                $sinhVien->username,
                 $sinhVien->hoTen,
                 $sinhVien->email,
                 $sinhVien->sdt,
@@ -143,7 +143,7 @@ class NhomHocPhanService
             ],
             'headerTitles' => [
                 'STT',
-                'MSSV',
+                'Tên đăng nhập',
                 'Tên sinh viên',
                 'Email',
                 'SĐT',
@@ -159,16 +159,29 @@ class NhomHocPhanService
         $added = [];
 
         foreach ($rows as $rowIndex => $row) {
+            // Skip if row doesn't have enough columns
+            if (count($row) < 2) {
+                continue;
+            }
+            
             $mssv = isset($row[1]) ? trim((string)$row[1]) : null;
+            
+            // Skip empty rows
             if (empty($mssv)) {
                 continue;
             }
+            
+            // Skip header row - check if the value matches common header titles
+            $headerTitles = ['Tên đăng nhập', 'MSSV', 'STT', 'Username', 'Student ID', 'ID'];
+            if (in_array($mssv, $headerTitles, true)) {
+                continue;
+            }
 
-            $user = User::query()->where('ma', $mssv)->first();
+            $user = User::query()->where('username', $mssv)->first();
             if (!$user) {
                 $missing[] = [
                     'dòng' => $rowIndex + 2,
-                    'mssv' => $mssv,
+                    'username' => $mssv,
                     'hoTen' => isset($row[2]) ? trim((string)$row[2]) : null,
                     'email' => isset($row[3]) ? trim((string)$row[3]) : null,
                     'sdt' => isset($row[4]) ? trim((string)$row[4]) : null,
@@ -179,7 +192,7 @@ class NhomHocPhanService
 
             try {
                 $this->add_sinh_vien_to_nhom($user->id, $nhomHocPhan);
-                $added[] = ['id' => $user->id, 'ma' => $user->ma, 'hoTen' => $user->hoTen];
+                $added[] = ['id' => $user->id, 'username' => $user->username, 'hoTen' => $user->hoTen];
             } catch (BusinessException $e) {
                 if (str_contains($e->getMessage(), 'đã có trong nhóm')) {
                     continue;
@@ -193,6 +206,10 @@ class NhomHocPhanService
                 'Một số sinh viên không tồn tại trong hệ thống',
                 $missing,
             );
+        }
+
+        if (empty($added)) {
+            throw new BusinessException('Không có sinh viên nào mới được thêm vào nhóm học phần');
         }
 
         return [
