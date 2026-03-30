@@ -73,6 +73,16 @@ class Handler extends ExceptionHandler
     private function handleApiException(Throwable $e)
     {
         $msg = $e->getMessage();
+
+        if ($e instanceof NotFoundException) {
+            return response()->json([
+                'success' => false,
+                'code' => 404,
+                'message' => $msg,
+                'errors' => $e->getErrors(),
+            ], 404);
+        }
+
         return match (true) {
             $e instanceof ValidationException       => $this->validation($e->errors(), 'Dữ liệu không hợp lệ'),
 
@@ -83,8 +93,6 @@ class Handler extends ExceptionHandler
             $e instanceof ThrottleRequestsException => $this->throttleRequest(),
 
             $e instanceof BusinessException         => $this->error(null, $msg, 400),
-
-            $e instanceof NotFoundException         => $this->notFound($msg),
 
             $e instanceof ModelNotFoundException    => $this->notFound(
                 class_basename($e->getModel()) . " không tìm thấy"

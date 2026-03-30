@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\BusinessException;
+use App\Helpers\XlsxExportHelper;
 use App\Http\Requests\StoreNhomHocPhanRequest;
 use App\Http\Requests\ThamGiaNhomRequest;
 use App\Http\Requests\UpdateNhomHocPhanRequest;
@@ -13,16 +14,21 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exceptions\NotFoundException;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class NhomHocPhanController extends Controller
 {
     use ApiResponseTrait;
 
     private NhomHocPhanService $nhomHocPhanService;
+    private XlsxExportHelper $xlsxExportHelper;
 
-    public function __construct(NhomHocPhanService $nhomHocPhanService)
+    public function __construct(NhomHocPhanService $nhomHocPhanService, XlsxExportHelper $xlsxExportHelper)
     {
         $this->nhomHocPhanService = $nhomHocPhanService;
+        $this->xlsxExportHelper = $xlsxExportHelper;
     }
 
     /**
@@ -40,7 +46,7 @@ class NhomHocPhanController extends Controller
     public function store(StoreNhomHocPhanRequest $request)
     {
         $data = $this->nhomHocPhanService->add($request->validated());
-        return $this->success($data, 201);
+        return $this->created($data);
     }
 
     /**
@@ -68,6 +74,12 @@ class NhomHocPhanController extends Controller
     public function destroy(NhomHocPhan $nhomhocphan)
     {
         $data = $this->nhomHocPhanService->delete($nhomhocphan);
+        return $this->success($data);
+    }
+
+    public function hidden(NhomHocPhan $nhomhocphan)
+    {
+        $data = $this->nhomHocPhanService->hidden($nhomhocphan);
         return $this->success($data);
     }
 
@@ -128,6 +140,52 @@ class NhomHocPhanController extends Controller
     {
         $includeHidden = filter_var($request->query('includeHidden', false), FILTER_VALIDATE_BOOLEAN);
         $data = $this->nhomHocPhanService->getAssignedTeachingByLecturerId($user->id, $includeHidden);
+        return $this->success($data);
+    }
+
+    public function sinhVienExport(NhomHocPhan $nhomhocphan, Request $request): BinaryFileResponse
+    {
+        $keyword = $request->query('keyword');
+        $export = $this->nhomHocPhanService->getSinhViensExport($nhomhocphan, $keyword);
+
+        return $this->xlsxExportHelper->download(
+            $export['fileNameAttributes'],
+            $export['headerTitles'],
+            $export['data']
+        );
+    }
+
+    public function sinhVienImport(NhomHocPhan $nhomhocphan, Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx,xls,csv'],
+        ]);
+        $file = $request->file('file');
+
+        $sheets = Excel::toArray(null, $file);
+        if (empty($sheets) || empty($sheets[0])) {
+            throw new NotFoundException('File import rỗng');
+        }
+
+        $rows = $sheets[0];
+
+        $firstRow = $rows[0] ?? null;
+        if ($firstRow && count($firstRow) >= 2 && in_array(trim((string)$firstRow[1]), ['MSSV', 'mssv', 'Mã sinh viên'])) {
+            array_shift($rows);
+        }
+
+        $result = $this->nhomHocPhanService->importSinhViensToNhom($nhomhocphan, $rows);
+        return $this->success($result);
+    }
+
+    public function remove_sinh_vien_from_nhom(NhomHocPhan $nhomhocphan, Request $request)
+    {
+        $sinhVienId = $request->input('sinhVienId');
+        if (!is_numeric($sinhVienId)) {
+            throw new BusinessException('ID sinh viên không hợp lệ');
+        }
+        
+        $data = $this->nhomHocPhanService->remove_sinh_vien_from_nhom((int)$sinhVienId, $nhomhocphan);
         return $this->success($data);
     }
 

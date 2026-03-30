@@ -8,6 +8,7 @@ use App\Models\ChiTietNhom;
 use App\Models\NhomHocPhan;
 use App\Models\User;
 use Illuminate\Support\Str;
+use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class NhomHocPhanService
 {
@@ -36,6 +37,12 @@ class NhomHocPhanService
     {
         $nhomHocPhan->update(['isDeleted' => true]);
         return true;
+    }
+
+    public function hidden(NhomHocPhan $nhomHocPhan)
+    {
+        $nhomHocPhan->update(['isHide' => true]);
+        return $nhomHocPhan;
     }
 
     public function get_w_gvien_mon(NhomHocPhan $nhomHocPhan)
@@ -90,7 +97,7 @@ class NhomHocPhanService
             $keyword = trim($keyword);
             $query->where(function ($q) use ($keyword) {
                 $q->where('users.hoTen', 'like', "%{$keyword}%")
-                  ->orWhere('users.ma', 'like', "%{$keyword}%")
+                  ->orWhere('users.username', 'like', "%{$keyword}%")
                   ->orWhere('users.email', 'like', "%{$keyword}%");
             });
         }
@@ -106,6 +113,108 @@ class NhomHocPhanService
             'soLuongSinhVien' => $sinhViens->count(),
             'keyword' => $keyword,
             'sinhViens' => $sinhViens,
+        ];
+    }
+
+    public function getSinhViensExport(NhomHocPhan $nhomHocPhan, ?string $keyword = null): array
+    {
+        $danhSach = $this->get_danh_sach_sinh_vien($nhomHocPhan, $keyword);
+        $sinhViens = collect($danhSach['sinhViens']);
+
+        $rows = $sinhViens->values()->map(function ($sinhVien, $index) {
+            $ngaySinh = $sinhVien->ngaySinh ? $sinhVien->ngaySinh->format('d-m-Y') : '';
+
+            return [
+                $index + 1,
+                $sinhVien->username,
+                $sinhVien->hoTen,
+                $sinhVien->email,
+                $sinhVien->sdt,
+                $ngaySinh,
+            ];
+        })->toArray();
+
+        return [
+            'fileNameAttributes' => [
+                'namHoc' => $nhomHocPhan->namHoc,
+                'hocKy' => $nhomHocPhan->hocKy,
+                'tenNhomHocPhan' => $nhomHocPhan->tenNhom,
+                'idNhomHocPhan' => $nhomHocPhan->id,
+            ],
+            'headerTitles' => [
+                'STT',
+                'Tên đăng nhập',
+                'Tên sinh viên',
+                'Email',
+                'SĐT',
+                'Ngày sinh',
+            ],
+            'data' => $rows,
+        ];
+    }
+
+    public function importSinhViensToNhom(NhomHocPhan $nhomHocPhan, array $rows): array
+    {
+        $missing = [];
+        $added = [];
+
+        foreach ($rows as $rowIndex => $row) {
+            // Skip if row doesn't have enough columns
+            if (count($row) < 2) {
+                continue;
+            }
+            
+            $mssv = isset($row[1]) ? trim((string)$row[1]) : null;
+            
+            // Skip empty rows
+            if (empty($mssv)) {
+                continue;
+            }
+            
+            // Skip header row - check if the value matches common header titles
+            $headerTitles = ['Tên đăng nhập', 'MSSV', 'STT', 'Username', 'Student ID', 'ID'];
+            if (in_array($mssv, $headerTitles, true)) {
+                continue;
+            }
+
+            $user = User::query()->where('username', $mssv)->first();
+            if (!$user) {
+                $missing[] = [
+                    'dòng' => $rowIndex + 2,
+                    'username' => $mssv,
+                    'hoTen' => isset($row[2]) ? trim((string)$row[2]) : null,
+                    'email' => isset($row[3]) ? trim((string)$row[3]) : null,
+                    'sdt' => isset($row[4]) ? trim((string)$row[4]) : null,
+                    'ngaySinh' => $this->normalizeImportedBirthDate($row[5] ?? null),
+                ];
+                continue;
+            }
+
+            try {
+                $this->add_sinh_vien_to_nhom($user->id, $nhomHocPhan);
+                $added[] = ['id' => $user->id, 'username' => $user->username, 'hoTen' => $user->hoTen];
+            } catch (BusinessException $e) {
+                if (str_contains($e->getMessage(), 'đã có trong nhóm')) {
+                    continue;
+                }
+                throw $e;
+            }
+        }
+
+        if (!empty($missing)) {
+            throw new NotFoundException(
+                'Một số sinh viên không tồn tại trong hệ thống',
+                $missing,
+            );
+        }
+
+        if (empty($added)) {
+            throw new BusinessException('Không có sinh viên nào mới được thêm vào nhóm học phần');
+        }
+
+        return [
+            'added' => $added,
+            'count' => count($added),
         ];
     }
 
@@ -169,5 +278,53 @@ class NhomHocPhanService
                 'soMonHoc' => $monHocs->count(),
             ],
         ];
+    }
+
+    public function remove_sinh_vien_from_nhom(int $sinhVienId, NhomHocPhan $nhomHocPhan): bool
+    {
+        $deleted = ChiTietNhom::where('sinhVienId', $sinhVienId)
+            ->where('nhomHocPhanId', $nhomHocPhan->id)
+            ->delete();
+
+        if ($deleted === 0) {
+            throw new NotFoundException('Sinh viên không tồn tại trong nhóm học phần này');
+        }
+
+        return true;
+    }
+
+    private function normalizeImportedBirthDate($value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $value = trim($value);
+            if ($value === '') {
+                return null;
+            }
+        }
+
+        if (is_numeric($value)) {
+            try {
+                return ExcelDate::excelToDateTimeObject((float) $value)->format('d-m-Y');
+            } catch (\Throwable $e) {
+                return (string) $value;
+            }
+        }
+
+        $raw = (string) $value;
+        $parsed = \DateTime::createFromFormat('d-m-Y', $raw);
+        if ($parsed !== false) {
+            return $parsed->format('d-m-Y');
+        }
+
+        $timestamp = strtotime($raw);
+        if ($timestamp !== false) {
+            return date('d-m-Y', $timestamp);
+        }
+
+        return $raw;
     }
 }
