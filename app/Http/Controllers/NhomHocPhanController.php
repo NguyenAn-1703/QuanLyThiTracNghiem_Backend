@@ -117,4 +117,17 @@ class NhomHocPhanController extends Controller
         return $this->success($data);
     }
 
+    /**
+     * Hiển thị danh sách học phần / nhóm lớp được phân công giảng dạy của một giảng viên.
+     *
+     * Query params:
+     *   - includeHidden (bool, default false): có lấy cả nhóm đang ẩn không
+     */
+    public function getAssignedTeaching(User $user, Request $request)
+    {
+        $includeHidden = filter_var($request->query('includeHidden', false), FILTER_VALIDATE_BOOLEAN);
+        $data = $this->nhomHocPhanService->getAssignedTeachingByLecturerId($user->id, $includeHidden);
+        return $this->success($data);
+    }
+
 }
