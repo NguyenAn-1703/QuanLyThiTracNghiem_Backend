@@ -29,13 +29,13 @@ class GiaoBaiThiSeeder extends Seeder
             ],
             [
                 'deThiId' => 2,
-                'nhomHocPhanId' => 1,
+                'nhomHocPhanId' => 3,
                 'thoiGianBatDau' => '2026-06-02 08:00:00',
                 'thoiGianKetThuc' => '2026-06-02 09:00:00',
             ],
             [
                 'deThiId' => 2,
-                'nhomHocPhanId' => 2,
+                'nhomHocPhanId' => 4,
                 'thoiGianBatDau' => '2026-06-03 13:30:00',
                 'thoiGianKetThuc' => '2026-06-03 15:00:00',
             ],

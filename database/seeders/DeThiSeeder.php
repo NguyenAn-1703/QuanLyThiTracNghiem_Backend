@@ -41,6 +41,26 @@ class DeThiSeeder extends Seeder
                 'isDeleted' => false,
                 // 'createdAt' => now()
             ],
+            [
+                'monThiId' => $monLapTrinhC->id,
+                'nguoiTaoId' => $giangvien->id,
+                'tenDe' => 'Đề thi cuối kỳ Lập trình C',
+                'thoiGianBatDau' => '2026-03-24 02:22:00',
+                'thoiGianKetThuc' => '2026-03-24 02:59:00',
+                'thoiGianLamBai' => 20,
+                'isDeleted' => false,
+                // 'createdAt' => now()
+            ],
+            [
+                'monThiId' => $monCauTrucDuLieu->id,
+                'nguoiTaoId' => $giangvien->id,
+                'tenDe' => 'Đề thi cuối kỳ Cấu trúc dữ liệu',
+                'thoiGianBatDau' => '2026-06-02 08:00:00',
+                'thoiGianKetThuc' => '2026-06-02 10:00:00',
+                'thoiGianLamBai' => 60,
+                'isDeleted' => false,
+                // 'createdAt' => now()
+            ],
         ];
 
         foreach ($deThis as $deThi) {
