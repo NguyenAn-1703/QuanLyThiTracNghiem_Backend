@@ -19,3 +19,4 @@ Route::get('/nhomhocphans/w_dekiemtra/{nhomhocphan}', [NhomHocPhanController::cl
 Route::post('/nhomhocphans/join_group', [NhomHocPhanController::class, 'join_group']);
 Route::patch('/nhomhocphans/reset_invite_code/{nhomhocphan}', [NhomHocPhanController::class, 'resetInviteCode']);
 Route::get('/nhomhocphans/assigned/{user}', [NhomHocPhanController::class, 'getAssignedTeaching']);
+Route::delete('/nhomhocphans/{nhomhocphan}/sinh-vien', [NhomHocPhanController::class, 'remove_sinh_vien_from_nhom']);

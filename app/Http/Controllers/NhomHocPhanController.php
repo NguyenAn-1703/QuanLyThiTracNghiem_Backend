@@ -154,10 +154,8 @@ class NhomHocPhanController extends Controller
         $request->validate([
             'file' => ['required', 'file', 'mimes:xlsx,xls,csv'],
         ]);
-
         $file = $request->file('file');
 
-        // Pass UploadedFile so Laravel Excel can detect reader type from extension.
         $sheets = Excel::toArray(null, $file);
         if (empty($sheets) || empty($sheets[0])) {
             throw new NotFoundException('File import rỗng');
@@ -165,7 +163,6 @@ class NhomHocPhanController extends Controller
 
         $rows = $sheets[0];
 
-        // If header present (first row matches header titles), drop it
         $firstRow = $rows[0] ?? null;
         if ($firstRow && count($firstRow) >= 2 && in_array(trim((string)$firstRow[1]), ['MSSV', 'mssv', 'Mã sinh viên'])) {
             array_shift($rows);
@@ -173,6 +170,17 @@ class NhomHocPhanController extends Controller
 
         $result = $this->nhomHocPhanService->importSinhViensToNhom($nhomhocphan, $rows);
         return $this->success($result);
+    }
+
+    public function remove_sinh_vien_from_nhom(NhomHocPhan $nhomhocphan, Request $request)
+    {
+        $sinhVienId = $request->input('sinhVienId');
+        if (!is_numeric($sinhVienId)) {
+            throw new BusinessException('ID sinh viên không hợp lệ');
+        }
+        
+        $data = $this->nhomHocPhanService->remove_sinh_vien_from_nhom((int)$sinhVienId, $nhomhocphan);
+        return $this->success($data);
     }
 
 }

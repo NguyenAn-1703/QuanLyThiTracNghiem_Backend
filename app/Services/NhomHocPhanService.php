@@ -257,6 +257,19 @@ class NhomHocPhanService
         ];
     }
 
+    public function remove_sinh_vien_from_nhom(int $sinhVienId, NhomHocPhan $nhomHocPhan): bool
+    {
+        $deleted = ChiTietNhom::where('sinhVienId', $sinhVienId)
+            ->where('nhomHocPhanId', $nhomHocPhan->id)
+            ->delete();
+
+        if ($deleted === 0) {
+            throw new NotFoundException('Sinh viên không tồn tại trong nhóm học phần này');
+        }
+
+        return true;
+    }
+
     private function normalizeImportedBirthDate($value): ?string
     {
         if ($value === null) {
@@ -270,7 +283,6 @@ class NhomHocPhanService
             }
         }
 
-        // Excel stores dates as serial numbers (e.g. 38514), convert back for readable API errors.
         if (is_numeric($value)) {
             try {
                 return ExcelDate::excelToDateTimeObject((float) $value)->format('d-m-Y');
