@@ -39,11 +39,11 @@ class StoreUserRequest extends FormRequest
                 "confirmed", //cần có trường password_confirmation
             ],
             "nhomQuyenId" => ["required", "numeric", "exists:roles,id"],
-            "sdt" => ["required", "numeric", "digits:10"],
+            "sdt" => ["numeric", "digits:10"],
             "username" => ["required", "unique:users,username"],
             "ngaySinh" => ["required", "date_format:Y-m-d", "before:today"],
             "laGioiTinhNu" => ["required", "boolean"],
-            "ggid" => ["required", "string"],
+            "ggid" => ["string"],
             "urlAvatar" => ["string"]
         ];
     }
