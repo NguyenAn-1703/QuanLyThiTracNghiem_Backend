@@ -36,6 +36,6 @@ cmds = [
 
 # Start command (Nixpacks PHP provider sẽ tự generate nginx + php-fpm, bạn chỉ cần override nếu cần)
 [start]
-cmd = ""   # Railway sẽ override $PORT tự động
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"   # Railway sẽ override $PORT tự động
 # Hoặc để Nixpacks dùng mặc định (khuyến nghị cho Laravel):
 # cmd = ""   # để trống để Nixpacks tự xử lý nginx + php-fpm
