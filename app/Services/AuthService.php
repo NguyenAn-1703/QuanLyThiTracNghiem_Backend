@@ -40,7 +40,7 @@ class AuthService
             ]);
         }
 
-        $role = $this->roleService->getRoleDetailById($user->nhomQuyenId) ?? "sinh viên";
+        $role = $user->nhomQuyenId ? $this->roleService->getRoleDetailById($user->nhomQuyenId) : null;
 
         return response()->json([
             'access_token' => $token,

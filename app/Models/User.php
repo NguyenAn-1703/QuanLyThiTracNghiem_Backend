@@ -29,6 +29,8 @@ class User extends Authenticatable implements JWTSubject
         "username",
         "ngaySinh",
         "laGioiTinhNu",
+        "isStudent",
+        "isLocked",
         "ggid",
         "urlAvatar",
         "isLocked",
@@ -56,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
-        'ngaySinh' => 'date',       // tự động cast sang Carbon (chỉ date)
+        'ngaySinh' => 'date:Y-m-d',       // tự động cast sang Carbon (chỉ date)
         'laGioiTinhNu' => 'boolean',
         'isStudent' => 'boolean',
         'isLocked' => 'boolean',

@@ -28,7 +28,7 @@ class UpdateUserRequest extends FormRequest
 
         return [
             "hoTen" => ["sometimes", "string", "max:255"],
-            "nhomQuyenId" => ["sometimes", "numeric", "exists:roles,id"],
+            "nhomQuyenId" => ["sometimes", "numeric", "exists:roles,id", "nullable"],
             "sdt" => ["sometimes", "numeric", "digits:10"],
             "username" => [
                 "sometimes",
@@ -38,6 +38,8 @@ class UpdateUserRequest extends FormRequest
             "ngaySinh" => ["sometimes", "date_format:Y-m-d", "before:today"],
 
             "laGioiTinhNu" => ["sometimes", "boolean"],
+            "isStudent" => ["required", "boolean"],
+            "isLocked" => ["required", "boolean"],
 
             "ggid" => ["sometimes", "string"],
 

@@ -31,7 +31,6 @@ class ResetPasswordRequest extends FormRequest
                     ->letters()
                     ->numbers()
                     ->mixedCase(),
-                'confirmed'
             ],
         ];
     }

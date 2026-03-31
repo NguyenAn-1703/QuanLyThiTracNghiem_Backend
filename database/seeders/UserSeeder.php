@@ -18,7 +18,6 @@ class UserSeeder extends Seeder
     {
         $adminRole = Role::where('tenNhomQuyen', 'admin')->first();
         $teacherRole = Role::where('tenNhomQuyen','teacher')->first();
-        $studentRole = Role::where('tenNhomQuyen', 'student')->first();
         $users = [
             [
                 'hoTen' => 'Admin',
@@ -50,7 +49,7 @@ class UserSeeder extends Seeder
                 'hoTen' => 'Nguyễn Ngọc Thiên Ân',
                 'email' => 'sinhvien@gmail.com',
                 'password' => '123456',
-                'nhomQuyenId' => $studentRole->id,
+                // 'nhomQuyenId' => null,
                 'sdt' => "0988888888",
                 'username' => 'sinhvien',
                 'ngaySinh' => '2004-05-10',
