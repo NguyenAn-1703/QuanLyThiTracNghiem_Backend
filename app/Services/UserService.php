@@ -41,7 +41,7 @@ class UserService
         }
         //update
         $dataUpdate = [
-            "password" => Hash::make($newPassword),
+            "password" => $newPassword, //tự hash trong modal rồi
         ];
 
         return $user->update($dataUpdate);
@@ -49,7 +49,7 @@ class UserService
 
     public function resetpassword(array $data, User $user){
         $dataUpdate = [
-            "password" => Hash::make($data["newPassword"]),
+            "password" => $data["newPassword"], //tự hash trong modal rồi
         ];
 
         return $user->update($dataUpdate);
