@@ -17,13 +17,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
 
-            $table->string('username', 10);
+            $table->string('username');
             $table->string('hoTen');
             $table->string('email')->unique();
             $table->string('password');
 
-            $table->integer('nhomQuyenId');
-            $table->string('sdt', 20);
+            $table->integer('nhomQuyenId')->nullable();
+            $table->string('sdt', 20)->nullable();
 
             // Ngày sinh bỏ default, để nullable hoặc fill giá trị khi insert
             $table->date('ngaySinh')->nullable();

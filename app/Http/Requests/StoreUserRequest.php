@@ -36,15 +36,25 @@ class StoreUserRequest extends FormRequest
                     ->letters()
                     ->numbers()
                     ->mixedCase(),
-                "confirmed", //cần có trường password_confirmation
             ],
-            "nhomQuyenId" => ["required", "numeric", "exists:roles,id"],
-            "sdt" => ["required", "numeric", "digits:10"],
+            "nhomQuyenId" => ["nullable","numeric", "exists:roles,id"],
+            "sdt" => ["numeric", "digits:10"],
             "username" => ["required", "unique:users,username"],
             "ngaySinh" => ["required", "date_format:Y-m-d", "before:today"],
             "laGioiTinhNu" => ["required", "boolean"],
-            "ggid" => ["required", "string"],
+            "isStudent" => ["required", "boolean"],
+            "isLocked" => ["required", "boolean"],
+            "ggid" => ["string"],
             "urlAvatar" => ["string"]
         ];
     }
+
+    public function messages()
+{
+    return [
+        "email.unique" => "Email đã tồn tại",
+
+        "username.unique" => "Tên đăng nhập đã tồn tại",
+    ];
+}
 }
