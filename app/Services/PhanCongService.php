@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PhanCong;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class PhanCongService
 {
@@ -35,8 +36,30 @@ class PhanCongService
             ->delete();
     }
 
-    public function get_o_gvien(User $user){
+    public function get_o_gvien(User $user)
+    {
         $user->load(['monHocs']);
         return $user->monHocs;
+    }
+
+    public function addPhanCong(array $data)
+    {
+        return DB::transaction(function () use ($data) {
+            $giangVienId = $data["giangVienId"];
+            $monHocIds = $data["monHocIds"];
+            $data = [];
+            //Xóa hết phân công cũ của giảng viên
+            PhanCong::where('giangVienId', $giangVienId)->delete();
+            
+            foreach ($monHocIds as $monHocId) {
+                $data[] = [
+                    'giangVienId' => $giangVienId,
+                    'monHocId' => $monHocId,
+                ];
+            }
+
+            PhanCong::insert($data);
+            return $data;
+        });
     }
 }
