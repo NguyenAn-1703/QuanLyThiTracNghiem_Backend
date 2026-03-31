@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = [
+  "php82",
+  "php82Extensions.gd",
+  "php82Extensions.mbstring",
+  "php82Extensions.zip",
+  "php82Extensions.openssl"
+]
+
+[phases.install]
+cmds = ["composer install --no-dev --optimize-autoloader"]
