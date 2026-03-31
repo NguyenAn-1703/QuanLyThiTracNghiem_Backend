@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('password');
 
             $table->integer('nhomQuyenId');
-            $table->string('sdt', 20);
+            $table->string('sdt', 20)->nullable();
 
             // Ngày sinh bỏ default, để nullable hoặc fill giá trị khi insert
             $table->date('ngaySinh')->nullable();
