@@ -113,4 +113,9 @@ class UserController extends Controller
         $data = $this->userService->resetpassword($request->validated(), $user);
         return $this->success($data);
     }
+
+    public function getgiangvien(){
+        $data = $this->userService->getgiangvien();
+        return $this->success($data);
+    }
 }

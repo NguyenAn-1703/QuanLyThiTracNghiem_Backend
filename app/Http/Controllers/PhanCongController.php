@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePhanCongRequest;
+use App\Http\Requests\StorePhanCongsRequest;
 use App\Models\PhanCong;
 use App\Models\User;
 use App\Services\PhanCongService;
@@ -39,6 +40,11 @@ class PhanCongController extends Controller
 
     public function get_o_gvien(User $user){
         $data = $this->phanCongService->get_o_gvien($user);
+        return $this->success($data);
+    }
+
+    public function addPhanCong(StorePhanCongsRequest $request){
+        $data = $this->phanCongService->addPhanCong($request->validated());
         return $this->success($data);
     }
 
