@@ -2,13 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\ChiTietThongBao;
 use App\Models\ThongBao;
+use Illuminate\Support\Facades\DB;
 
 class ThongBaoService
 {
     public function getAll()
     {
-        return ThongBao::all();
+        return ThongBao::all()->load("nguoiGui");
     }
 
     public function getOne(ThongBao $thongBao)
@@ -18,7 +20,26 @@ class ThongBaoService
 
     public function add(array $data)
     {
-        return ThongBao::create($data);
+        return DB::transaction(function () use ($data) {
+            $thongBao = ThongBao::create($data);
+
+            $nhomHocPhanIds = $data["nhomHocPhanIds"];
+            $chiTietThongBaos = collect($nhomHocPhanIds)->map(
+                function ($nhomHocPhanId) use ($thongBao) {
+                    return ([
+                        "nhomHocPhanId" => $nhomHocPhanId,
+                        "thongBaoId" => $thongBao->id,
+                    ]);
+                }
+            )->toArray();
+
+            $chiTietThongBao = ChiTietThongBao::insert($chiTietThongBaos);
+
+            return ([
+                "thongBao" => $thongBao,
+                "chiTietThongBao" =>$chiTietThongBaos 
+            ]);
+        });
     }
 
     public function update(array $data, ThongBao $thongBao)

@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('chi_tiet_thong_baos', function (Blueprint $table) {
             // foreign key tới bảng tài khoản
-            $table->foreignId('taiKhoanId')
-                ->constrained('users');
+            $table->foreignId('nhomHocPhanId')
+                ->constrained('nhom_hoc_phans');
 
             // foreign key tới bảng thông báo
             $table->foreignId('thongBaoId')
                 ->constrained('thong_baos');
 
             // primary key kép
-            $table->primary(['taiKhoanId', 'thongBaoId']);
+            $table->primary(['nhomHocPhanId', 'thongBaoId']);
 
 
         });

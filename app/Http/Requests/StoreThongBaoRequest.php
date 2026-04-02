@@ -34,6 +34,9 @@ class StoreThongBaoRequest extends FormRequest
             'uuTien' => ['nullable', 'integer'],
 
             'status' => 'nullable|boolean',
+
+            'nhomHocPhanIds' => 'required|array|min:1',
+            'nhomHocPhanIds.*' => 'integer|exists:nhom_hoc_phans,id',
         ];
     }
 
