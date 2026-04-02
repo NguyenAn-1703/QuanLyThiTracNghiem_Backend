@@ -28,12 +28,10 @@ class UpdateUserRequest extends FormRequest
 
         return [
             "hoTen" => ["sometimes", "string", "max:255"],
+            "email" => ["sometimes", "string", "email", "unique:users,email"],
+
             "nhomQuyenId" => ["sometimes", "numeric", "exists:roles,id", "nullable"],
             "sdt" => ["sometimes", "numeric", "digits:10"],
-            "username" => [
-                "sometimes",
-                Rule::unique("users", "username")->ignore($userId)
-            ],
 
             "ngaySinh" => ["sometimes", "date_format:Y-m-d", "before:today"],
 
