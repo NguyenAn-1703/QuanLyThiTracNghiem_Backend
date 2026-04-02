@@ -8,9 +8,11 @@ use App\Models\CauHoi;
 use App\Models\User;
 use DateTime;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Ramsey\Uuid\Type\Integer;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BaiLamService
@@ -180,38 +182,46 @@ class BaiLamService
 
     public function submittest(array $data, int $baiLamId)
     {
-        $baiLam = BaiLam::findOrFail($baiLamId);
-        //Nếu đã submit thì không cho submit nữa
-        if ($baiLam->status == "DA_NOP") {
-            throw new HttpException(500, "Bài làm đã nộp!");
-        }
-
-        $this->updatestudenttest($data, $baiLam); // update lần cuối
-        // tính điểm
-        $baiLam->load('chiTietBaiLams');
-        $soCauDung = $baiLam->chiTietBaiLams->reduce(function ($carry, $item) {
-            if ($item->isCorrectChooser) {
-                return $carry + 1;
+        return DB::transaction(function () use ($data, $baiLamId) {
+            $baiLam = BaiLam::findOrFail($baiLamId);
+            //Nếu đã submit thì không cho submit nữa
+            if ($baiLam->status == "DA_NOP") {
+                throw new HttpException(500, "Bài làm đã nộp!");
             }
-            return $carry;
-        }, 0);
-        $tongDiem = $baiLam->chiTietBaiLams->reduce(function ($carry, $item) {
-            return $carry + $item->diem ?? 0;
-        }, 0);
 
-        // cập nhật status
-        $dataUpdate = [
-            "thoiGianNopBai" => Date::now(),
-            "tongDiem" => $tongDiem,
-            "soCauDung" => $soCauDung,
-            "status" => "DA_NOP"
-        ];
+            $this->updatestudenttest($data, $baiLam); // update lần cuối
+            // tính điểm
+            $baiLam->load('chiTietBaiLams');
+            $soCauDung = $baiLam->chiTietBaiLams->reduce(function ($carry, $item) {
+                if ($item->isCorrectChooser) {
+                    return $carry + 1;
+                }
+                return $carry;
+            }, 0);
+            $tongDiem = $baiLam->chiTietBaiLams->reduce(function ($carry, $item) {
+                return $carry + $item->diem ?? 0;
+            }, 0);
 
-        return $this->updateById($dataUpdate, $baiLam->id);
+            // cập nhật status
+            $dataUpdate = [
+                "thoiGianNopBai" => Date::now(),
+                "tongDiem" => $tongDiem,
+                "soCauDung" => $soCauDung,
+                "status" => "DA_NOP"
+            ];
+
+            $this->updateById($dataUpdate, $baiLam->id);
+            return $this->reviewresultbyid($baiLam->id);
+        });
     }
 
     public function reviewresult(BaiLam $bailam)
     {
+        if ($bailam->status != "DA_NOP") {
+            throw new HttpException(500, "Bài làm chưa nộp");
+        }
+        $bailam->load("logBaiLam");
+
         //check cấu hình
         $deThi = $bailam->deThi;
         $deThi->loadCount([
@@ -228,6 +238,65 @@ class BaiLamService
         $bailam->makeHidden('deThi');
         $bailam->makeHidden('chiTietBaiLams');
         $deThi->makeHidden('cauHinhThi');
+        $deThi->makeHidden('cauHois');
+
+
+        $mapChiTiet = $chiTietBaiLams->keyBy('cauHoiId'); // giống dictionary
+
+        $cauHois->transform(function ($cauHoi) use ($mapChiTiet) { // map
+            $chiTiet = $mapChiTiet->get($cauHoi->id);
+
+            $cauHoi->dapAnDaChon = $chiTiet->dapAnId;
+
+            return $cauHoi;
+        });
+
+
+        if ($cauHinhThi->showScore) {
+            $data = [
+                "baiLam" => $bailam,
+                "deThi" => $deThi,
+            ];
+            if ($cauHinhThi->showDetailResults) {
+                $data["cauHois"] = $cauHois;
+            }
+        }
+
+        return $data;
+    }
+
+    public function reviewresultbyid(int $idBaiLam)
+    {
+        try {
+            $bailam = BaiLam::findOrFail($idBaiLam);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Không tìm thấy bài làm'
+            ], 404);
+        }
+
+        if ($bailam->status != "DA_NOP") {
+            throw new HttpException(500, "Bài làm chưa nộp");
+        }
+        $bailam->load("logBaiLam");
+
+        //check cấu hình
+        $deThi = $bailam->deThi;
+        $deThi->loadCount([
+            'cauHois as soCauHoi'
+        ]);
+
+        $cauHinhThi = $deThi->cauHinhThi;
+        $cauHois = $deThi->cauHois;
+
+        $cauHois->load('cauTraLois');
+
+        $chiTietBaiLams = $bailam->chiTietBaiLams;
+
+        $bailam->makeHidden('deThi');
+        $bailam->makeHidden('chiTietBaiLams');
+        $deThi->makeHidden('cauHinhThi');
+        $deThi->makeHidden('cauHois');
 
         $mapChiTiet = $chiTietBaiLams->keyBy('cauHoiId'); // giống dictionary
 

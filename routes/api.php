@@ -27,3 +27,4 @@ require __DIR__ . '/api/cautraloi.php';
 require __DIR__ . '/api/bailam.php';
 require __DIR__ . '/api/cauhinhthi.php';
 require __DIR__ . '/api/phancong.php';
+require __DIR__ . '/api/logbailam.php';
