@@ -15,14 +15,13 @@ class ChiTietThongBaoSeeder extends Seeder
      */
     public function run()
     {
-        $giangvien = User::where('username', 'giangvien')->first();
         $chiTietThongBaos = [
             [
-                'taiKhoanId' => $giangvien->id,
+                'nhomHocPhanId' => 1,
                 'thongBaoId' => 1,
             ],
             [
-                'taiKhoanId' => $giangvien->id,
+                'nhomHocPhanId' => 2,
                 'thongBaoId' => 2,
             ],
         ];
@@ -30,7 +29,7 @@ class ChiTietThongBaoSeeder extends Seeder
         foreach ($chiTietThongBaos as $chiTietThongBao) {
             ChiTietThongBao::firstOrCreate(
                 [
-                    'taiKhoanId' => $chiTietThongBao['taiKhoanId'],
+                    'nhomHocPhanId' => $chiTietThongBao['nhomHocPhanId'],
                     'thongBaoId' => $chiTietThongBao['thongBaoId']
                 ],
                 $chiTietThongBao
