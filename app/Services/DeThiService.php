@@ -3,9 +3,13 @@
 namespace App\Services;
 
 use App\Exceptions\BusinessException;
+use App\Models\BaiLam;
+use App\Models\CauHinhThi;
 use App\Models\CauHoi;
+use App\Models\ChiTietDeThi;
 use App\Models\DeThi;
 use App\Models\DoKho;
+use App\Models\GiaoBaiThi;
 use App\Models\MonHoc;
 use App\Models\NhomHocPhan;
 use App\Models\User;
@@ -230,91 +234,120 @@ class DeThiService
         });
     }
 
-public function update(array $data, DeThi $deThi)
-{
-    return DB::transaction(function () use ($data, $deThi) {
-        // 1. Update DeThi
+    public function update(array $data, DeThi $deThi)
+    {
+        return DB::transaction(function () use ($data, $deThi) {
+            // 1. Update DeThi
 
-        $deThi->update($data);
+            $deThi->update($data);
 
-        /*
+            /*
         =========================
         2. Xử lý nhóm học phần
         =========================
         */
-        if (isset($data['nhomHocPhanIds'])) {
-            // Xóa cũ
-            $this->giaoBaiThiService->deleteByDeThiId($deThi->id);
+            if (isset($data['nhomHocPhanIds'])) {
+                // Xóa cũ
+                $this->giaoBaiThiService->deleteByDeThiId($deThi->id);
 
-            // Tạo mới
-            $giaoBaiThis = collect($data['nhomHocPhanIds'])->map(function ($item) use ($deThi) {
-                return [
-                    "deThiId" => $deThi->id,
-                    "nhomHocPhanId" => $item,
-                    "thoiGianBatDau" => $deThi->thoiGianBatDau,
-                    "thoiGianKetThuc" => $deThi->thoiGianKetThuc,
-                ];
-            });
+                // Tạo mới
+                $giaoBaiThis = collect($data['nhomHocPhanIds'])->map(function ($item) use ($deThi) {
+                    return [
+                        "deThiId" => $deThi->id,
+                        "nhomHocPhanId" => $item,
+                        "thoiGianBatDau" => $deThi->thoiGianBatDau,
+                        "thoiGianKetThuc" => $deThi->thoiGianKetThuc,
+                    ];
+                });
 
-            $this->giaoBaiThiService->addArr($giaoBaiThis->toArray());
-        }
+                $this->giaoBaiThiService->addArr($giaoBaiThis->toArray());
+            }
 
-        /*
+            /*
         =========================
         3. Xử lý câu hỏi
         =========================
         */
-        if (isset($data['cauHois'])) {
-            // Xóa cũ
-            $this->chiTietDeThiService->deleteByDeThiId($deThi->id);
+            if (isset($data['cauHois'])) {
+                // Xóa cũ
+                $this->chiTietDeThiService->deleteByDeThiId($deThi->id);
 
-            // Tạo mới
-            $chiTietDeThis = collect($data['cauHois'])->map(function ($item) use ($deThi) {
-                return [
-                    "deThiId" => $deThi->id,
-                    "cauHoiId" => $item["id"],
-                    "thuTu" => $item["thuTu"],
-                    "diem" => $item["diem"]
-                ];
-            });
+                // Tạo mới
+                $chiTietDeThis = collect($data['cauHois'])->map(function ($item) use ($deThi) {
+                    return [
+                        "deThiId" => $deThi->id,
+                        "cauHoiId" => $item["id"],
+                        "thuTu" => $item["thuTu"],
+                        "diem" => $item["diem"]
+                    ];
+                });
 
-            $this->chiTietDeThiService->addArr($chiTietDeThis->toArray());
-        }
+                $this->chiTietDeThiService->addArr($chiTietDeThis->toArray());
+            }
 
-        /*
+            /*
         =========================
         4. Xử lý cấu hình
         =========================
         */
-        if (isset($data['cauHinh'])) {
-            $cauHinhData = $data['cauHinh'];
-            $cauHinhData['deThiId'] = $deThi->id;
+            if (isset($data['cauHinh'])) {
+                $cauHinhData = $data['cauHinh'];
+                $cauHinhData['deThiId'] = $deThi->id;
 
-            // Nếu đã có thì update, chưa có thì create
-            $cauHinh = $this->cauHinhThiService->findByDeThiId($deThi->id);
+                // Nếu đã có thì update, chưa có thì create
+                $cauHinh = $this->cauHinhThiService->findByDeThiId($deThi->id);
 
-            if ($cauHinh) {
-                $this->cauHinhThiService->update($cauHinh, $cauHinhData);
-            } else {
-                $this->cauHinhThiService->create($cauHinhData);
+                if ($cauHinh) {
+                    $this->cauHinhThiService->update($cauHinh, $cauHinhData);
+                } else {
+                    $this->cauHinhThiService->create($cauHinhData);
+                }
             }
-        }
 
-        /*
+            /*
         =========================
         5. Load lại dữ liệu
         =========================
         */
-        $deThi->load(['cauHois', 'monThi', 'nhomHocPhans', 'cauHinhThi']);
-        $deThi->cauHois->load('cauTraLois');
+            $deThi->load(['cauHois', 'monThi', 'nhomHocPhans', 'cauHinhThi']);
+            $deThi->cauHois->load('cauTraLois');
 
-        return $deThi;
-    });
-}
+            return $deThi;
+        });
+    }
 
-    public function delete(DeThi $deThi)
+    public function delete(int $deThiId)
     {
-        return $deThi->delete();
+        return DB::transaction(function () use ($deThiId) {
+
+            $deThi = DeThi::findOrFail($deThiId);
+
+            $hasBaiLam = BaiLam::where('deThiId', $deThiId)->exists();
+
+            //xóa mềm
+            if ($hasBaiLam) {
+                $deThi->update([
+                    'isDeleted' => true
+                ]);
+
+                return true;
+            }
+
+            //xóa cứng
+            // 1. Xóa cấu hình
+            CauHinhThi::where('deThiId', $deThiId)->delete();
+
+            // 2. Xóa chi tiết đề thi (câu hỏi)
+            ChiTietDeThi::where('deThiId', $deThiId)->delete();
+
+            // 3. Xóa giao bài thi
+            GiaoBaiThi::where('deThiId', $deThiId)->delete();
+
+            // 4. Xóa đề thi
+            $deThi->delete();
+
+            return true;
+        });
     }
 
     public function get_osvien(User $user)
