@@ -29,11 +29,14 @@ class UpdateThongBaoRequest extends FormRequest
 
             'nguoiGuiId' => 'sometimes|nullable|integer|exists:users,id',
 
-            'thoiGianGui' => 'sometimes|date',
+            'thoiGianGui' => 'sometimes|nullable|date',
 
-            'uuTien' => ['sometimes', 'integer'],
+            'uuTien' => ['sometimes', 'nullable', 'integer'],
 
-            'status' => 'sometimes|boolean',
+            'status' => 'sometimes|nullable|boolean',
+
+            'nhomHocPhanIds' => 'sometimes|array|min:1',
+            'nhomHocPhanIds.*' => 'integer|exists:nhom_hoc_phans,id',
         ];
     }
 }

@@ -44,8 +44,28 @@ class ThongBaoService
 
     public function update(array $data, ThongBao $thongBao)
     {
-        $thongBao->update($data);
-        return $thongBao;
+        return DB::transaction(function () use ($data, $thongBao) {
+
+            // 1. Update thông báo
+            $thongBao->update($data);
+
+            // 2. Xóa toàn bộ chi tiết thông báo cũ
+            $thongBao->chiTietThongBaos()->delete();
+
+            // 3. Thêm mới chi tiết thông báo
+            if (!empty($data['nhomHocPhanIds'])) {
+                $chiTietData = array_map(function ($nhomHocPhanId) use ($thongBao) {
+                    return [
+                        'thongBaoId' => $thongBao->id,
+                        'nhomHocPhanId' => $nhomHocPhanId,
+                    ];
+                }, $data['nhomHocPhanIds']);
+
+                $thongBao->chiTietThongBaos()->insert($chiTietData);
+            }
+
+            return $thongBao->load('chiTietThongBaos');
+        });
     }
 
     public function delete(ThongBao $thongBao)
