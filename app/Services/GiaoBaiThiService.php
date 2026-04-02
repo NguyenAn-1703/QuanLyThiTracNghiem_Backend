@@ -32,7 +32,13 @@ class GiaoBaiThiService
         return $giaoBaiThi->delete();
     }
 
-    public function addArr(array $data){
+    public function addArr(array $data)
+    {
         return GiaoBaiThi::insert($data);
+    }
+
+    public function deleteByDeThiId(int $deThiId)
+    {
+        return GiaoBaiThi::where('deThiId', $deThiId)->delete();
     }
 }
