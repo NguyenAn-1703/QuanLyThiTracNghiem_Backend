@@ -68,7 +68,7 @@ class DeThiController extends Controller
      */
     public function destroy(DeThi $dethi)
     {
-        $data = $this->deThiService->delete($dethi);
+        $data = $this->deThiService->delete($dethi->id);
         return $this->success($data);
     }
 
