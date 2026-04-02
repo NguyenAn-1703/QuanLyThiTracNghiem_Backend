@@ -34,4 +34,8 @@ class BaiLam extends Model
     public function deThi(){
         return $this->belongsTo(DeThi::class, 'deThiId');
     }
+
+    public function logBaiLam(){
+        return $this->hasMany(LogBaiLam::class, 'baiLamId');
+    }
 }

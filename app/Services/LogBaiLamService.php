@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Services;
+
+use App\Models\BaiLam;
 use App\Models\LogBaiLam;
 
 class LogBaiLamService{
@@ -19,10 +21,10 @@ class LogBaiLamService{
         return LogBaiLam::create($data);
     }
 
-    public function update(array $data, LogBaiLam $logBaiLam)
+    public function update(array $data, BaiLam $bailam)
     {
-        $logBaiLam->update($data);
-        return $logBaiLam;
+        return LogBaiLam::where('baiLamId', $bailam->id)
+        ->update($data);
     }
 
     public function delete(LogBaiLam $logBaiLam)
