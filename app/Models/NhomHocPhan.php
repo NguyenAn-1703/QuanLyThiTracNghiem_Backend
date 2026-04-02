@@ -50,4 +50,8 @@ class NhomHocPhan extends Model
     public function chiTietNhoms(){
         return $this->hasMany(ChiTietNhom::class, 'nhomHocPhanId');
     }
+
+    public function thongBaos(){
+        return $this->belongsToMany(ThongBao::class, 'chi_tiet_thong_baos','nhomHocPhanId','thongBaoId');
+    }
 }
