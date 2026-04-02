@@ -41,4 +41,9 @@ class ChiTietDeThiService
     public function addArr(array $data){
         return ChiTietDeThi::insert($data);
     }
+
+    public function deleteByDeThiId(int $deThiId)
+    {
+        return ChiTietDeThi::where('deThiId', $deThiId)->delete();
+    }
 }

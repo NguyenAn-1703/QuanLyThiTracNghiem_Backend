@@ -18,7 +18,8 @@ class DeThiService
     protected ChiTietDeThiService $chiTietDeThiService;
     protected CauHinhThiService $cauHinhThiService;
 
-    public function __construct(GiaoBaiThiService $giaoBaiThiService, ChiTietDeThiService $chiTietDeThiService, CauHinhThiService $cauHinhThiService) {
+    public function __construct(GiaoBaiThiService $giaoBaiThiService, ChiTietDeThiService $chiTietDeThiService, CauHinhThiService $cauHinhThiService)
+    {
         $this->giaoBaiThiService = $giaoBaiThiService;
         $this->chiTietDeThiService = $chiTietDeThiService;
         $this->cauHinhThiService = $cauHinhThiService;
@@ -68,13 +69,13 @@ class DeThiService
                 );
             });
 
-            $chiTietDeThis = collect($cauHois)->map(function ($item) use($deThi){
-                return([
+            $chiTietDeThis = collect($cauHois)->map(function ($item) use ($deThi) {
+                return ([
                     "deThiId" => $deThi->id,
                     "cauHoiId" => $item["id"],
                     "thuTu" => $item["thuTu"],
                     "diem" => $item["diem"]
-                ]) ;
+                ]);
             });
 
             $this->giaoBaiThiService->addArr($giaoBaiThis->toArray());
@@ -82,21 +83,7 @@ class DeThiService
 
             $cauHinh = $data["cauHinh"];
             $cauHinh["deThiId"] = $deThi->id;
-            // $cauHinh = [
-            //     "deThiId" => $deThi->id,
-            //     "hasMonitoring" => $data["cauHinh.hasMonitoring"],
-            //     "allowCopy" => $data["allowCopy"],
-            //     "allowPrint" => $data["allowPrint"],
-            //     "isEnableResume" => $data["isEnableResume"],
-            //     "shuffleQuestions" => $data["shuffleQuestions"],
-            //     "shuffleAnswers" => $data["shuffleAnswers"],
-            //     "showScore" => $data["showScore"],
-            //     "showDetailResults" => $data["showDetailResults"],
-            //     "isLimitSwitchTab" => $data["isLimitSwitchTab"],
-            //     "tabSwitchLimit" => $data["tabSwitchLimit"],
-            //     "messageOnWarning" => $data["messageOnWarning"],
-            // ];
-            
+
             $this->cauHinhThiService->create($cauHinh);
 
             $deThi->load(['cauHois', 'monThi', 'nhomHocPhans', 'cauHinhThi']);
@@ -243,11 +230,87 @@ class DeThiService
         });
     }
 
-    public function update(array $data, DeThi $deThi)
-    {
+public function update(array $data, DeThi $deThi)
+{
+    return DB::transaction(function () use ($data, $deThi) {
+        // 1. Update DeThi
+
         $deThi->update($data);
+
+        /*
+        =========================
+        2. Xử lý nhóm học phần
+        =========================
+        */
+        if (isset($data['nhomHocPhanIds'])) {
+            // Xóa cũ
+            $this->giaoBaiThiService->deleteByDeThiId($deThi->id);
+
+            // Tạo mới
+            $giaoBaiThis = collect($data['nhomHocPhanIds'])->map(function ($item) use ($deThi) {
+                return [
+                    "deThiId" => $deThi->id,
+                    "nhomHocPhanId" => $item,
+                    "thoiGianBatDau" => $deThi->thoiGianBatDau,
+                    "thoiGianKetThuc" => $deThi->thoiGianKetThuc,
+                ];
+            });
+
+            $this->giaoBaiThiService->addArr($giaoBaiThis->toArray());
+        }
+
+        /*
+        =========================
+        3. Xử lý câu hỏi
+        =========================
+        */
+        if (isset($data['cauHois'])) {
+            // Xóa cũ
+            $this->chiTietDeThiService->deleteByDeThiId($deThi->id);
+
+            // Tạo mới
+            $chiTietDeThis = collect($data['cauHois'])->map(function ($item) use ($deThi) {
+                return [
+                    "deThiId" => $deThi->id,
+                    "cauHoiId" => $item["id"],
+                    "thuTu" => $item["thuTu"],
+                    "diem" => $item["diem"]
+                ];
+            });
+
+            $this->chiTietDeThiService->addArr($chiTietDeThis->toArray());
+        }
+
+        /*
+        =========================
+        4. Xử lý cấu hình
+        =========================
+        */
+        if (isset($data['cauHinh'])) {
+            $cauHinhData = $data['cauHinh'];
+            $cauHinhData['deThiId'] = $deThi->id;
+
+            // Nếu đã có thì update, chưa có thì create
+            $cauHinh = $this->cauHinhThiService->findByDeThiId($deThi->id);
+
+            if ($cauHinh) {
+                $this->cauHinhThiService->update($cauHinh, $cauHinhData);
+            } else {
+                $this->cauHinhThiService->create($cauHinhData);
+            }
+        }
+
+        /*
+        =========================
+        5. Load lại dữ liệu
+        =========================
+        */
+        $deThi->load(['cauHois', 'monThi', 'nhomHocPhans', 'cauHinhThi']);
+        $deThi->cauHois->load('cauTraLois');
+
         return $deThi;
-    }
+    });
+}
 
     public function delete(DeThi $deThi)
     {

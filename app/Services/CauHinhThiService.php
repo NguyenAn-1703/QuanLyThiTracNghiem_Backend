@@ -32,4 +32,9 @@ class CauHinhThiService
     {
         return (bool) $cauHinhThi->delete();
     }
+
+    public function findByDeThiId(int $deThiId): ?CauHinhThi
+    {
+        return CauHinhThi::where('deThiId', $deThiId)->first();
+    }
 }
