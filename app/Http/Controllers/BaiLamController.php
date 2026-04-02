@@ -68,23 +68,37 @@ class BaiLamController extends Controller
         return $this->baiLamService->delete($bailam);
     }
 
-    public function starttest(StartTestRequest $request){
-        return $this->success($this->baiLamService->startTest($request->validated()));
+    public function starttest(StartTestRequest $request)
+    {
+        try {
+            return $this->success(
+                $this->baiLamService->startTest($request->validated())
+            );
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Có lỗi xảy ra',
+                'error' => $e->getMessage(), // chỉ nên bật khi debug
+            ], 500);
+        }
     }
 
-    public function updatestudenttest(UpdateStudentTestRequest $request, BaiLam $bailam){
+    public function updatestudenttest(UpdateStudentTestRequest $request, BaiLam $bailam)
+    {
         return $this->success($this->baiLamService->updatestudenttest($request->validated(), $bailam));
     }
 
-    public function submittest(SubmitTestRequest $request,BaiLam $bailam){
+    public function submittest(SubmitTestRequest $request, BaiLam $bailam)
+    {
         return $this->success($this->baiLamService->submittest($request->validated(), $bailam->id));
     }
 
-    public function reviewresult(BaiLam $bailam){
+    public function reviewresult(BaiLam $bailam)
+    {
         return $this->success($this->baiLamService->reviewresult($bailam));
     }
 
-    public function get_osvien(User $user){
+    public function get_osvien(User $user)
+    {
         return $this->success($this->baiLamService->get_osvien($user));
     }
 }
