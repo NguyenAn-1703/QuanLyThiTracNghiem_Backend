@@ -10,7 +10,7 @@ class ThongBaoService
 {
     public function getAll()
     {
-        return ThongBao::all()->load(["nguoiGui", "nhomHocPhans"]);
+        return ThongBao::all()->load(["nguoiGui", "nhomHocPhans.monHoc"]);
     }
 
     public function getOne(ThongBao $thongBao)
@@ -37,7 +37,7 @@ class ThongBaoService
 
             return ([
                 "thongBao" => $thongBao,
-                "chiTietThongBao" =>$chiTietThongBaos 
+                "chiTietThongBao" => $chiTietThongBaos
             ]);
         });
     }
@@ -50,6 +50,7 @@ class ThongBaoService
 
     public function delete(ThongBao $thongBao)
     {
+        $thongBao->chiTietThongBaos()->delete();
         return $thongBao->delete();
     }
 }
