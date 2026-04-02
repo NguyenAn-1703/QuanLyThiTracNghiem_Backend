@@ -27,10 +27,7 @@ cmds = [
 # Các lệnh Laravel tối ưu sau khi install
 # (bạn có thể thêm npm install && npm run build nếu có frontend assets)
 cmds = [
-  "php artisan config:cache",
-  "php artisan route:cache",
-  "php artisan view:cache",
-  "php artisan optimize"
+  "php artisan optimize:clear"
   # "php artisan migrate --force"   # <-- Bỏ comment nếu muốn chạy migrate tự động khi build (cẩn thận với production)
 ]
 

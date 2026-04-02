@@ -7,12 +7,10 @@ use App\Models\BaiLam;
 use App\Models\CauHoi;
 use App\Models\User;
 use DateTime;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Ramsey\Uuid\Type\Integer;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BaiLamService
