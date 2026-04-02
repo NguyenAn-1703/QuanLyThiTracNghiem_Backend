@@ -97,8 +97,8 @@ class NhomHocPhanService
             $keyword = trim($keyword);
             $query->where(function ($q) use ($keyword) {
                 $q->where('users.hoTen', 'like', "%{$keyword}%")
-                  ->orWhere('users.username', 'like', "%{$keyword}%")
-                  ->orWhere('users.email', 'like', "%{$keyword}%");
+                    ->orWhere('users.username', 'like', "%{$keyword}%")
+                    ->orWhere('users.email', 'like', "%{$keyword}%");
             });
         }
 
@@ -163,14 +163,14 @@ class NhomHocPhanService
             if (count($row) < 2) {
                 continue;
             }
-            
+
             $mssv = isset($row[1]) ? trim((string)$row[1]) : null;
-            
+
             // Skip empty rows
             if (empty($mssv)) {
                 continue;
             }
-            
+
             // Skip header row - check if the value matches common header titles
             $headerTitles = ['Tên đăng nhập', 'MSSV', 'STT', 'Username', 'Student ID', 'ID'];
             if (in_array($mssv, $headerTitles, true)) {
@@ -326,5 +326,17 @@ class NhomHocPhanService
         }
 
         return $raw;
+    }
+
+    public function get_with_tbao(NhomHocPhan $nhomHocPhan)
+    {
+        $nhomHocPhan->load('thongBaos.nguoiGui');
+        return ($nhomHocPhan);
+    }
+
+    public function get_with_tbao_dekiemtra(NhomHocPhan $nhomHocPhan)
+    {
+        $nhomHocPhan->load(['thongBaos.nguoiGui', "deThis"]);
+        return ($nhomHocPhan);
     }
 }
