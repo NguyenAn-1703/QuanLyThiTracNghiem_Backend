@@ -10,7 +10,7 @@ class ThongBaoService
 {
     public function getAll()
     {
-        return ThongBao::all()->load("nguoiGui");
+        return ThongBao::all()->load(["nguoiGui", "nhomHocPhans"]);
     }
 
     public function getOne(ThongBao $thongBao)

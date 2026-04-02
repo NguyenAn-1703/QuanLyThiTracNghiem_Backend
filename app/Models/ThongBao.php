@@ -31,4 +31,8 @@ class ThongBao extends Model
     {
         return $this->belongsTo(User::class, 'nguoiGuiId');
     }
+
+    public function nhomHocPhans(){
+        return $this->belongsToMany(NhomHocPhan::class, 'chi_tiet_thong_baos','thongBaoId', 'nhomHocPhanId');
+    }
 }
