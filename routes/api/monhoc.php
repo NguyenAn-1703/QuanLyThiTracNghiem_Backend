@@ -11,4 +11,4 @@ Route::get('/monhocs/{monhoc}', [MonHocController::class, 'show']);
 Route::post('/monhocs', [MonHocController::class, 'store']);
 Route::put('/monhocs/{monhoc}', [MonHocController::class, 'update']);
 Route::delete('/monhocs/{monhoc}', [MonHocController::class, 'destroy']);
-Route::get('/monhocs', [MonHocController::class, 'index']);
+

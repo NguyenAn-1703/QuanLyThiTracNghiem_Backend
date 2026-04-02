@@ -110,8 +110,9 @@ class BaiLamService
 
         $this->setAutoSubmit($baiLam->id, $duration);
 
-        return DB::transaction(function () use ($chiTietBaiLam) {
+        return DB::transaction(function () use ($chiTietBaiLam, $baiLam) {
             $this->chiTietBaiLamService->addManyNonTrans($chiTietBaiLam);
+            return $baiLam;
         });
     }
 
