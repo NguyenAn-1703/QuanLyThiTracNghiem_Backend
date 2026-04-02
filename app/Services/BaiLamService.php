@@ -39,7 +39,8 @@ class BaiLamService
 
     public function getOne(BaiLam $baiLam)
     {
-        return $baiLam;
+        return $this->reviewresultbyid($baiLam->id);
+        // return $baiLam;
     }
 
     public function add(array $data)
@@ -321,6 +322,63 @@ class BaiLamService
 
         return $data;
     }
+
+    // public function reviewresultbyidnoncheckstatus(int $idBaiLam)
+    // {
+    //     try {
+    //         $bailam = BaiLam::findOrFail($idBaiLam);
+    //     } catch (ModelNotFoundException $e) {
+    //         return response()->json([
+    //             'message' => 'Không tìm thấy bài làm'
+    //         ], 404);
+    //     }
+
+    //     // if ($bailam->status != "DA_NOP") {
+    //     //     throw new HttpException(500, "Bài làm chưa nộp");
+    //     // }
+    //     $bailam->load("logBaiLam");
+
+    //     //check cấu hình
+    //     $deThi = $bailam->deThi;
+    //     $deThi->loadCount([
+    //         'cauHois as soCauHoi'
+    //     ]);
+
+    //     $cauHinhThi = $deThi->cauHinhThi;
+    //     $cauHois = $deThi->cauHois;
+
+    //     $cauHois->load('cauTraLois');
+
+    //     $chiTietBaiLams = $bailam->chiTietBaiLams;
+
+    //     $bailam->makeHidden('deThi');
+    //     $bailam->makeHidden('chiTietBaiLams');
+    //     $deThi->makeHidden('cauHinhThi');
+    //     $deThi->makeHidden('cauHois');
+
+    //     $mapChiTiet = $chiTietBaiLams->keyBy('cauHoiId'); // giống dictionary
+
+    //     $cauHois->transform(function ($cauHoi) use ($mapChiTiet) { // map
+    //         $chiTiet = $mapChiTiet->get($cauHoi->id);
+
+    //         $cauHoi->dapAnDaChon = $chiTiet->dapAnId;
+
+    //         return $cauHoi;
+    //     });
+
+
+    //     if ($cauHinhThi->showScore) {
+    //         $data = [
+    //             "baiLam" => $bailam,
+    //             "deThi" => $deThi,
+    //         ];
+    //         if ($cauHinhThi->showDetailResults) {
+    //             $data["cauHois"] = $cauHois;
+    //         }
+    //     }
+
+    //     return $data;
+    // }
 
     public function get_osvien(User $user)
     { // lấy tất cả bài làm của sinh viên
