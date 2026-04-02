@@ -28,7 +28,13 @@ class UpdateUserRequest extends FormRequest
 
         return [
             "hoTen" => ["sometimes", "string", "max:255"],
-            "email" => ["sometimes", "string", "email", "unique:users,email"],
+
+            "email" => [
+                "sometimes",
+                "string",
+                "email",
+                Rule::unique('users', 'email')->ignore($this->route('user')),
+            ],
 
             "nhomQuyenId" => ["sometimes", "numeric", "exists:roles,id", "nullable"],
             "sdt" => ["sometimes", "numeric", "digits:10"],
