@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLogBaiLamRequest;
 use App\Http\Requests\UpdateLogBaiLamRequest;
+use App\Models\BaiLam;
 use App\Models\LogBaiLam;
 use App\Services\LogBaiLamService;
 use App\Traits\ApiResponseTrait;
@@ -49,9 +50,9 @@ class LogBaiLamController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateLogBaiLamRequest $request, LogBaiLam $logbailam)
+    public function update(UpdateLogBaiLamRequest $request, BaiLam $bailam)
     {
-        $log = $this->logBaiLamService->update($request->validated(), $logbailam);
+        $log = $this->logBaiLamService->update($request->validated(), $bailam);
         return $this->success($log);
     }
 
