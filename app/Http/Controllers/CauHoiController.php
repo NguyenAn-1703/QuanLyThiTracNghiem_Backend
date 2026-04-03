@@ -6,6 +6,7 @@ use App\Http\Requests\ChangeCauHoiStatusRequest;
 use App\Http\Requests\StoreCauHoiRequest;
 use App\Http\Requests\UpdateCauHoiRequest;
 use App\Models\CauHoi;
+use App\Models\User;
 use App\Services\CauHoiService;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -90,5 +91,10 @@ class CauHoiController extends Controller
 
         $data = $this->cauHoiService->copyFromPublic($cauhoi, (int) $validated['nguoiTaoId']);
         return $this->success($data, 201);
+    }
+
+    public function getWithPrivate(User $user){
+        $data = $this->cauHoiService->getWithPrivate($user->id);
+        return $this->success($data);
     }
 }

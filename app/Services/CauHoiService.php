@@ -16,11 +16,24 @@ class CauHoiService
         $query = CauHoi::query()
             ->with(['monHoc', 'chuong', 'doKho', 'nguoiTao', 'cauTraLois'])
             ->withCount('deThis')
-            ->where('isDeleted', false);
+            ->where('isDeleted', false)
+            ->where('status', 'public'); 
 
         $this->applyFilters($query, $filters);
 
         return $query
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    public function getWithPrivate(int $userId)
+    {
+        return CauHoi::query()
+            ->with(['monHoc', 'chuong', 'doKho', 'nguoiTao', 'cauTraLois'])
+            ->withCount('deThis')
+            ->where('isDeleted', false)
+            ->where('status', 'private')
+            ->where('nguoiTaoId', $userId)
             ->orderByDesc('created_at')
             ->get();
     }
