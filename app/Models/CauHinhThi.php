@@ -17,6 +17,8 @@ class CauHinhThi extends Model
     protected $fillable = [
         'deThiId',
         'hasMonitoring',
+        'limitQuestionPerPage',
+        'allowBackLastQuestion',
         'allowCopy',
         'allowPrint',
         'isEnableResume',

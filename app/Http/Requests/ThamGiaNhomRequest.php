@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ThamGiaNhomRequest extends FormRequest
 {
@@ -24,13 +25,29 @@ class ThamGiaNhomRequest extends FormRequest
     public function rules()
     {
         return [
-            "sinhVienId" => ["required", "numeric", "exists:users,id"],
+            "sinhVienId" => [
+                "required",
+                "numeric",
+                "exists:users,id",
+                Rule::unique('chi_tiet_nhoms')
+                    ->where(function ($query) {
+                        return $query->where('sinhVienId', request()->sinhVienId)
+                            ->where('nhomHocPhanId', request()->nhomHocPhanId);
+                    })
+            ],
             "nhomHocPhanId" => ["required", "numeric", "exists:nhom_hoc_phans,id"],
             "maMoi" => [
                 "required",
                 "string",
-                "max:20",
+                "max:20"
+
             ]
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'sinhVienId.unique' => 'Sinh viên đã tồn tại trong nhóm học phần này.',
         ];
     }
 }
