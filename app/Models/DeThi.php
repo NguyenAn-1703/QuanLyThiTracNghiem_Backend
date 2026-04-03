@@ -39,15 +39,23 @@ class DeThi extends Model
         return $this->belongsTo(User::class, 'nguoiTaoId');
     }
 
-    public function nhomHocPhans(){
+    public function nhomHocPhans()
+    {
         return $this->belongsToMany(NhomHocPhan::class, 'giao_bai_this', 'deThiId', 'nhomHocPhanId');
     }
 
-    public function cauHois(){
+    public function cauHois()
+    {
         return $this->belongsToMany(CauHoi::class, 'chi_tiet_de_this', 'deThiId', 'cauHoiId');
     }
 
-    public function cauHinhThi(){
+    public function cauHinhThi()
+    {
         return $this->hasOne(CauHinhThi::class, 'deThiId');
+    }
+
+    public function baiLams()
+    {
+        return $this->hasMany(BaiLam::class, 'deThiId');
     }
 }

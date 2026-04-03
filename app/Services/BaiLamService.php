@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\SubmitTestJob;
 use App\Models\BaiLam;
 use App\Models\CauHoi;
+use App\Models\NhomHocPhan;
 use App\Models\User;
 use DateTime;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -241,10 +242,14 @@ class BaiLamService
 
 
         $mapChiTiet = $chiTietBaiLams->keyBy('cauHoiId'); // giống dictionary
+        // Log::info("chiTietBaiLams", $chiTietBaiLams);
+        // Log::info("mapChiTiet", $mapChiTiet);
 
         $cauHois->transform(function ($cauHoi) use ($mapChiTiet) { // map
             $chiTiet = $mapChiTiet->get($cauHoi->id);
-
+            if (!$chiTiet) {
+                throw new HttpException(500, "Dữ liệu câu hỏi không hợp lệ hoặc thí sinh chưa làm bài");
+            }
             $cauHoi->dapAnDaChon = $chiTiet->dapAnId;
 
             return $cauHoi;
@@ -273,10 +278,11 @@ class BaiLamService
                 'message' => 'Không tìm thấy bài làm'
             ], 404);
         }
-
+        // Log::info($bailam->status);
         if ($bailam->status != "DA_NOP") {
             throw new HttpException(500, "Bài làm chưa nộp");
         }
+
         $bailam->load("logBaiLam");
 
         //check cấu hình
@@ -301,7 +307,9 @@ class BaiLamService
 
         $cauHois->transform(function ($cauHoi) use ($mapChiTiet) { // map
             $chiTiet = $mapChiTiet->get($cauHoi->id);
-
+            if (!$chiTiet) {
+                throw new HttpException(500, "Dữ liệu câu hỏi không hợp lệ hoặc thí sinh chưa làm bài");
+            }
             $cauHoi->dapAnDaChon = $chiTiet->dapAnId;
 
             return $cauHoi;
@@ -382,5 +390,25 @@ class BaiLamService
     { // lấy tất cả bài làm của sinh viên
         $data = $user->load('baiLams.deThi');
         return $data;
+    }
+
+    //bài làm theo nhóm học phần, theo user 
+    public function get_by_nhomhocphan_svien(NhomHocPhan $nhomHocPhan, User $user)
+    {
+        $nhomHocPhan->load([
+            'deThis.baiLams' => function ($query) use ($user) {
+                $query->where('thiSinhId', $user->id)
+                    ->orderByDesc('created_at');
+            }
+        ]);
+
+        $nhomHocPhan->deThis->each(function ($deThi) {
+            // lấy bài làm gần nhất
+            $deThi->bai_lam = $deThi->baiLams->first() ?? null;
+
+            $deThi->makeHidden("baiLams");
+        });
+
+        return $nhomHocPhan;
     }
 }

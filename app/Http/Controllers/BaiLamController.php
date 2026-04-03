@@ -8,6 +8,7 @@ use App\Http\Requests\SubmitTestRequest;
 use App\Http\Requests\UpdateBaiLamRequest;
 use App\Http\Requests\UpdateStudentTestRequest;
 use App\Models\BaiLam;
+use App\Models\NhomHocPhan;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
 use App\Services\BaiLamService;
