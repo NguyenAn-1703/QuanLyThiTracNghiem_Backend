@@ -24,11 +24,10 @@ class RoleSeeder extends Seeder
             ],
         ];
 
-        foreach ($roles as $role) {
-            Role::firstOrCreate(
-                ['tenNhomQuyen' => $role['tenNhomQuyen']], // điều kiện kiểm tra trùng
-                $role
-            );
-        }
+        Role::upsert(
+            $roles,
+            ['tenNhomQuyen'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

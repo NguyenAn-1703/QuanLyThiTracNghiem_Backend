@@ -252,11 +252,10 @@ class NhomHocPhanSeeder extends Seeder
             ],
         ];
 
-        foreach ($nhomHocPhans as $nhom) {
-            NhomHocPhan::firstOrCreate(
-                ['maMoi' => $nhom['maMoi']], // điều kiện kiểm tra trùng
-                $nhom
-            );
-        }
+        NhomHocPhan::upsert(
+            $nhomHocPhans,
+            ['maMoi'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

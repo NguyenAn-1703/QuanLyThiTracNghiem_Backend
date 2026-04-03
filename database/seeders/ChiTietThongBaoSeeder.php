@@ -77,14 +77,10 @@ class ChiTietThongBaoSeeder extends Seeder
             ['nhomHocPhanId' => 10, 'thongBaoId' => 10],
         ];
 
-        foreach ($chiTietThongBaos as $chiTietThongBao) {
-            ChiTietThongBao::firstOrCreate(
-                [
-                    'nhomHocPhanId' => $chiTietThongBao['nhomHocPhanId'],
-                    'thongBaoId' => $chiTietThongBao['thongBaoId']
-                ],
-                $chiTietThongBao
-            );
-        }
+        ChiTietThongBao::upsert(
+            $chiTietThongBaos,
+            ['nhomHocPhanId', 'thongBaoId'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

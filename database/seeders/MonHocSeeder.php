@@ -177,11 +177,10 @@ class MonHocSeeder extends Seeder
             ],
         ];
 
-        foreach ($monHocs as $monHoc) {
-            MonHoc::firstOrCreate(
-                ['maMonHoc' => $monHoc['maMonHoc']], // điều kiện tránh trùng
-                $monHoc
-            );
-        }
+        MonHoc::upsert(
+            $monHocs,
+            ['maMonHoc'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

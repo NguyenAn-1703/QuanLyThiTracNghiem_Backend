@@ -71,7 +71,7 @@ class DoKhoController extends Controller
      */
     public function destroy(DoKho $dokho)
     {
-        $this->service->delete($dokho);
-        return $this->deleted();
+        $data = $this->service->delete($dokho);
+        return $this->success($data);
     }
 }

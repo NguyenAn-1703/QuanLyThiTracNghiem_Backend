@@ -47,14 +47,10 @@ class PhanCongSeeder extends Seeder
             ['giangVienId' => 6, 'monHocId' => 10],
         ];
 
-        foreach ($phanCongs as $phanCong) {
-            PhanCong::firstOrCreate(
-                [
-                    'giangVienId' => $phanCong['giangVienId'],
-                    'monHocId' => $phanCong['monHocId'],
-                ],
-                $phanCong
-            );
-        }
+        PhanCong::upsert(
+            $phanCongs,
+            ['giangVienId', 'monHocId'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Services;
 
+use App\Exceptions\BusinessException;
 use App\Models\DoKho;
+use Illuminate\Validation\ValidationException;
 
 class DoKhoService
 {
@@ -30,6 +33,12 @@ class DoKhoService
 
     public function delete(DoKho $doKho): bool
     {
+        // Kiểm tra có câu hỏi liên quan chưa
+        if ($doKho->cauHois()->exists()) {
+            throw ValidationException::withMessages([
+                'doKho' => ['Độ khó đang được sử dụng, không thể xóa.'],
+            ]);
+        }
         return (bool) $doKho->delete();
     }
 

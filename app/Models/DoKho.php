@@ -9,4 +9,9 @@ class DoKho extends Model
 {
     use HasFactory;
     protected $fillable = ['tenDoKho'];
+
+    public function cauHois()
+    {
+        return $this->hasMany(CauHoi::class, 'doKhoId');
+    }
 }

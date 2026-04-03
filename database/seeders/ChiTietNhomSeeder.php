@@ -65,14 +65,10 @@ class ChiTietNhomSeeder extends Seeder
             ['sinhVienId' => 27, 'nhomHocPhanId' => 4],
         ];
 
-        foreach ($chiTietNhoms as $chiTietNhom) {
-            ChiTietNhom::firstOrCreate(
-                [
-                    'sinhVienId' => $chiTietNhom['sinhVienId'],
-                    'nhomHocPhanId' => $chiTietNhom['nhomHocPhanId']
-                ],
-                $chiTietNhom
-            );
-        }
+        ChiTietNhom::upsert(
+            $chiTietNhoms,
+            ['sinhVienId', 'nhomHocPhanId'], // khóa xác định trùng (giống điều kiện firstOrCreate)
+            [] // không update gì khi trùng
+        );
     }
 }

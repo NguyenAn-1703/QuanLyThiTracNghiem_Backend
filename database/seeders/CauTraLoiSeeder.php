@@ -273,8 +273,9 @@ class CauTraLoiSeeder extends Seeder
         ];
 
 
-        foreach ($answers as $answer) {
-            CauTraLoi::firstOrCreate($answer);
-        }
+        CauTraLoi::upsert(
+            $answers,
+            ['id'] // hoặc key unique phù hợp
+        );
     }
 }
