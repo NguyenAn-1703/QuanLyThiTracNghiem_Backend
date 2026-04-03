@@ -22,5 +22,5 @@ Route::patch('/nhomhocphans/reset_invite_code/{nhomhocphan}', [NhomHocPhanContro
 Route::get('/nhomhocphans/assigned/{user}', [NhomHocPhanController::class, 'getAssignedTeaching']);
 Route::delete('/nhomhocphans/{nhomhocphan}/sinh-vien', [NhomHocPhanController::class, 'remove_sinh_vien_from_nhom']);
 Route::get('/nhomhocphans/w_tbao/{nhomhocphan}', [NhomHocPhanController::class, 'get_with_tbao']);
-Route::get('/nhomhocphans/w_tbao_dekiemtra/{nhomhocphan}', [NhomHocPhanController::class, 'get_with_tbao_dekiemtra']);
+Route::get('/nhomhocphans/detailsinhvien/{nhomhocphan}', [NhomHocPhanController::class, 'get_for_detail_sv']);
 

@@ -195,8 +195,8 @@ class NhomHocPhanController extends Controller
         return $this->success($data);
     }
 
-    public function get_with_tbao_dekiemtra(NhomHocPhan $nhomhocphan){
-                $data = $this->nhomHocPhanService->get_with_tbao_dekiemtra($nhomhocphan);
+    public function get_for_detail_sv(NhomHocPhan $nhomhocphan){
+        $data = $this->nhomHocPhanService->get_for_detail_sv($nhomhocphan);
         return $this->success($data);
     }
 }
