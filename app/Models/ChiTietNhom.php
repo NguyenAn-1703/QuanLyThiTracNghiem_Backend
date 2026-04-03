@@ -16,15 +16,15 @@ class ChiTietNhom extends Model
         "nhomHocPhanId"
     ];
 
-    protected $hidden = [
-        
-    ];
+    protected $hidden = [];
 
-    public function sinhVien(){
+    public function sinhVien()
+    {
         return $this->belongsTo(User::class, 'sinhVienId');
     }
 
-    public function nhomHocPhan(){
+    public function nhomHocPhan()
+    {
         return $this->belongsTo(NhomHocPhan::class, 'nhomHocPhanId');
     }
 }

@@ -10,7 +10,7 @@ class NhomHocPhan extends Model
     use HasFactory;
 
     public $timestamps = false;
-    
+
     protected $fillable = [
         "monHocId",
         "tenNhom",
@@ -27,31 +27,35 @@ class NhomHocPhan extends Model
         'chiTietNhoms as siSo'
     ];
 
-    protected $hidden = [
-        
-    ];
+    protected $hidden = [];
 
-    public function monHoc(){
+    public function monHoc()
+    {
         return $this->belongsTo(MonHoc::class, 'monHocId');
     }
 
-    public function giangVien(){
+    public function giangVien()
+    {
         return $this->belongsTo(User::class, 'giangVienId');
     }
 
-    public function deThis(){
+    public function deThis()
+    {
         return $this->belongsToMany(DeThi::class, 'giao_bai_this', 'nhomHocPhanId', "deThiId");
     }
 
-    public function sinhViens(){
+    public function sinhViens()
+    {
         return $this->belongsToMany(User::class, "chi_tiet_nhoms", "nhomHocPhanId", "sinhVienId");
     }
 
-    public function chiTietNhoms(){
+    public function chiTietNhoms()
+    {
         return $this->hasMany(ChiTietNhom::class, 'nhomHocPhanId');
     }
 
-    public function thongBaos(){
-        return $this->belongsToMany(ThongBao::class, 'chi_tiet_thong_baos','nhomHocPhanId','thongBaoId');
+    public function thongBaos()
+    {
+        return $this->belongsToMany(ThongBao::class, 'chi_tiet_thong_baos', 'nhomHocPhanId', 'thongBaoId');
     }
 }
