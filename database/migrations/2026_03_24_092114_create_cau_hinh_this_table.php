@@ -19,6 +19,9 @@ return new class extends Migration
 
             $table->boolean('hasMonitoring')->default(false);
 
+            $table->integer('limitQuestionPerPage')->default(-1);
+            $table->boolean('allowBackLastQuestion')->default(true);
+
             $table->boolean('allowCopy')->default(false);
             $table->boolean('allowPrint')->default(false);
             $table->boolean('isEnableResume')->default(false);

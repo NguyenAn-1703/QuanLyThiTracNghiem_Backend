@@ -15,23 +15,50 @@ class ChiTietDeThiSeeder extends Seeder
      */
     public function run()
     {
-        $deThiId = 1;
+        $chiTietDeThis = [];
 
-        $cauHois = CauHoi::all(); // sau này có thể lấy ds 1 số câu hỏi
+        $chiTietDeThis = [];
 
-        $thutu = 1;
-
-        foreach ($cauHois as $cauHoi) {
-            ChiTietDeThi::updateOrCreate(
-                [
-                    'cauHoiId' => $cauHoi->id,
-                    'deThiId' => $deThiId,
-                ],
-                [
-                    'thutu' => $thutu++,
-                    'diem' => $cauHoi->diemMacDinh ?? 1.00,
-                ]
-            );
+        // đề 1 (id = 1, môn 1)
+        $thuTu = 1;
+        for ($i = 1; $i <= 10; $i++) {
+            $chiTietDeThis[] = [
+                'cauHoiId' => $i,
+                'deThiId' => 1,
+                'thuTu' => $thuTu++,
+            ];
         }
+
+        // đề 2 (id = 2, môn 1)
+        $thuTu = 1;
+        for ($i = 11; $i <= 20; $i++) {
+            $chiTietDeThis[] = [
+                'cauHoiId' => $i,
+                'deThiId' => 2,
+                'thuTu' => $thuTu++,
+            ];
+        }
+
+        // đề 3 (id = 3, môn 2)
+        $thuTu = 1;
+        for ($i = 26; $i <= 35; $i++) {
+            $chiTietDeThis[] = [
+                'cauHoiId' => $i,
+                'deThiId' => 3,
+                'thuTu' => $thuTu++,
+            ];
+        }
+
+        // đề 4 (id = 4, môn 2)
+        $thuTu = 1;
+        for ($i = 36; $i <= 45; $i++) {
+            $chiTietDeThis[] = [
+                'cauHoiId' => $i,
+                'deThiId' => 4,
+                'thuTu' => $thuTu++,
+            ];
+        }
+
+        ChiTietDeThi::insert($chiTietDeThis);
     }
 }
