@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserService
@@ -41,7 +42,9 @@ class UserService
         $userPassword = $user->password;
         //validate
         if (!Hash::check($currentPassword, $userPassword)) {
-            throw new HttpException(400, "Mật khẩu cũ không khớp");
+            throw ValidationException::withMessages([
+                'currentPassword' => ['Mật khẩu cũ không khớp'],
+            ]);
         }
         //update
         $dataUpdate = [
