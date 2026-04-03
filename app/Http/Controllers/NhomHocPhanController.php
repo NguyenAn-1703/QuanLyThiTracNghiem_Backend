@@ -116,11 +116,11 @@ class NhomHocPhanController extends Controller
 
     public function add_sinh_vien_to_nhom(Request $request, NhomHocPhan $nhomhocphan)
     {
-        $sinhVienId = $request->input('sinhVienId');
-        if (!is_numeric($sinhVienId)) {
-            throw new BusinessException('ID sinh viên không hợp lệ');
+        $username = $request->input('username');
+        if (empty($username)) {
+            throw new BusinessException('Mã sinh viên không hợp lệ');
         }
-        $data = $this->nhomHocPhanService->add_sinh_vien_to_nhom($sinhVienId, $nhomhocphan);
+        $data = $this->nhomHocPhanService->add_sinh_vien_to_nhom($username, $nhomhocphan);
         return $this->success($data, 201);
     }
 
@@ -184,19 +184,9 @@ class NhomHocPhanController extends Controller
         if (!is_numeric($sinhVienId)) {
             throw new BusinessException('ID sinh viên không hợp lệ');
         }
-
+        
         $data = $this->nhomHocPhanService->remove_sinh_vien_from_nhom((int)$sinhVienId, $nhomhocphan);
         return $this->success($data);
     }
 
-    public function get_with_tbao(NhomHocPhan $nhomhocphan)
-    {
-        $data = $this->nhomHocPhanService->get_with_tbao($nhomhocphan);
-        return $this->success($data);
-    }
-
-    public function get_for_detail_sv(NhomHocPhan $nhomhocphan){
-        $data = $this->nhomHocPhanService->get_for_detail_sv($nhomhocphan);
-        return $this->success($data);
-    }
 }

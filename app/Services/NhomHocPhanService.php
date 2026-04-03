@@ -191,7 +191,7 @@ class NhomHocPhanService
             }
 
             try {
-                $this->add_sinh_vien_to_nhom($user->id, $nhomHocPhan);
+                $this->add_sinh_vien_to_nhom($user->username, $nhomHocPhan);
                 $added[] = ['id' => $user->id, 'username' => $user->username, 'hoTen' => $user->hoTen];
             } catch (BusinessException $e) {
                 if (str_contains($e->getMessage(), 'đã có trong nhóm')) {
@@ -218,9 +218,9 @@ class NhomHocPhanService
         ];
     }
 
-    public function add_sinh_vien_to_nhom(int $sinhVienId, NhomHocPhan $nhomHocPhan)
+    public function add_sinh_vien_to_nhom(string $username, NhomHocPhan $nhomHocPhan)
     {
-        $user = User::findOrFail($sinhVienId);
+        $user = User::findOrFail($username);
 
         if (!$user->isStudent) {
             throw new BusinessException('Người dùng không phải là sinh viên');
@@ -230,7 +230,7 @@ class NhomHocPhanService
             throw new BusinessException('Người dùng đã bị xóa');
         }
 
-        $exists = ChiTietNhom::where('sinhVienId', $sinhVienId)
+        $exists = ChiTietNhom::where('username', $username)
             ->where('nhomHocPhanId', $nhomHocPhan->id)
             ->exists();
 
@@ -239,7 +239,7 @@ class NhomHocPhanService
         }
 
         return ChiTietNhom::create([
-            'sinhVienId' => $sinhVienId,
+            'username' => $username,
             'nhomHocPhanId' => $nhomHocPhan->id,
         ]);
     }
