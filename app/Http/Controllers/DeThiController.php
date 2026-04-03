@@ -6,6 +6,7 @@ use App\Http\Requests\GenerateDeThiByFilterRequest;
 use App\Http\Requests\StoreDeThiRequest;
 use App\Http\Requests\UpdateDeThiRequest;
 use App\Models\DeThi;
+use App\Models\NhomHocPhan;
 use App\Models\User;
 use App\Services\DeThiService;
 use App\Traits\ApiResponseTrait;
@@ -78,6 +79,12 @@ class DeThiController extends Controller
     }
     public function get_ad(DeThi $dethi){
         $data = $this->deThiService->getAd($dethi);
+        return $this->success($data);
+    }
+
+    public function get_by_nhomhocphan_svien(NhomHocPhan $nhomhocphan, User $user)
+    {
+        $data = $this->deThiService->get_by_nhomhocphan_svien($nhomhocphan, $user);
         return $this->success($data);
     }
 }

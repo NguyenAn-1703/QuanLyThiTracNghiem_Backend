@@ -334,9 +334,9 @@ class NhomHocPhanService
         return ($nhomHocPhan);
     }
 
-    public function get_with_tbao_dekiemtra(NhomHocPhan $nhomHocPhan)
+    public function get_for_detail_sv(NhomHocPhan $nhomHocPhan)
     {
-        $nhomHocPhan->load(['thongBaos.nguoiGui', "deThis"]);
+        $nhomHocPhan->load(['thongBaos.nguoiGui', "deThis", "sinhViens", "giangVien"]);
         return ($nhomHocPhan);
     }
 }

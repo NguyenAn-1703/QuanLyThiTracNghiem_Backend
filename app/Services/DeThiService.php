@@ -415,4 +415,25 @@ class DeThiService
             throw new BusinessException('Danh sách nhóm học phần không hợp lệ hoặc không thuộc quyền quản lý', 422);
         }
     }
+
+
+    //bài làm theo nhóm học phần, theo user 
+    public function get_by_nhomhocphan_svien(NhomHocPhan $nhomHocPhan, User $user)
+    {
+        $nhomHocPhan->load([
+            'deThis.baiLams' => function ($query) use ($user) {
+                $query->where('thiSinhId', $user->id)
+                    ->orderByDesc('created_at');
+            }
+        ]);
+
+        $nhomHocPhan->deThis->each(function ($deThi) {
+            // lấy bài làm gần nhất
+            $deThi->bai_lam = $deThi->baiLams->first() ?? null;
+
+            $deThi->makeHidden("baiLams");
+        });
+
+        return $nhomHocPhan;
+    }
 }
