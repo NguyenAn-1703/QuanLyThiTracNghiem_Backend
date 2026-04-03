@@ -76,11 +76,10 @@ class ChuongSeeder extends Seeder
             ['tenChuong' => 'Triển khai ứng dụng trên Cloud', 'monHocId' => 20, 'isDeleted' => false],
         ];
 
-        foreach ($chuongs as $chuong) {
-            Chuong::firstOrCreate(
-                ['tenChuong' => $chuong['tenChuong'], 'monHocId' => $chuong['monHocId']],
-                $chuong
-            );
-        }
+Chuong::upsert(
+    $chuongs,
+    ['tenChuong', 'monHocId'], // khóa xác định trùng
+    [] // không update gì khi trùng
+);
     }
 }

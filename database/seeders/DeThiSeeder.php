@@ -212,11 +212,10 @@ class DeThiSeeder extends Seeder
             ],
         ];
 
-        foreach ($deThis as $deThi) {
-            DeThi::firstOrCreate(
-                ['tenDe' => $deThi['tenDe']], // tránh tạo trùng
-                $deThi
-            );
-        }
+        DeThi::upsert(
+            $deThis,
+            ['tenDe'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

@@ -38,11 +38,10 @@ class CauHinhThiSeeder extends Seeder
             ['deThiId' => 20, 'hasMonitoring' => false, 'allowCopy' => false, 'allowPrint' => false, 'isEnableResume' => true, 'shuffleQuestions' => true, 'shuffleAnswers' => true, 'showScore' => true, 'showDetailResults' => false, 'isLimitSwitchTab' => false, 'tabSwitchLimit' => 999, 'messageOnWarning' => null],
         ];
 
-        foreach ($data as $item) {
-            CauHinhThi::updateOrCreate(
-                ['deThiId' => $item['deThiId']],
-                $item
-            );
-        }
+        CauHinhThi::upsert(
+            $data,
+            ['deThiId'], // khóa xác định trùng
+            array_keys($data[0]) // các cột sẽ update khi trùng
+        );
     }
 }

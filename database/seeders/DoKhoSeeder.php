@@ -21,8 +21,10 @@ class DoKhoSeeder extends Seeder
             ['tenDoKho' => 'Vận dụng cao'],
         ];
 
-        foreach ($doKhos as $doKho) {
-            \App\Models\DoKho::create($doKho);
-        }
+        \App\Models\DoKho::upsert(
+            $doKhos,
+            ['tenDoKho'], // khóa xác định trùng (ví dụ: "Dễ", "Trung bình", "Khó")
+            [] // không update gì khi trùng
+        );
     }
 }
