@@ -55,11 +55,6 @@ class ActionSeeder extends Seeder
             ],
         ];
 
-        foreach ($actions as $action) {
-            Action::firstOrCreate(
-                ['tenChucNang' => $action['tenChucNang']],
-                $action
-            );
-        }
+        Action::upsert($actions, ['tenChucNang']);
     }
 }

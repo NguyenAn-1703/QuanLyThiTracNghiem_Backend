@@ -181,11 +181,10 @@ class ThongBaoSeeder extends Seeder
             ],
         ];
 
-        foreach ($thongBaos as $thongBao) {
-            ThongBao::firstOrCreate(
-                ['tieuDe' => $thongBao['tieuDe']],
-                $thongBao
-            );
-        }
+        ThongBao::upsert(
+            $thongBaos,
+            ['tieuDe'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

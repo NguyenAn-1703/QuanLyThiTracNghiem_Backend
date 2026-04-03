@@ -46,14 +46,10 @@ class GiaoBaiThiSeeder extends Seeder
             ['deThiId' => 20, 'nhomHocPhanId' => 10, 'thoiGianBatDau' => '2026-03-19 13:00:00', 'thoiGianKetThuc' => '2026-03-19 13:45:00'],
         ];
 
-        foreach ($giaoBaiThis as $giaoBaiThi) {
-            GiaoBaiThi::firstOrCreate(
-                [
-                    'deThiId' => $giaoBaiThi['deThiId'],
-                    'nhomHocPhanId' => $giaoBaiThi['nhomHocPhanId']
-                ],
-                $giaoBaiThi
-            );
-        }
+        GiaoBaiThi::upsert(
+            $giaoBaiThis,
+            ['deThiId', 'nhomHocPhanId'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

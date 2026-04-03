@@ -74,14 +74,10 @@ class BaiLamSeeder extends Seeder
             ],
         ];
 
-        foreach ($baiLams as $baiLam) {
-            BaiLam::firstOrCreate(
-                [
-                    'thiSinhId' => $baiLam['thiSinhId'],
-                    'deThiId' => $baiLam['deThiId'],
-                ],
-                $baiLam
-            );
-        }
+        BaiLam::upsert(
+            $baiLams,
+            ['thiSinhId', 'deThiId'], // key xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }

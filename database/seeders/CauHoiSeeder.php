@@ -86,8 +86,9 @@ class CauHoiSeeder extends Seeder
             ['noiDungCauHoi' => 'Collision trong hash là gì?', 'monHocId' => 2, 'doKhoId' => 3, 'imageUrl' => null, 'giaiThichDapAn' => 'Trùng giá trị hash.', 'diemMacDinh' => 1, 'nguoiTaoId' => 2, 'soLuotSuDung' => 0, 'status' => 'public', 'isDeleted' => false],
         ];
 
-        foreach ($cauHois as $cauHoi) {
-            CauHoi::firstOrCreate($cauHoi);
-        }
+        CauHoi::upsert(
+            $cauHois,
+            ['id'] // hoặc khóa duy nhất phù hợp (ví dụ: nội dung câu hỏi nếu có unique)
+        );
     }
 }

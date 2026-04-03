@@ -176,11 +176,10 @@ class UserSeeder extends Seeder
 
         ];
 
-        foreach ($users as $user) {
-            User::firstOrCreate(
-                ['email' => $user['email']], // điều kiện kiểm tra trùng
-                $user
-            );
-        }
+        User::upsert(
+            $users,
+            ['email'], // khóa xác định trùng
+            [] // không update gì khi trùng
+        );
     }
 }
