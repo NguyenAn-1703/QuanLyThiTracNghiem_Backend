@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -176,10 +177,23 @@ class UserSeeder extends Seeder
 
         ];
 
+
+        $users = array_map(function ($user) {
+            return [
+                ...$user,
+                'password' => Hash::make($user['password']),
+            ];
+        }, $users);
         User::upsert(
             $users,
             ['email'], // khóa xác định trùng
             [] // không update gì khi trùng
         );
+        // foreach ($users as $user) {
+        //     User::firstOrCreate(
+        //         ['email' => $user['email']], // điều kiện kiểm tra trùng
+        //         $user
+        //     );
+        // }
     }
 }

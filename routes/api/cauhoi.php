@@ -4,6 +4,8 @@ use App\Http\Controllers\CauHoiController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/cauhois', [CauHoiController::class, 'index']);
+Route::get('/cauhois/get_w_private/{user}', [CauHoiController::class, "getWithPrivate"]);
+
 Route::get('/cauhois/{cauhoi}', [CauHoiController::class, 'show']);
 Route::post('/cauhois', [CauHoiController::class, 'store']);
 Route::put('/cauhois/{cauhoi}', [CauHoiController::class, 'update']);
