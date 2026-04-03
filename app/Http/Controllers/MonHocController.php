@@ -68,4 +68,9 @@ class MonHocController extends Controller
         $data = $this->monHocService->get_w_nhp();
         return $this->success($data);
     }
+
+    public function get_w_chuong(){
+        $data = $this->monHocService->get_w_chuong();
+        return $this->success($data);
+    }
 }

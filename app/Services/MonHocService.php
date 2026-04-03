@@ -37,4 +37,10 @@ class MonHocService
         $monHocs->load('nhomHocPhans');
         return $monHocs;
     }
+
+    public function get_w_chuong(){
+        $monHoc = MonHoc::all();
+        $monHoc->load('chuongs');
+        return $monHoc;
+    }
 }
