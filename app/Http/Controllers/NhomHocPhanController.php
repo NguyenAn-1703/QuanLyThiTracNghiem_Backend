@@ -184,9 +184,20 @@ class NhomHocPhanController extends Controller
         if (!is_numeric($sinhVienId)) {
             throw new BusinessException('ID sinh viên không hợp lệ');
         }
-        
+
         $data = $this->nhomHocPhanService->remove_sinh_vien_from_nhom((int)$sinhVienId, $nhomhocphan);
         return $this->success($data);
     }
 
+    public function get_with_tbao(NhomHocPhan $nhomhocphan)
+    {
+        $data = $this->nhomHocPhanService->get_with_tbao($nhomhocphan);
+        return $this->success($data);
+    }
+
+    public function get_for_detail_sv(NhomHocPhan $nhomhocphan)
+    {
+        $data = $this->nhomHocPhanService->get_for_detail_sv($nhomhocphan);
+        return $this->success($data);
+    }
 }
