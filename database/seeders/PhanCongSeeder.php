@@ -24,14 +24,27 @@ class PhanCongSeeder extends Seeder
         $monHoc2 = MonHoc::where("maMonHoc", "841244")->first();
 
         $phanCongs = [
-            [
-                'giangVienId' => $giangVien->id,
-                'monHocId' => $monHoc1->id,
-            ],
-            [
-                'giangVienId' => $giangVien->id,
-                'monHocId' => $monHoc2->id,
-            ],
+            ['giangVienId' => 2, 'monHocId' => 1],
+            ['giangVienId' => 4, 'monHocId' => 2],
+            ['giangVienId' => 5, 'monHocId' => 3],
+            ['giangVienId' => 6, 'monHocId' => 4],
+            ['giangVienId' => 7, 'monHocId' => 5],
+            ['giangVienId' => 8, 'monHocId' => 6],
+            ['giangVienId' => 9, 'monHocId' => 7],
+            ['giangVienId' => 10, 'monHocId' => 8],
+            ['giangVienId' => 2, 'monHocId' => 9],
+            ['giangVienId' => 4, 'monHocId' => 10],
+
+            ['giangVienId' => 5, 'monHocId' => 1],
+            ['giangVienId' => 6, 'monHocId' => 2],
+            ['giangVienId' => 7, 'monHocId' => 3],
+            ['giangVienId' => 8, 'monHocId' => 4],
+            ['giangVienId' => 9, 'monHocId' => 5],
+            ['giangVienId' => 10, 'monHocId' => 6],
+            ['giangVienId' => 2, 'monHocId' => 7],
+            ['giangVienId' => 4, 'monHocId' => 8],
+            ['giangVienId' => 5, 'monHocId' => 9],
+            ['giangVienId' => 6, 'monHocId' => 10],
         ];
 
         foreach ($phanCongs as $phanCong) {

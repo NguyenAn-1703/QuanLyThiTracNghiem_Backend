@@ -220,7 +220,11 @@ class NhomHocPhanService
 
     public function add_sinh_vien_to_nhom(string $username, NhomHocPhan $nhomHocPhan)
     {
-        $user = User::findOrFail($username);
+        $user = User::query()->where('username', $username)->first();
+
+        if (!$user) {
+            throw new NotFoundException('Người dùng không tồn tại');
+        }
 
         if (!$user->isStudent) {
             throw new BusinessException('Người dùng không phải là sinh viên');
@@ -230,7 +234,8 @@ class NhomHocPhanService
             throw new BusinessException('Người dùng đã bị xóa');
         }
 
-        $exists = ChiTietNhom::where('username', $username)
+
+        $exists = ChiTietNhom::where('sinhVienId', $user->id)
             ->where('nhomHocPhanId', $nhomHocPhan->id)
             ->exists();
 
@@ -239,7 +244,7 @@ class NhomHocPhanService
         }
 
         return ChiTietNhom::create([
-            'username' => $username,
+            'sinhVienId' => $user->id,
             'nhomHocPhanId' => $nhomHocPhan->id,
         ]);
     }

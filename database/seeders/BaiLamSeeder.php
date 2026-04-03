@@ -20,7 +20,7 @@ class BaiLamSeeder extends Seeder
         // 'tenDe' => 'Đề thi giữa kỳ Cấu trúc dữ liệu',
         // lấy 2 đề 
         $deThi1 = DeThi::where('tenDe', 'Đề thi giữa kỳ Lập trình C')->first();
-        $deThi2 = DeThi::where('tenDe', 'Đề thi giữa kỳ Cấu trúc dữ liệu')->first();
+        $deThi2 = DeThi::where('tenDe', 'Đề thi giữa kỳ Cấu trúc dữ liệu và giải thuật')->first();
 
         $now = Date::now();
 
