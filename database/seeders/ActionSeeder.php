@@ -22,6 +22,10 @@ class ActionSeeder extends Seeder
                 'urlIcon' => 'example.icon',
             ],
             [
+                'tenChucNang' => 'do_kho',
+                'urlIcon' => 'example.icon',
+            ],
+            [
                 'tenChucNang' => 'hoc_phan',
                 'urlIcon' => 'example.icon',
             ],

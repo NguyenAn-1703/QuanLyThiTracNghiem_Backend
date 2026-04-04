@@ -44,6 +44,13 @@ class GiaoBaiThiSeeder extends Seeder
 
             ['deThiId' => 19, 'nhomHocPhanId' => 10, 'thoiGianBatDau' => '2026-03-10 13:00:00', 'thoiGianKetThuc' => '2026-03-10 13:30:00'],
             ['deThiId' => 20, 'nhomHocPhanId' => 10, 'thoiGianBatDau' => '2026-03-19 13:00:00', 'thoiGianKetThuc' => '2026-03-19 13:45:00'],
+
+            // ['deThiId' => 5,  'nhomHocPhanId' => 3,  'thoiGianBatDau' => '2026-03-03 08:00:00', 'thoiGianKetThuc' => '2026-03-03 08:30:00'],
+
+            ['deThiId' => 1,  'nhomHocPhanId' => 3,  'thoiGianBatDau' => '2026-03-01 08:00:00', 'thoiGianKetThuc' => '2026-03-01 08:30:00'],
+            ['deThiId' => 1,  'nhomHocPhanId' => 4,  'thoiGianBatDau' => '2026-03-01 08:00:00', 'thoiGianKetThuc' => '2026-03-01 08:30:00'],
+
+
         ];
 
         GiaoBaiThi::upsert(
