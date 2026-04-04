@@ -7,7 +7,6 @@ use App\Exceptions\NotFoundException;
 use App\Models\ChiTietNhom;
 use App\Models\NhomHocPhan;
 use App\Models\User;
-use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class NhomHocPhanService
@@ -251,8 +250,23 @@ class NhomHocPhanService
 
     public function resetInviteCode(NhomHocPhan $nhomHocPhan)
     {
-        $nhomHocPhan->update(['maMoi' => Str::random(19)]);
+        $nhomHocPhan->update(['maMoi' => $this->generateUniqueInviteCode()]);
         return $nhomHocPhan;
+    }
+
+    private function generateUniqueInviteCode(int $length = 8): string
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $maxIndex = strlen($characters) - 1;
+
+        do {
+            $code = '';
+            for ($i = 0; $i < $length; $i++) {
+                $code .= $characters[random_int(0, $maxIndex)];
+            }
+        } while (NhomHocPhan::query()->where('maMoi', $code)->exists());
+
+        return $code;
     }
 
     public function getAssignedTeachingByLecturerId(int $lecturerId, bool $includeHidden = false): array
