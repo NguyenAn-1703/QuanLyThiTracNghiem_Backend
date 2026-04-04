@@ -256,7 +256,7 @@ class BaiLamService
         });
 
 
-        if ($cauHinhThi->showScore) {
+        // if ($cauHinhThi->showScore) {
             $data = [
                 "baiLam" => $bailam,
                 "deThi" => $deThi,
@@ -264,7 +264,7 @@ class BaiLamService
             if ($cauHinhThi->showDetailResults) {
                 $data["cauHois"] = $cauHois;
             }
-        }
+        // }
 
         return $data;
     }
@@ -316,7 +316,7 @@ class BaiLamService
         });
 
 
-        if ($cauHinhThi->showScore) {
+        // if ($cauHinhThi->showScore) {
             $data = [
                 "baiLam" => $bailam,
                 "deThi" => $deThi,
@@ -324,7 +324,7 @@ class BaiLamService
             if ($cauHinhThi->showDetailResults) {
                 $data["cauHois"] = $cauHois;
             }
-        }
+        // }
 
         return $data;
     }
