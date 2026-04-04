@@ -16,3 +16,4 @@ Route::put('/bailams/updatestudenttest/{bailam}', [BaiLamController::class, 'upd
 Route::put('/bailams/submittest/{bailam}', [BaiLamController::class, 'submittest']);
 Route::get('/bailams/reviewresult/{bailam}', [BaiLamController::class, 'reviewresult']);
 Route::get('/bailams/get_osvien/{user}', [BaiLamController::class, 'get_osvien']);
+Route::get('/bailams/get_o_hphan_dethi/{nhomhocphan}/{dethi}', [BaiLamController::class, 'get_o_hphan_dethi']);

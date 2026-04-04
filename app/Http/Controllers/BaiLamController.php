@@ -8,6 +8,7 @@ use App\Http\Requests\SubmitTestRequest;
 use App\Http\Requests\UpdateBaiLamRequest;
 use App\Http\Requests\UpdateStudentTestRequest;
 use App\Models\BaiLam;
+use App\Models\DeThi;
 use App\Models\NhomHocPhan;
 use App\Models\User;
 use App\Traits\ApiResponseTrait;
@@ -101,5 +102,10 @@ class BaiLamController extends Controller
     public function get_osvien(User $user)
     {
         return $this->success($this->baiLamService->get_osvien($user));
+    }
+
+    public function get_o_hphan_dethi(NhomHocPhan $nhomhocphan, DeThi $dethi){
+        $data = $this->baiLamService->get_o_hphan_dethi($nhomhocphan, $dethi);
+        return $this->success($data);
     }
 }

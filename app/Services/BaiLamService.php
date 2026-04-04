@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Jobs\SubmitTestJob;
 use App\Models\BaiLam;
 use App\Models\CauHoi;
+use App\Models\DeThi;
 use App\Models\NhomHocPhan;
 use App\Models\User;
 use DateTime;
@@ -257,13 +258,13 @@ class BaiLamService
 
 
         // if ($cauHinhThi->showScore) {
-            $data = [
-                "baiLam" => $bailam,
-                "deThi" => $deThi,
-            ];
-            // if ($cauHinhThi->showDetailResults) {
-                $data["cauHois"] = $cauHois;
-            // }
+        $data = [
+            "baiLam" => $bailam,
+            "deThi" => $deThi,
+        ];
+        // if ($cauHinhThi->showDetailResults) {
+        $data["cauHois"] = $cauHois;
+        // }
         // }
 
         return $data;
@@ -317,74 +318,64 @@ class BaiLamService
 
 
         // if ($cauHinhThi->showScore) {
-            $data = [
-                "baiLam" => $bailam,
-                "deThi" => $deThi,
-            ];
-            // if ($cauHinhThi->showDetailResults) {
-                $data["cauHois"] = $cauHois;
-            // }
+        $data = [
+            "baiLam" => $bailam,
+            "deThi" => $deThi,
+        ];
+        // if ($cauHinhThi->showDetailResults) {
+        $data["cauHois"] = $cauHois;
+        // }
         // }
 
         return $data;
     }
 
-    // public function reviewresultbyidnoncheckstatus(int $idBaiLam)
-    // {
-    //     try {
-    //         $bailam = BaiLam::findOrFail($idBaiLam);
-    //     } catch (ModelNotFoundException $e) {
-    //         return response()->json([
-    //             'message' => 'Không tìm thấy bài làm'
-    //         ], 404);
-    //     }
+    public function reviewresultbyidnoncheckstatus(int $idBaiLam)
+    {
+        try {
+            $bailam = BaiLam::findOrFail($idBaiLam);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Không tìm thấy bài làm'
+            ], 404);
+        }
 
-    //     // if ($bailam->status != "DA_NOP") {
-    //     //     throw new HttpException(500, "Bài làm chưa nộp");
-    //     // }
-    //     $bailam->load("logBaiLam");
+        $bailam->load("logBaiLam");
 
-    //     //check cấu hình
-    //     $deThi = $bailam->deThi;
-    //     $deThi->loadCount([
-    //         'cauHois as soCauHoi'
-    //     ]);
+        $deThi = $bailam->deThi;
+        $deThi->loadCount([
+            'cauHois as soCauHoi'
+        ]);
 
-    //     $cauHinhThi = $deThi->cauHinhThi;
-    //     $cauHois = $deThi->cauHois;
+        $cauHois = $deThi->cauHois;
 
-    //     $cauHois->load('cauTraLois');
+        $cauHois->load('cauTraLois');
+        $chiTietBaiLams = $bailam->chiTietBaiLams;
 
-    //     $chiTietBaiLams = $bailam->chiTietBaiLams;
+        $bailam->makeHidden('deThi');
+        $bailam->makeHidden('chiTietBaiLams');
+        $deThi->makeHidden('cauHinhThi');
+        $deThi->makeHidden('cauHois');
 
-    //     $bailam->makeHidden('deThi');
-    //     $bailam->makeHidden('chiTietBaiLams');
-    //     $deThi->makeHidden('cauHinhThi');
-    //     $deThi->makeHidden('cauHois');
+        $mapChiTiet = $chiTietBaiLams->keyBy('cauHoiId'); // giống dictionary
 
-    //     $mapChiTiet = $chiTietBaiLams->keyBy('cauHoiId'); // giống dictionary
+        $cauHois->transform(function ($cauHoi) use ($mapChiTiet) { // lấy đáp án
+            $chiTiet = $mapChiTiet->get($cauHoi->id);
+            if (!$chiTiet) {
+                $cauHoi->dapAnDaChon = null;
+            } else {
+                $cauHoi->dapAnDaChon = $chiTiet->dapAnId;
+            }
 
-    //     $cauHois->transform(function ($cauHoi) use ($mapChiTiet) { // map
-    //         $chiTiet = $mapChiTiet->get($cauHoi->id);
-
-    //         $cauHoi->dapAnDaChon = $chiTiet->dapAnId;
-
-    //         return $cauHoi;
-    //     });
-
-
-    //     if ($cauHinhThi->showScore) {
-    //         $data = [
-    //             "baiLam" => $bailam,
-    //             "deThi" => $deThi,
-    //         ];
-    //         if ($cauHinhThi->showDetailResults) {
-    //             $data["cauHois"] = $cauHois;
-    //         }
-    //     }
-
-    //     return $data;
-    // }
+            return $cauHoi;
+        });
+        $data = [
+            "baiLam" => $bailam,
+            "deThi" => $deThi,
+        ];
+        $data["cauHois"] = $cauHois;
+        return $data;
+    }
 
     public function get_osvien(User $user)
     { // lấy tất cả bài làm của sinh viên
@@ -410,5 +401,60 @@ class BaiLamService
         });
 
         return $nhomHocPhan;
+    }
+
+    public function get_o_hphan_dethi(NhomHocPhan $nhomhocphan, DeThi $deThi)
+    {
+        //lọc bài làm theo điều kiện
+        $baiLams = BaiLam::where('deThiId', $deThi->id)
+            ->whereHas('user.nhomHocPhans', function ($query) use ($nhomhocphan) {
+                $query->where('nhom_hoc_phans.id', $nhomhocphan->id);
+            })
+            ->get();
+
+        //lấy các chi tiết bài làm
+        $baiLams->load(["logBaiLam", "chiTietBaiLams"]);
+        $deThi->loadCount([
+            'cauHois as soCauHoi'
+        ]);
+
+        $deThi->load([
+            'cauHois.cauTraLois'
+        ]);
+        $cauHois = $deThi->cauHois;
+
+        $result = $baiLams->map(function ($bailam) use ($cauHois, $deThi) { //map lấy đáp án cho ds câu hỏi với từng bài làm
+            $chiTietBaiLams = $bailam->chiTietBaiLams;
+
+            $mapChiTiet = $chiTietBaiLams->keyBy('cauHoiId'); // giống dictionary
+
+            $cauHoisClone = $cauHois->map(function ($cauHoi) use ($mapChiTiet) { //clone câu hỏi và lấy đáp án
+                $cauHoiClone = clone $cauHoi;
+
+                $chiTiet = $mapChiTiet->get($cauHoiClone->id);
+
+                $cauHoiClone->dapAnDaChon = $chiTiet
+                    ? $chiTiet->dapAnId
+                    : null;
+
+                return $cauHoiClone;
+            });
+
+            $bailam->makeHidden('chiTietBaiLams');
+
+            $data = [
+                "baiLam" => $bailam,
+                "cauHois" => $cauHoisClone
+            ];
+            return $data;
+        });
+
+        $deThi->makeHidden('cauHinhThi');
+        $deThi->makeHidden('cauHois');
+
+        return [
+            "deThi" => $deThi,
+            "baiLams" => $result
+        ];
     }
 }
