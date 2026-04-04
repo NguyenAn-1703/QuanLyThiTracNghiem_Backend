@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/dethis', [DeThiController::class, 'index']);
+Route::get('/dethis/generate_dethis_by_fiter', [DeThiController::class, 'preview_generate_dethis_by_fiter']);
 Route::get('/dethis/{dethi}', [DeThiController::class, 'show']);
 Route::post('/dethis', [DeThiController::class, 'store']);
 Route::post('/dethis/generate_dethis_by_fiter', [DeThiController::class, 'generate_dethis_by_fiter']);

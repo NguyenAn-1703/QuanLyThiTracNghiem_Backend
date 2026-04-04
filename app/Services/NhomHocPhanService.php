@@ -108,6 +108,10 @@ class NhomHocPhanService
             throw new NotFoundException('Nhóm học phần chưa có sinh viên, vui lòng thêm sinh viên mới.');
         }
 
+        if ($sinhViens->isEmpty()) {
+            throw new NotFoundException('Không tìm thấy sinh viên nào phù hợp với từ khóa: ' . $keyword);
+        }
+
         return [
             'nhomHocPhanId' => $nhomHocPhan->id,
             'soLuongSinhVien' => $sinhViens->count(),

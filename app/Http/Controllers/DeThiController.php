@@ -46,6 +46,12 @@ class DeThiController extends Controller
         return $this->success($data, 201);
     }
 
+    public function preview_generate_dethis_by_fiter(GenerateDeThiByFilterRequest $request)
+    {
+        $data = $this->deThiService->previewGenerateByFilter($request->validated());
+        return $this->success($data);
+    }
+
     /**
      * Display the specified resource.
      */
@@ -73,11 +79,13 @@ class DeThiController extends Controller
         return $this->success($data);
     }
 
-    public function get_osvien(User $user){
+    public function get_osvien(User $user)
+    {
         $data = $this->deThiService->get_osvien($user);
         return $this->success($data);
     }
-    public function get_ad(DeThi $dethi){
+    public function get_ad(DeThi $dethi)
+    {
         $data = $this->deThiService->getAd($dethi);
         return $this->success($data);
     }

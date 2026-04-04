@@ -100,96 +100,9 @@ class DeThiService
     public function generateByFilter(array $data)
     {
         return DB::transaction(function () use ($data) {
-            $nhomHocPhanIds = array_values(array_unique($data['nhomHocPhanIds'] ?? []));
-
-            $creator = User::query()
-                ->with(['role', 'monHocs'])
-                ->findOrFail($data['nguoiTaoId']);
-
-            $roleName = strtolower((string) optional($creator->role)->tenNhomQuyen);
-            $isAdmin = $roleName === 'admin';
-            $isTeacher = $roleName === 'teacher';
-
-            if (!$isAdmin && !$isTeacher) {
-                throw new BusinessException('Chỉ admin hoặc giảng viên mới được tạo đề ngẫu nhiên', 403);
-            }
-
-            $allowedMonHocIds = $this->getAllowedMonHocIds($creator, $isAdmin);
-            if (!in_array((int) $data['monThiId'], $allowedMonHocIds, true)) {
-                throw new BusinessException('Bạn không có quyền tạo đề cho môn học này', 403);
-            }
-
-            if (!empty($nhomHocPhanIds)) {
-                $this->validateNhomHocPhans($nhomHocPhanIds, (int) $data['monThiId'], $creator->id, $isAdmin);
-            }
-
-            $chuongIds = array_values(array_unique($data['chuongIds'] ?? []));
-            if (!empty($chuongIds)) {
-                $validChapterCount = DB::table('chuongs')
-                    ->whereIn('id', $chuongIds)
-                    ->where('monHocId', $data['monThiId'])
-                    ->where('isDeleted', false)
-                    ->count();
-
-                if ($validChapterCount !== count($chuongIds)) {
-                    throw new BusinessException('Danh sách chương không hợp lệ cho môn đã chọn', 422);
-                }
-            }
-
-            $doKhoFilters = collect($data['doKhoFilters'])
-                ->groupBy('doKhoId')
-                ->map(function ($items) {
-                    return (int) collect($items)->sum('soLuongCau');
-                })
-                ->filter(function ($soLuong) {
-                    return $soLuong > 0;
-                });
-
-            if ($doKhoFilters->isEmpty()) {
-                throw new BusinessException('Cấu hình độ khó không hợp lệ, mỗi mức cần số lượng câu lớn hơn 0', 422);
-            }
-
-            $selectedQuestions = collect();
-
-            foreach ($doKhoFilters as $doKhoId => $soLuongCau) {
-                $query = CauHoi::query()
-                    ->where('isDeleted', false)
-                    ->where('status', '!=', 'archive')
-                    ->where('monHocId', $data['monThiId'])
-                    ->where('doKhoId', (int) $doKhoId);
-
-                if (!empty($chuongIds)) {
-                    $query->whereIn('chuongId', $chuongIds);
-                }
-
-                if (!$isAdmin) {
-                    $query->where(function (Builder $inner) use ($creator) {
-                        $inner->where('status', 'public')
-                            ->orWhere('nguoiTaoId', $creator->id);
-                    });
-                }
-
-                $questionsByDifficulty = $query
-                    ->inRandomOrder()
-                    ->limit($soLuongCau)
-                    ->get();
-
-                if ($questionsByDifficulty->count() < $soLuongCau) {
-                    $doKho = DoKho::query()->find($doKhoId);
-                    $tenDoKho = $doKho?->tenDoKho ?? ('ID ' . $doKhoId);
-                    throw new BusinessException('Không đủ câu hỏi cho độ khó ' . $tenDoKho, 422);
-                }
-
-                $selectedQuestions = $selectedQuestions->concat($questionsByDifficulty);
-            }
-
-            $selectedQuestions = $selectedQuestions
-                ->shuffle()
-                ->values();
-
-            if ($selectedQuestions->isEmpty()) {
-                throw new BusinessException('Không có câu hỏi phù hợp với bộ lọc đã chọn', 422);
-            }
+            $preparedData = $this->prepareGenerateByFilterData($data);
+            $nhomHocPhanIds = $preparedData['nhomHocPhanIds'];
+            $selectedQuestions = $preparedData['selectedQuestions'];
 
             $deThi = DeThi::create([
                 'tenDe' => $data['tenDe'],
@@ -232,6 +145,34 @@ class DeThiService
 
             return $deThi;
         });
+    }
+
+    public function previewGenerateByFilter(array $data)
+    {
+        $preparedData = $this->prepareGenerateByFilterData($data);
+        $selectedQuestions = $preparedData['selectedQuestions'];
+
+        return [
+            'tenDe' => $data['tenDe'],
+            'thoiGianBatDau' => $data['thoiGianBatDau'],
+            'thoiGianKetThuc' => $data['thoiGianKetThuc'],
+            'thoiGianLamBai' => $data['thoiGianLamBai'],
+            'nguoiTaoId' => $data['nguoiTaoId'],
+            'monThiId' => $data['monThiId'],
+            'nhomHocPhanIds' => $preparedData['nhomHocPhanIds'],
+            'cauHinh' => $data['cauHinh'],
+            'tongSoCau' => $selectedQuestions->count(),
+            'cauHois' => $selectedQuestions->values()->map(function ($question, $index) {
+                return [
+                    'id' => $question->id,
+                    'thuTu' => $index + 1,
+                    'diem' => $question->diemMacDinh ?? 1,
+                    'noiDung' => $question->noiDung,
+                    'doKhoId' => $question->doKhoId,
+                    'chuongId' => $question->chuongId,
+                ];
+            }),
+        ];
     }
 
     public function update(array $data, DeThi $deThi)
@@ -414,6 +355,105 @@ class DeThiService
         if ($validCount !== count(array_unique($nhomHocPhanIds))) {
             throw new BusinessException('Danh sách nhóm học phần không hợp lệ hoặc không thuộc quyền quản lý', 422);
         }
+    }
+
+    private function prepareGenerateByFilterData(array $data): array
+    {
+        $nhomHocPhanIds = array_values(array_unique($data['nhomHocPhanIds'] ?? []));
+
+        $creator = User::query()
+            ->with(['role', 'monHocs'])
+            ->findOrFail($data['nguoiTaoId']);
+
+        $roleName = strtolower((string) optional($creator->role)->tenNhomQuyen);
+        $isAdmin = $roleName === 'admin';
+        $isTeacher = $roleName === 'teacher';
+
+        if (!$isAdmin && !$isTeacher) {
+            throw new BusinessException('Chỉ admin hoặc giảng viên mới được tạo đề ngẫu nhiên', 403);
+        }
+
+        $allowedMonHocIds = $this->getAllowedMonHocIds($creator, $isAdmin);
+        if (!in_array((int) $data['monThiId'], $allowedMonHocIds, true)) {
+            throw new BusinessException('Bạn không có quyền tạo đề cho môn học này', 403);
+        }
+
+        if (!empty($nhomHocPhanIds)) {
+            $this->validateNhomHocPhans($nhomHocPhanIds, (int) $data['monThiId'], $creator->id, $isAdmin);
+        }
+
+        $chuongIds = array_values(array_unique($data['chuongIds'] ?? []));
+        if (!empty($chuongIds)) {
+            $validChapterCount = DB::table('chuongs')
+                ->whereIn('id', $chuongIds)
+                ->where('monHocId', $data['monThiId'])
+                ->where('isDeleted', false)
+                ->count();
+
+            if ($validChapterCount !== count($chuongIds)) {
+                throw new BusinessException('Danh sách chương không hợp lệ cho môn đã chọn', 422);
+            }
+        }
+
+        $doKhoFilters = collect($data['doKhoFilters'])
+            ->groupBy('doKhoId')
+            ->map(function ($items) {
+                return (int) collect($items)->sum('soLuongCau');
+            })
+            ->filter(function ($soLuong) {
+                return $soLuong > 0;
+            });
+
+        if ($doKhoFilters->isEmpty()) {
+            throw new BusinessException('Cấu hình độ khó không hợp lệ, mỗi mức cần số lượng câu lớn hơn 0', 422);
+        }
+
+        $selectedQuestions = collect();
+
+        foreach ($doKhoFilters as $doKhoId => $soLuongCau) {
+            $query = CauHoi::query()
+                ->where('isDeleted', false)
+                ->where('status', '!=', 'archive')
+                ->where('monHocId', $data['monThiId'])
+                ->where('doKhoId', (int) $doKhoId);
+
+            if (!empty($chuongIds)) {
+                $query->whereIn('chuongId', $chuongIds);
+            }
+
+            if (!$isAdmin) {
+                $query->where(function (Builder $inner) use ($creator) {
+                    $inner->where('status', 'public')
+                        ->orWhere('nguoiTaoId', $creator->id);
+                });
+            }
+
+            $questionsByDifficulty = $query
+                ->inRandomOrder()
+                ->limit($soLuongCau)
+                ->get();
+
+            if ($questionsByDifficulty->count() < $soLuongCau) {
+                $doKho = DoKho::query()->find($doKhoId);
+                $tenDoKho = $doKho?->tenDoKho ?? ('ID ' . $doKhoId);
+                throw new BusinessException('Không đủ câu hỏi cho độ khó ' . $tenDoKho, 422);
+            }
+
+            $selectedQuestions = $selectedQuestions->concat($questionsByDifficulty);
+        }
+
+        $selectedQuestions = $selectedQuestions
+            ->shuffle()
+            ->values();
+
+        if ($selectedQuestions->isEmpty()) {
+            throw new BusinessException('Không có câu hỏi phù hợp với bộ lọc đã chọn', 422);
+        }
+
+        return [
+            'nhomHocPhanIds' => $nhomHocPhanIds,
+            'selectedQuestions' => $selectedQuestions,
+        ];
     }
 
 
