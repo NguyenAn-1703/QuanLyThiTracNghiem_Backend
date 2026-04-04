@@ -38,4 +38,8 @@ class BaiLam extends Model
     public function logBaiLam(){
         return $this->hasMany(LogBaiLam::class, 'baiLamId');
     }
+
+    public function user(){ //sinh viên làm bài
+        return $this->belongsTo(User::class, "thiSinhId");
+    }
 }
