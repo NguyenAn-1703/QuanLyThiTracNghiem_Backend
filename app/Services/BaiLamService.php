@@ -261,9 +261,9 @@ class BaiLamService
                 "baiLam" => $bailam,
                 "deThi" => $deThi,
             ];
-            if ($cauHinhThi->showDetailResults) {
+            // if ($cauHinhThi->showDetailResults) {
                 $data["cauHois"] = $cauHois;
-            }
+            // }
         // }
 
         return $data;
@@ -321,9 +321,9 @@ class BaiLamService
                 "baiLam" => $bailam,
                 "deThi" => $deThi,
             ];
-            if ($cauHinhThi->showDetailResults) {
+            // if ($cauHinhThi->showDetailResults) {
                 $data["cauHois"] = $cauHois;
-            }
+            // }
         // }
 
         return $data;
