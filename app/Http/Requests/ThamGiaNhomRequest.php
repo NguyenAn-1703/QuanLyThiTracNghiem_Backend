@@ -35,7 +35,6 @@ class ThamGiaNhomRequest extends FormRequest
                             ->where('nhomHocPhanId', request()->nhomHocPhanId);
                     })
             ],
-            "nhomHocPhanId" => ["required", "numeric", "exists:nhom_hoc_phans,id"],
             "maMoi" => [
                 "required",
                 "string",

@@ -7,6 +7,7 @@ use App\Exceptions\NotFoundException;
 use App\Models\ChiTietNhom;
 use App\Models\NhomHocPhan;
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
 class NhomHocPhanService
@@ -63,19 +64,33 @@ class NhomHocPhanService
 
     public function join_group(array $data)
     {
-        $mamoi = $data["maMoi"];
+        $maMoi = $data["maMoi"];
         $sinhVienId = $data["sinhVienId"];
-        $nhomHocPhanId = $data["nhomHocPhanId"];
 
-        $nhomHocPhan = NhomHocPhan::findOrFail($nhomHocPhanId);
+        // Tìm nhóm học phần theo mã mời
+        $nhomHocPhan = NhomHocPhan::where("maMoi", $maMoi)->first();
 
-        if ($mamoi !== $nhomHocPhan->maMoi) {
-            throw new BusinessException('Mã tham gia không đúng');
+        if (!$nhomHocPhan) {
+            throw ValidationException::withMessages([
+                'ma' => ['Mã tham gia không tồn tại'],
+            ]);
         }
 
+        // Kiểm tra sinh viên đã ở trong nhóm chưa
+        $exists = ChiTietNhom::where("sinhVienId", $sinhVienId)
+            ->where("nhomHocPhanId", $nhomHocPhan->id)
+            ->exists();
+
+        if ($exists) {
+            throw ValidationException::withMessages([
+                'sinhvien' => ['Sinh viên đã tham gia nhóm này'],
+            ]);
+        }
+
+        // Tạo chi tiết nhóm
         $chiTietNhom = [
             "sinhVienId" => $sinhVienId,
-            "nhomHocPhanId" => $nhomHocPhanId
+            "nhomHocPhanId" => $nhomHocPhan->id
         ];
 
         return ChiTietNhom::create($chiTietNhom);
