@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\BusinessException;
 use App\Models\CauHoi;
 use App\Models\Chuong;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,7 @@ class CauHoiService
             ->with(['monHoc', 'chuong', 'doKho', 'nguoiTao', 'cauTraLois'])
             ->withCount('deThis')
             ->where('isDeleted', false)
-            ->where('status', 'public'); 
+            ->where('status', 'public');
 
         $this->applyFilters($query, $filters);
 
@@ -100,7 +101,7 @@ class CauHoiService
 
         return DB::transaction(function () use ($source, $nguoiTaoId) {
             $source->load('cauTraLois');
-
+            $source->increment('soLuotSuDung');
             $newQuestionData = [
                 'monHocId' => $source->monHocId,
                 'chuongId' => $source->chuongId,
@@ -228,5 +229,31 @@ class CauHoiService
         if (!$belongsToMonHoc) {
             throw new \InvalidArgumentException('Chương không thuộc môn học đã chọn');
         }
+    }
+
+    public function getAllPublic()
+    {
+        return CauHoi::where('status', 'public')->get()->load(
+            [
+                "monHoc",
+                "chuong",
+                "doKho",
+                "nguoiTao",
+                "cauTraLois"
+            ]
+        );
+    }
+
+    public function getAllOfUser(User $user)
+    {
+        return CauHoi::where('nguoiTaoId', $user->id)->get()->load(
+            [
+                "monHoc",
+                "chuong",
+                "doKho",
+                "nguoiTao",
+                "cauTraLois"
+            ]
+        );
     }
 }
