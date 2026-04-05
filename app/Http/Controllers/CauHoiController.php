@@ -97,4 +97,15 @@ class CauHoiController extends Controller
         $data = $this->cauHoiService->getWithPrivate($user->id);
         return $this->success($data);
     }
+
+    public function getAllPublic(){
+        $data = $this->cauHoiService->getAllPublic();
+        return $this->success($data);
+    }
+
+    public function getAllOfUser(User $user){
+        $data = $this->cauHoiService->getAllOfUser($user);
+        return $this->success($data);
+    }
 }
+
