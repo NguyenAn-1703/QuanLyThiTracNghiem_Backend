@@ -23,4 +23,5 @@ Route::get('/nhomhocphans/assigned/{user}', [NhomHocPhanController::class, 'getA
 Route::delete('/nhomhocphans/{nhomhocphan}/sinh-vien', [NhomHocPhanController::class, 'remove_sinh_vien_from_nhom']);
 Route::get('/nhomhocphans/w_tbao/{nhomhocphan}', [NhomHocPhanController::class, 'get_with_tbao']);
 Route::get('/nhomhocphans/detailsinhvien/{nhomhocphan}', [NhomHocPhanController::class, 'get_for_detail_sv']);
+Route::get('/nhomhocphans/get_o_gvien/{user}', [NhomHocPhanController::class, 'get_o_gvien']);
 

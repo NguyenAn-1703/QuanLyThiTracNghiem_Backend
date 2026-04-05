@@ -13,4 +13,6 @@ Route::post('/monhocs', [MonHocController::class, 'store']);
 Route::put('/monhocs/{monhoc}', [MonHocController::class, 'update']);
 Route::delete('/monhocs/{monhoc}', [MonHocController::class, 'destroy']);
 
+Route::get('/monhocs/get_o_gvien/{user}', [MonHocController::class, 'get_o_gvien']);
+
 
