@@ -89,6 +89,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(NhomHocPhan::class, "chi_tiet_nhoms", "sinhVienId", "nhomHocPhanId");
     }
 
+    public function quanLyNhomHocPhans(){
+        return $this->hasMany(NhomHocPhan::class, "giangVienId");
+    }
+
     public function monHocs()
     {
         return $this->belongsToMany(MonHoc::class, "phan_congs", "giangVienId", "monHocId");
