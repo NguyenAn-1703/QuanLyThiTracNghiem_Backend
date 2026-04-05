@@ -200,4 +200,10 @@ class NhomHocPhanController extends Controller
         $data = $this->nhomHocPhanService->get_for_detail_sv($nhomhocphan);
         return $this->success($data);
     }
+
+    public function get_o_gvien(User $user)
+    {
+        $data = $this->nhomHocPhanService->get_o_gvien($user);
+        return $this->success($data);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\MonHoc;
+use App\Models\User;
 
 class MonHocService
 {
@@ -42,5 +43,10 @@ class MonHocService
         $monHoc = MonHoc::all();
         $monHoc->load('chuongs');
         return $monHoc;
+    }
+
+    public function get_o_gvien(User $user){
+        $data = $user->monHocs;
+        return $data;
     }
 }

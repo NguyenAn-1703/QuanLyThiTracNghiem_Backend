@@ -363,4 +363,9 @@ class NhomHocPhanService
         $nhomHocPhan->load(['thongBaos.nguoiGui', "deThis", "sinhViens", "giangVien"]);
         return ($nhomHocPhan);
     }
+
+    public function get_o_gvien(User $user){
+        $nhomHocPhan = $user->quanLyNhomHocPhans;
+        return $nhomHocPhan;
+    }
 }

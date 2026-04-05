@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreMonHocRequest;
 use App\Http\Requests\UpdateMonHocRequest;
 use App\Models\MonHoc;
+use App\Models\User;
 use App\Services\MonHocService;
 use App\Traits\ApiResponseTrait;
 
@@ -71,6 +72,11 @@ class MonHocController extends Controller
 
     public function get_w_chuong(){
         $data = $this->monHocService->get_w_chuong();
+        return $this->success($data);
+    }
+
+    public function get_o_gvien(User $user){
+        $data = $this->monHocService->get_o_gvien($user);
         return $this->success($data);
     }
 }
