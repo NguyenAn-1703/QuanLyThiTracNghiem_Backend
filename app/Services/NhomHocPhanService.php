@@ -163,19 +163,16 @@ class NhomHocPhanService
         $added = [];
 
         foreach ($rows as $rowIndex => $row) {
-            // Skip if row doesn't have enough columns
             if (count($row) < 2) {
                 continue;
             }
 
             $mssv = isset($row[1]) ? trim((string)$row[1]) : null;
 
-            // Skip empty rows
             if (empty($mssv)) {
                 continue;
             }
 
-            // Skip header row - check if the value matches common header titles
             $headerTitles = ['Tên đăng nhập', 'MSSV', 'STT', 'Username', 'Student ID', 'ID'];
             if (in_array($mssv, $headerTitles, true)) {
                 continue;
@@ -205,19 +202,13 @@ class NhomHocPhanService
             }
         }
 
-        if (!empty($missing)) {
-            throw new NotFoundException(
-                'Một số sinh viên không tồn tại trong hệ thống',
-                $missing,
-            );
-        }
-
-        if (empty($added)) {
-            throw new BusinessException('Không có sinh viên nào mới được thêm vào nhóm học phần');
+        if (empty($added) && !empty($missing)) {
+            throw new NotFoundException('Không sinh viên nào được thêm vào nhóm vì tất cả đều chưa có tài khoản hệ thống:', $missing);
         }
 
         return [
             'added' => $added,
+            'missing' => $missing,
             'count' => count($added),
         ];
     }
@@ -364,7 +355,8 @@ class NhomHocPhanService
         return ($nhomHocPhan);
     }
 
-    public function get_o_gvien(User $user){
+    public function get_o_gvien(User $user)
+    {
         $nhomHocPhan = $user->quanLyNhomHocPhans;
         return $nhomHocPhan;
     }
