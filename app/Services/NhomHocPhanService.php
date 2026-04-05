@@ -23,6 +23,11 @@ class NhomHocPhanService
 
     public function add(array $data)
     {
+        // nếu chưa có maMoi thì tạo mới
+        if (empty($data['maMoi'])) {
+            $data['maMoi'] = $this->generateUniqueInviteCode();
+        }
+
         return NhomHocPhan::create($data);
     }
 

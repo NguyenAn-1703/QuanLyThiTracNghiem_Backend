@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ChiTietThongBao;
 use App\Models\ThongBao;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class ThongBaoService

@@ -21,7 +21,7 @@ class StoreNhomHocPhanRequest extends FormRequest
         return [
             'monHocId' => ['required', 'integer', 'exists:mon_hocs,id'],
             'tenNhom' => ['required', 'string', 'max:100'],
-            'maMoi' => ['required', 'string', 'max:20', 'unique:nhom_hoc_phans,maMoi'],
+            // 'maMoi' => ['required', 'string', 'max:20', 'unique:nhom_hoc_phans,maMoi'],
             'notes' => ['nullable', 'string'],
             'hocKy' => ['required', 'integer', 'min:1', 'max:3'],
             'namHoc' => ['required', 'integer', 'min:2000'],
@@ -43,10 +43,10 @@ class StoreNhomHocPhanRequest extends FormRequest
             'tenNhom.string' => ':attribute phải là chuỗi ký tự',
             'tenNhom.max' => ':attribute không được vượt quá 100 ký tự',
 
-            'maMoi.required' => ':attribute không được để trống',
-            'maMoi.string' => ':attribute phải là chuỗi ký tự',
-            'maMoi.max' => ':attribute không được vượt quá 20 ký tự',
-            'maMoi.unique' => ':attribute đã tồn tại',
+            // 'maMoi.required' => ':attribute không được để trống',
+            // 'maMoi.string' => ':attribute phải là chuỗi ký tự',
+            // 'maMoi.max' => ':attribute không được vượt quá 20 ký tự',
+            // 'maMoi.unique' => ':attribute đã tồn tại',
 
             'notes.string' => ':attribute phải là chuỗi ký tự',
 
