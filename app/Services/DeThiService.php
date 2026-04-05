@@ -359,7 +359,7 @@ class DeThiService
             function ($nhomHocPhan) {
                 return $nhomHocPhan->deThis->load('monThi');
             }
-        )->unique('id'); // tránh trường hợp đề thi chia cho 2 nhóm khác nhau
+        )->unique('id')->values(); // tránh trường hợp đề thi chia cho 2 nhóm khác nhau
         $deThi;
 
         return $deThi;
