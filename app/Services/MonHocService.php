@@ -33,20 +33,31 @@ class MonHocService
         return $monHoc->delete();
     }
 
-    public function get_w_nhp(){
+    public function get_w_nhp()
+    {
         $monHocs = MonHoc::all();
         $monHocs->load('nhomHocPhans');
         return $monHocs;
     }
 
-    public function get_w_chuong(){
+    public function get_w_chuong()
+    {
         $monHoc = MonHoc::all();
         $monHoc->load('chuongs');
         return $monHoc;
     }
 
-    public function get_o_gvien(User $user){
-        $data = $user->monHocs;
+    public function get_o_gvien(User $user)
+    {
+        // Lấy id các nhóm học phần giảng viên quản lý
+        $nhomIds = $user->quanLyNhomHocPhans->pluck('id');
+
+        $data = $user->monHocs()->with([
+            'nhomHocPhans' => function ($query) use ($nhomIds) {
+                $query->whereIn('id', $nhomIds);
+            }
+        ])->get();
+
         return $data;
     }
 }
