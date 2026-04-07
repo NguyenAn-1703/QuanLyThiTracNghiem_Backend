@@ -54,6 +54,16 @@ class AuthService
         ]);
     }
 
+    public function me()
+    {
+        $user = Auth::guard('api')->user();
+        $role = $user->nhomQuyenId ? $this->roleService->getRoleDetailById($user->nhomQuyenId) : null;
+        return response()->json([
+            'me' => Auth::guard('api')->user(),
+            'role' => $role
+        ]);
+    }
+
     public function redirectToGoogle(): RedirectResponse
     {
         return $this->googleProvider()->stateless()->redirect();
@@ -79,13 +89,13 @@ class AuthService
         $email = $googleUser->getEmail();
 
         if (!$email) {
-            throw new HttpException(403, 'Tài khoản của bạn không thuộc phạm vi quản lý của chúng tôi');
+            return(["error" => "unauthorized_domain"]);
         }
 
         $user = User::where('email', $email)->first();
 
         if (!$user) {
-            throw new HttpException(403, 'Tài khoản của bạn không thuộc phạm vi quản lý của chúng tôi');
+            return(["error" => "unauthorized_domain"]);
         }
 
         $googleId = $googleUser->getId();
@@ -98,7 +108,7 @@ class AuthService
         $token = Auth::guard('api')->login($user);
 
         if (!$token) {
-            throw new HttpException(401, 'Không thể đăng nhập bằng Google');
+            return(["error" => "login_failed"]);
         }
 
         $role = $user->nhomQuyenId ? $this->roleService->getRoleDetailById($user->nhomQuyenId) : null;
@@ -117,11 +127,6 @@ class AuthService
         $provider = Socialite::driver('google');
 
         return $provider;
-    }
-
-    public function me()
-    {
-        return response()->json(Auth::user());
     }
 
     public function logout()
