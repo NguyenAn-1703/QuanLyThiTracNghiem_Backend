@@ -42,19 +42,29 @@ class AuthController extends Controller
         ]);
     }
 
-    public function redirectToGoogle(): RedirectResponse
+    public function redirectToGoogle(Request $request): RedirectResponse
     {
-        return $this->authService->redirectToGoogle();
+        // session(['frontend_redirect_url' => $request->query()["redirect_url"]]);
+        // Log::info(session()->all());
+        return $this->authService->redirectToGoogle($request, $request->query()["redirect_url"]);
     }
 
     public function handleGoogleCallback(Request $request)
     {
+        // 1. Lấy chuỗi state từ URL mà Google trả về
+        $state = $request->input('state');
+
+        // 2. Tách chuỗi để lấy lại URL (giả sử state là "frontend_url=http://...")
+        parse_str($state, $result);
+        $frontendUrl = $result['frontend_url'];
+
+        Log::info('Lấy URL từ state thành công: ' . $frontendUrl);
         if (!$request->filled('code') && !$request->filled('error')) {
             if ($request->expectsJson()) {
                 return $this->error(null, 'Thiếu mã xác thực Google. Hãy bắt đầu từ endpoint /auth/google/redirect', 400);
             }
 
-            return $this->authService->redirectToGoogle();
+            return $this->authService->redirectToGoogle($request, $frontendUrl);
         }
 
         try {
@@ -62,21 +72,12 @@ class AuthController extends Controller
             // Lấy địa chỉ Frontend từ file .env, nếu không có thì mặc định là localhost
             $frontendBaseUrl = env('FRONTEND_URL', 'http://localhost:5173');
 
-            // Đường dẫn đến trạm đón đã tạo ở FE
-            $callbackPath = "/auth/callback";
-
-            // Kiểm tra nếu có lỗi trả về từ Service
             if (isset($data['error'])) {
-                // Redirect về Frontend kèm mã lỗi dưới dạng Query String
-                return redirect($frontendBaseUrl . $callbackPath . '?error=' . $data['error']);
+                return redirect($frontendUrl . '?error=' . $data['error']);
             }
+            return redirect($frontendUrl . "?token=" . $data['access_token']);
 
-            $token = $data['access_token'];
-            $name = urlencode($data['me']['username']);
-            $email = $data['me']['email'];
-
-            // Redirect vèo một cái về đúng Frontend
-            return redirect($frontendBaseUrl . $callbackPath . "?token=" . $token . "&name=" . $name . "&email=" . $email);
+            // return $this->success($data, 'Đăng nhập Google thành công');
         } catch (HttpException $e) {
             return $this->error(null, $e->getMessage(), $e->getStatusCode());
         } catch (Throwable $e) {
