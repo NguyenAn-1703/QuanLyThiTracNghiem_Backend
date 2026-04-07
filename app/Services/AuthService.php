@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\GoogleProvider;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthService
@@ -48,6 +51,57 @@ class AuthService
             'me' => Auth::guard('api')->user(),
             'role' => $role
         ]);
+    }
+
+    public function redirectToGoogle(): RedirectResponse
+    {
+        return $this->googleProvider()->stateless()->redirect();
+    }
+
+    public function handleGoogleCallback(): array
+    {
+        $googleUser = $this->googleProvider()->stateless()->user();
+        $email = $googleUser->getEmail();
+
+        if (!$email) {
+            throw new HttpException(403, 'Tài khoản của bạn không thuộc phạm vi quản lý của chúng tôi');
+        }
+
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            throw new HttpException(403, 'Tài khoản của bạn không thuộc phạm vi quản lý của chúng tôi');
+        }
+
+        $googleId = $googleUser->getId();
+        if (!$user->ggid && $googleId) {
+            $user->ggid = $googleId;
+            $user->save();
+            $user->refresh();
+        }
+
+        $token = Auth::guard('api')->login($user);
+
+        if (!$token) {
+            throw new HttpException(401, 'Không thể đăng nhập bằng Google');
+        }
+
+        $role = $user->nhomQuyenId ? $this->roleService->getRoleDetailById($user->nhomQuyenId) : null;
+
+        return [
+            'access_token' => $token,
+            'token_type'   => 'bearer',
+            'me' => $user,
+            'role' => $role,
+        ];
+    }
+
+    private function googleProvider(): GoogleProvider
+    {
+        /** @var GoogleProvider $provider */
+        $provider = Socialite::driver('google');
+
+        return $provider;
     }
 
     public function me()
