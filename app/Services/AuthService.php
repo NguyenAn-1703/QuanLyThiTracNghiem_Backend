@@ -4,6 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Exception\ClientException;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
@@ -54,38 +55,41 @@ class AuthService
         ]);
     }
 
-    public function redirectToGoogle(): RedirectResponse
+    public function redirectToGoogle(Request $request, string $frontendUrl): RedirectResponse
     {
-        return $this->googleProvider()->stateless()->redirect();
+        return $this->googleProvider()->with(['state' => 'frontend_url=' . $frontendUrl])->redirect();
     }
 
     public function handleGoogleCallback(): array
     {
         $oauthError = request()->query('error');
         if ($oauthError) {
-            throw new HttpException(400, 'Đăng nhập Google bị hủy hoặc thất bại từ phía Google');
+            // throw new HttpException(400, 'Đăng nhập Google bị hủy hoặc thất bại từ phía Google');
+            return ['error' => 'google_auth_error'];
         }
 
         if (!request()->filled('code')) {
-            throw new HttpException(400, 'Thiếu mã xác thực Google. Hãy bắt đầu từ endpoint /auth/google/redirect');
+            // throw new HttpException(400, 'Thiếu mã xác thực Google. Hãy bắt đầu từ endpoint /auth/google/redirect');
+            return ['error' => 'google_auth_error'];
         }
 
         try {
             $googleUser = $this->googleProvider()->stateless()->user();
         } catch (ClientException $e) {
-            throw new HttpException(400, 'Mã xác thực Google không hợp lệ hoặc đã hết hạn');
+            // throw new HttpException(400, 'Mã xác thực Google không hợp lệ hoặc đã hết hạn');
+            return ['error' => 'google_auth_error'];
         }
 
         $email = $googleUser->getEmail();
 
         if (!$email) {
-            throw new HttpException(403, 'Tài khoản của bạn không thuộc phạm vi quản lý của chúng tôi');
+            return ['error' => 'unauthorized_domain'];
         }
 
         $user = User::where('email', $email)->first();
 
         if (!$user) {
-            throw new HttpException(403, 'Tài khoản của bạn không thuộc phạm vi quản lý của chúng tôi');
+            return ['error' => 'unauthorized_domain'];
         }
 
         $googleId = $googleUser->getId();
@@ -98,7 +102,8 @@ class AuthService
         $token = Auth::guard('api')->login($user);
 
         if (!$token) {
-            throw new HttpException(401, 'Không thể đăng nhập bằng Google');
+            // throw new HttpException(401, 'Không thể đăng nhập bằng Google');
+            return ['error' => 'google_auth_error'];
         }
 
         $role = $user->nhomQuyenId ? $this->roleService->getRoleDetailById($user->nhomQuyenId) : null;
@@ -121,7 +126,13 @@ class AuthService
 
     public function me()
     {
-        return response()->json(Auth::user());
+        $user = Auth::user();
+        $role = $user->nhomQuyenId ? $this->roleService->getRoleDetailById($user->nhomQuyenId) : null;
+        return response()->json([
+            'token_type'   => 'bearer',
+            'me' => Auth::guard('api')->user(),
+            'role' => $role
+        ]);
     }
 
     public function logout()
