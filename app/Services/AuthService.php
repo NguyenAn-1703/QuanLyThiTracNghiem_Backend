@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use GuzzleHttp\Exception\ClientException;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -60,7 +61,21 @@ class AuthService
 
     public function handleGoogleCallback(): array
     {
-        $googleUser = $this->googleProvider()->stateless()->user();
+        $oauthError = request()->query('error');
+        if ($oauthError) {
+            throw new HttpException(400, 'Đăng nhập Google bị hủy hoặc thất bại từ phía Google');
+        }
+
+        if (!request()->filled('code')) {
+            throw new HttpException(400, 'Thiếu mã xác thực Google. Hãy bắt đầu từ endpoint /auth/google/redirect');
+        }
+
+        try {
+            $googleUser = $this->googleProvider()->stateless()->user();
+        } catch (ClientException $e) {
+            throw new HttpException(400, 'Mã xác thực Google không hợp lệ hoặc đã hết hạn');
+        }
+
         $email = $googleUser->getEmail();
 
         if (!$email) {
