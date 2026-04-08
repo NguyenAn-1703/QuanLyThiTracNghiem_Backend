@@ -66,24 +66,11 @@ class AuthController extends Controller
 
         try {
             $data = $this->authService->handleGoogleCallback();
-            // Tạo cookie HttpOnly + Secure + SameSite=None
-            $cookie = cookie(
-                name: 'token',                    // hoặc 'access_token'
-                value: $data['access_token'],
-                minutes: 60 * 24 * 7,             // 7 ngày
-                path: '/',
-                domain: null,                     // để null hoặc .yourdomain.com nếu cùng TLD
-                secure: true,                     // phải true khi SameSite=None
-                httpOnly: true,                   // quan trọng
-                raw: false,
-                sameSite: 'None'                  // bắt buộc cho cross-origin
-            );
 
             if (isset($data['error'])) {
                 return redirect($frontendUrl . '?error=' . $data['error']);
             }
-            // return redirect($frontendUrl . "?token=" . $data['access_token']);
-            return redirect($frontendUrl)->withCookie($cookie);
+            return redirect($frontendUrl . "?token=" . $data['access_token']);
         } catch (HttpException $e) {
             return $this->error(null, $e->getMessage(), $e->getStatusCode());
         } catch (Throwable $e) {
@@ -93,5 +80,11 @@ class AuthController extends Controller
 
             return $this->serverError();
         }
+    }
+
+    public function setAuthCookie(Request $request)
+    {
+        $data = $this->authService->setAuthCookie($request);
+        return $data;
     }
 }
