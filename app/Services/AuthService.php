@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\ClientException;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\GoogleProvider;
@@ -141,5 +142,32 @@ class AuthService
         return response()->json([
             'message' => 'Đăng xuất thành công'
         ]);
+    }
+
+    public function setAuthCookie(Request $request){
+        $token = $request->input('access_token');
+
+        Log::info($token);
+
+        if (empty($token) || !is_string($token)) {
+            return response()->json(['error' => 'Token không hợp lệ'], 400);
+        }
+
+        $cookie = cookie(
+            name: 'token',
+            value: $token,
+            minutes: 60 * 24 * 7,
+            path: '/',
+            domain: null,
+            secure: true,
+            httpOnly: true,
+            raw: false,
+            sameSite: 'None'
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cookie xác thực đã được thiết lập thành công'
+        ])->withCookie($cookie);
     }
 }
