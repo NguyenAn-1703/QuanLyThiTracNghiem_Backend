@@ -51,14 +51,11 @@ class AuthController extends Controller
 
     public function handleGoogleCallback(Request $request)
     {
-        // 1. Lấy chuỗi state từ URL mà Google trả về
         $state = $request->input('state');
 
-        // 2. Tách chuỗi để lấy lại URL (giả sử state là "frontend_url=http://...")
         parse_str($state, $result);
         $frontendUrl = $result['frontend_url'];
 
-        Log::info('Lấy URL từ state thành công: ' . $frontendUrl);
         if (!$request->filled('code') && !$request->filled('error')) {
             if ($request->expectsJson()) {
                 return $this->error(null, 'Thiếu mã xác thực Google. Hãy bắt đầu từ endpoint /auth/google/redirect', 400);
@@ -69,15 +66,24 @@ class AuthController extends Controller
 
         try {
             $data = $this->authService->handleGoogleCallback();
-            // Lấy địa chỉ Frontend từ file .env, nếu không có thì mặc định là localhost
-            $frontendBaseUrl = env('FRONTEND_URL', 'http://localhost:5173');
+            // Tạo cookie HttpOnly + Secure + SameSite=None
+            $cookie = cookie(
+                name: 'token',                    // hoặc 'access_token'
+                value: $data['access_token'],
+                minutes: 60 * 24 * 7,             // 7 ngày
+                path: '/',
+                domain: null,                     // để null hoặc .yourdomain.com nếu cùng TLD
+                secure: true,                     // phải true khi SameSite=None
+                httpOnly: true,                   // quan trọng
+                raw: false,
+                sameSite: 'None'                  // bắt buộc cho cross-origin
+            );
 
             if (isset($data['error'])) {
                 return redirect($frontendUrl . '?error=' . $data['error']);
             }
-            return redirect($frontendUrl . "?token=" . $data['access_token']);
-
-            // return $this->success($data, 'Đăng nhập Google thành công');
+            // return redirect($frontendUrl . "?token=" . $data['access_token']);
+            return redirect($frontendUrl)->withCookie($cookie);
         } catch (HttpException $e) {
             return $this->error(null, $e->getMessage(), $e->getStatusCode());
         } catch (Throwable $e) {
