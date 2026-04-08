@@ -39,7 +39,7 @@ class StoreDeThiRequest extends FormRequest
             'cauHinh.isLimitSwitchTab' => ['sometimes', 'boolean'],
             'cauHinh.tabSwitchLimit' => ['sometimes', 'integer'],
             'cauHinh.messageOnWarning' => ['sometimes', 'string'],
-            'cauHinh.limitQuestionPerPage' => ['sometimes', 'integer', 'min:1'],
+            'cauHinh.limitQuestionPerPage' => ['sometimes', 'integer'],
             'cauHinh.allowBackLastQuestion' => ['sometimes', 'boolean'],
         ];
     }
