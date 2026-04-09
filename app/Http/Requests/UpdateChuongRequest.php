@@ -24,29 +24,23 @@ class UpdateChuongRequest extends FormRequest
     public function rules()
     {
         return [
-            'tenChuong' => ['sometimes', 'string', 'max:100'],
-            'monHocId'  => ['sometimes', 'integer', 'exists:mon_hocs,id'],
-            'isDeleted' => ['nullable', 'boolean'],
+            // Kiểm tra chuongs phải là một mảng
+            'chuongs' => ['required', 'array'],
+            // Validate từng item bên trong mảng chuongs
+            'chuongs.*.tenChuong' => ['required', 'string', 'max:100'],
         ];
     }
-
     public function messages()
-    {
-        return [
-            'tenChuong.string'  => ':attribute phải là chuỗi ký tự',
-            'tenChuong.max'     => ':attribute không được vượt quá 100 ký tự',
-            'monHocId.integer'  => ':attribute phải là số nguyên',
-            'monHocId.exists'   => ':attribute không tồn tại trong hệ thống',
-            'isDeleted.boolean' => ':attribute phải là kiểu đúng/sai',
-        ];
-    }
+{
+    return [
+        // Messages cho mảng chuongs
+        'chuongs.required' => 'Danh sách chương không được để trống.',
+        'chuongs.array'    => 'Danh sách chương phải là một mảng hợp lệ.',
 
-    public function attributes()
-    {
-        return [
-            'tenChuong' => 'Tên chương',
-            'monHocId'  => 'Mã môn học',
-            'isDeleted' => 'Trạng thái xóa',
-        ];
-    }
+        // Messages cho từng phần tử trong mảng
+        'chuongs.*.tenChuong.required' => 'Tên chương không được để trống.',
+        'chuongs.*.tenChuong.string'   => 'Tên chương phải là chuỗi ký tự.',
+        'chuongs.*.tenChuong.max'      => 'Tên chương không được vượt quá 100 ký tự.',
+    ];
+}
 }
