@@ -9,7 +9,7 @@ class MonHocService
 {
     public function getAll()
     {
-        return MonHoc::all();
+        return MonHoc::all()->load("chuongs");
     }
 
     public function getOne(MonHoc $monHoc)
@@ -36,7 +36,7 @@ class MonHocService
     public function get_w_nhp()
     {
         $monHocs = MonHoc::all();
-        $monHocs->load('nhomHocPhans');
+        $monHocs->load(['nhomHocPhans', 'chuongs']);
         return $monHocs;
     }
 
@@ -58,6 +58,6 @@ class MonHocService
             }
         ])->get();
 
-        return $data;
+        return $data->load("chuongs");
     }
 }
