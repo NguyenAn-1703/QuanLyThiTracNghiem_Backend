@@ -6,6 +6,7 @@ use App\Http\Requests\StoreChuongRequest;
 use App\Http\Requests\UpdateChuongRequest;
 use App\Http\Resources\ChuongResource;
 use App\Models\Chuong;
+use App\Models\MonHoc;
 use App\Services\ChuongService;
 use App\Traits\ApiResponseTrait;
 
@@ -56,10 +57,10 @@ class ChuongController extends Controller
      * @param  Chuong  $chuong
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateChuongRequest $request, Chuong $chuong)
+    public function update(UpdateChuongRequest $request, MonHoc $monhoc)
     {
-        $chuong = $this->service->update($chuong, $request->validated());
-        return $this->updated(new ChuongResource($chuong->load('monHoc')));
+        $chuong = $this->service->update($monhoc, $request->validated());
+        return $this->success($chuong);
     }
 
     /**
@@ -73,4 +74,10 @@ class ChuongController extends Controller
         $chuong->deleteOrFail();
         return $this->deleted();
     }
+
+    public function getByMonHoc(MonHoc $monhoc){
+        $data = $this->service->getByMonHoc($monhoc);
+        return $this->success($data);
+    }
+
 }
